@@ -1,254 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BAM FIT | By Any Means Fitness</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Barlow', sans-serif; background: #080808; color: #e8e8e0; overflow-x: hidden; cursor: none; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Barlow',sans-serif;background:#050508;color:#e8e8e0;overflow-x:hidden;cursor:none;}
+    .cursor{position:fixed;width:10px;height:10px;background:#00e5ff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s,background .15s;}
+    .cursor-ring{position:fixed;width:34px;height:34px;border:1px solid rgba(0,229,255,0.6);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+    :root{--blue:#00e5ff;--blue2:#0ff;--dark:#050508;--dark2:#0a0a10;--dark3:#12121a;--dark4:#1a1a24;--border:rgba(0,229,255,0.15);--text:#e8e8e0;--muted:#6a6a7a;--ff-display:'Bebas Neue',sans-serif;}
+    ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--blue);}
 
-    .cursor { position: fixed; width: 12px; height: 12px; background: #00e5ff; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s; }
-    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1.5px solid #00e5ff; border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .2s, height .2s; }
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(5,5,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--ff-display);font-size:2.2rem;letter-spacing:0.06em;color:var(--text);text-decoration:none;position:relative;}
+    .nav-logo span{color:var(--blue);}
+    .nav-logo::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:1px;background:linear-gradient(90deg,var(--blue),transparent);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--blue);}
+    .nav-cta{background:transparent;color:var(--blue);padding:0.5rem 1.4rem;border-radius:2px;font-weight:700;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border:1px solid var(--blue);transition:background 0.2s,color 0.2s,box-shadow 0.2s;}
+    .nav-cta:hover{background:var(--blue);color:#000;box-shadow:0 0 20px rgba(0,229,255,0.4);}
 
-    :root {
-      --blue: #00e5ff;
-      --blue-dim: #00b8cc;
-      --blue-glow: rgba(0,229,255,0.15);
-      --dark: #080808;
-      --dark2: #0f0f0f;
-      --dark3: #171717;
-      --dark4: #202020;
-      --border: rgba(0,229,255,0.18);
-      --text: #e8e8e0;
-      --muted: #7a7a72;
-      --ff-display: 'Bebas Neue', sans-serif;
-      --ff-body: 'Barlow', sans-serif;
-    }
+    /* HERO 3D */
+    #hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;}
+    #hero-canvas{position:absolute;inset:0;z-index:0;}
+    .hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,229,255,0.04) 0%,transparent 60%),linear-gradient(180deg,transparent 60%,#050508 100%);z-index:1;pointer-events:none;}
+    .hero-content{position:relative;z-index:2;padding:0 4rem;max-width:900px;}
+    .hero-tag{display:inline-flex;align-items:center;gap:0.8rem;color:var(--blue);font-size:0.72rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.8s ease 0.3s forwards;}
+    .hero-tag::before{content:'';display:block;width:40px;height:1px;background:var(--blue);}
+    .hero-tag-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(1.5);}}
+    .hero-title{font-family:var(--ff-display);font-size:clamp(5rem,12vw,11rem);line-height:0.85;letter-spacing:0.02em;color:var(--text);opacity:0;animation:fadeUp 0.8s ease 0.45s forwards;}
+    .hero-title .line1{display:block;}
+    .hero-title .line2{display:block;color:transparent;-webkit-text-stroke:1.5px var(--blue);filter:drop-shadow(0 0 20px rgba(0,229,255,0.5));}
+    .hero-title .line3{display:block;font-size:clamp(2rem,3.5vw,3.5rem);letter-spacing:0.15em;color:var(--muted);margin-top:0.3rem;}
+    .hero-tagline{font-family:var(--ff-display);font-size:clamp(1rem,1.8vw,1.5rem);letter-spacing:0.2em;color:var(--blue);margin:1.2rem 0;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards;text-shadow:0 0 30px rgba(0,229,255,0.5);}
+    .hero-desc{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.8;max-width:500px;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.8s ease 0.72s forwards;}
+    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s ease 0.85s forwards;}
+    .btn-glow{background:var(--blue);color:#000;padding:0.9rem 2.4rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:box-shadow 0.2s,transform 0.15s;box-shadow:0 0 25px rgba(0,229,255,0.35);}
+    .btn-glow:hover{box-shadow:0 0 45px rgba(0,229,255,0.65);transform:translateY(-2px);}
+    .btn-ghost{background:transparent;color:var(--text);padding:0.9rem 2.4rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border:1px solid rgba(232,232,224,0.2);border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:border-color 0.2s,color 0.2s,transform 0.15s;}
+    .btn-ghost:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px);}
+    .hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0;animation:fadeUp 0.8s ease 1.1s forwards;}
+    .scroll-line{width:1px;height:50px;background:linear-gradient(180deg,var(--blue),transparent);animation:scrollAnim 2s ease-in-out infinite;}
+    .scroll-label{font-size:0.62rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);}
+    @keyframes scrollAnim{0%,100%{transform:scaleY(1);opacity:1;}50%{transform:scaleY(0.5);opacity:0.4;}}
 
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--dark); }
-    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+    /* STATS STRIP */
+    #stats-strip{background:var(--dark3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-around;gap:2rem;flex-wrap:wrap;}
+    .strip-stat{text-align:center;}
+    .strip-num{font-family:var(--ff-display);font-size:3.5rem;color:var(--blue);line-height:1;text-shadow:0 0 20px rgba(0,229,255,0.35);}
+    .strip-label{font-size:0.7rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem;}
+    .strip-divider{width:1px;height:50px;background:var(--border);}
 
-    /* ── NAV ── */
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 4rem; background: rgba(8,8,8,0.9); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
-    .nav-logo { font-family: var(--ff-display); font-size: 2.2rem; letter-spacing: 0.06em; color: var(--text); text-decoration: none; }
-    .nav-logo span { color: var(--blue); }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
-    .nav-cta { background: var(--blue); color: #000; padding: 0.55rem 1.4rem; border-radius: 2px; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: background 0.2s, transform 0.15s; }
-    .nav-cta:hover { background: #33ecff; transform: translateY(-1px); }
+    /* SHARED */
+    section{padding:8rem 4rem;}
+    .section-tag{display:inline-flex;align-items:center;gap:0.6rem;color:var(--blue);font-size:0.7rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;margin-bottom:1rem;}
+    .section-tag::before{content:'';display:block;width:28px;height:1px;background:var(--blue);}
+    .section-title{font-family:var(--ff-display);font-size:clamp(2.8rem,5vw,4.8rem);line-height:0.93;letter-spacing:0.02em;color:var(--text);margin-bottom:1rem;}
+    .section-title span{color:var(--blue);}
+    .section-sub{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.8;max-width:520px;}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
 
-    /* ── HERO ── */
-    #hero { min-height: 100vh; display: flex; align-items: center; padding: 10rem 4rem 6rem; position: relative; overflow: hidden; }
-    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px); background-size: 55px 55px; }
-    .hero-glow { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 70%); top: 50%; right: 5%; transform: translateY(-50%); pointer-events: none; }
-    .hero-content { position: relative; z-index: 2; max-width: 820px; }
-    .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.8rem; color: var(--blue); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; }
-    .hero-eyebrow::before { content: ''; display: block; width: 40px; height: 1px; background: var(--blue); }
-    .hero-title { font-family: var(--ff-display); font-size: clamp(5rem, 11vw, 10rem); line-height: 0.88; letter-spacing: 0.03em; color: var(--text); margin-bottom: 1.2rem; opacity: 0; animation: fadeUp 0.7s ease 0.35s forwards; }
-    .hero-title .accent { color: var(--blue); display: block; }
-    .hero-title .sub-line { font-size: clamp(1.8rem, 3.5vw, 3rem); letter-spacing: 0.08em; color: var(--muted); display: block; margin-top: 0.3rem; }
-    .hero-tagline { font-family: var(--ff-display); font-size: clamp(1.1rem, 2vw, 1.6rem); letter-spacing: 0.15em; color: var(--blue); margin-bottom: 1.2rem; opacity: 0; animation: fadeUp 0.7s ease 0.48s forwards; }
-    .hero-desc { font-size: 1.05rem; font-weight: 300; color: var(--muted); line-height: 1.8; max-width: 520px; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.55s forwards; }
-    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease 0.65s forwards; }
-    .btn-primary { background: var(--blue); color: #000; padding: 0.9rem 2.2rem; font-family: var(--ff-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: 2px; cursor: none; text-decoration: none; display: inline-block; transition: background 0.2s, transform 0.15s; }
-    .btn-primary:hover { background: #33ecff; transform: translateY(-2px); }
-    .btn-outline { background: transparent; color: var(--text); padding: 0.9rem 2.2rem; font-family: var(--ff-body); font-size: 0.9rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid rgba(232,232,224,0.2); border-radius: 2px; cursor: none; text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s, transform 0.15s; }
-    .btn-outline:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-2px); }
-    .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; opacity: 0; animation: fadeUp 0.7s ease 0.78s forwards; flex-wrap: wrap; }
-    .stat-num { font-family: var(--ff-display); font-size: 3rem; color: var(--blue); line-height: 1; }
-    .stat-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 0.25rem; }
+    /* WHY */
+    #why{background:var(--dark2);position:relative;overflow:hidden;}
+    #why::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,0.05),transparent 70%);top:-100px;right:-100px;pointer-events:none;}
+    .why-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:center;margin-top:4rem;}
+    .why-photo{aspect-ratio:4/5;background:var(--dark3);border-radius:4px;border:1px solid rgba(0,229,255,0.1);position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.8rem;overflow:hidden;}
+    .why-photo::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,0.07),transparent 60%);}
+    .why-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 60%,rgba(0,229,255,0.05));}
+    .why-photo-icon{font-size:5rem;opacity:0.06;}
+    .why-photo p{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+    .photo-badge{position:absolute;bottom:1.5rem;left:1.5rem;background:var(--blue);color:#000;padding:0.5rem 1rem;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;box-shadow:0 0 20px rgba(0,229,255,0.4);}
+    .why-text{display:flex;flex-direction:column;gap:1.5rem;}
+    .why-text p{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.9;}
+    .why-text p strong{color:var(--text);font-weight:600;}
+    .why-text p em{color:var(--blue);font-style:normal;}
+    .mission-block{background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:1.8rem;margin-top:0.5rem;position:relative;overflow:hidden;}
+    .mission-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);box-shadow:0 0 10px var(--blue);}
+    .mission-label{font-size:0.62rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--blue);margin-bottom:0.6rem;}
+    .mission-text{font-family:var(--ff-display);font-size:1.7rem;color:var(--text);line-height:1.1;letter-spacing:0.03em;}
+    .svc-list{margin-top:1rem;display:flex;flex-direction:column;gap:0;}
+    .svc-item{display:flex;align-items:center;gap:1rem;padding:0.85rem 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:padding-left 0.2s;}
+    .svc-item:hover{padding-left:0.5rem;}
+    .svc-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;box-shadow:0 0 6px var(--blue);}
+    .svc-name{font-size:0.88rem;font-weight:600;color:var(--text);}
 
-    /* ── SHARED ── */
-    section { padding: 7rem 4rem; }
-    .section-tag { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--blue); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 1rem; }
-    .section-tag::before { content: ''; display: block; width: 30px; height: 1px; background: var(--blue); }
-    .section-title { font-family: var(--ff-display); font-size: clamp(2.8rem, 5vw, 4.5rem); line-height: 0.95; letter-spacing: 0.03em; color: var(--text); margin-bottom: 1rem; }
-    .section-title span { color: var(--blue); }
-    .section-sub { font-size: 1rem; font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 540px; }
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    /* PRICING */
+    #pricing-preview{background:var(--dark);position:relative;}
+    #pricing-preview::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+    .pkg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:4rem;position:relative;}
+    .pkg-card{background:rgba(18,18,26,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:2.2rem;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;backdrop-filter:blur(10px);}
+    .pkg-card:hover{transform:translateY(-6px);border-color:rgba(0,229,255,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 30px rgba(0,229,255,0.07);}
+    .pkg-card.featured{border-color:rgba(0,229,255,0.4);background:rgba(0,229,255,0.04);}
+    .pkg-card.featured:hover{box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(0,229,255,0.15);}
+    .pkg-label{font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--blue);margin-bottom:0.8rem;}
+    .pkg-name{font-family:var(--ff-display);font-size:1.9rem;color:var(--text);letter-spacing:0.03em;margin-bottom:0.5rem;}
+    .pkg-price{font-family:var(--ff-display);font-size:3.8rem;color:var(--blue);line-height:1;margin-bottom:0.3rem;text-shadow:0 0 20px rgba(0,229,255,0.3);}
+    .pkg-price-sub{font-size:0.75rem;color:var(--muted);margin-bottom:1rem;}
+    .pkg-desc{font-size:0.84rem;font-weight:300;color:var(--muted);line-height:1.75;margin-bottom:1.5rem;}
+    .pkg-btn{display:block;width:100%;padding:0.8rem;text-align:center;font-family:'Barlow',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border-radius:2px;text-decoration:none;cursor:none;transition:transform 0.15s,box-shadow 0.2s;border:none;}
+    .pkg-btn:hover{transform:translateY(-2px);}
+    .pkg-btn-blue{background:var(--blue);color:#000;box-shadow:0 0 20px rgba(0,229,255,0.25);}
+    .pkg-btn-blue:hover{box-shadow:0 0 35px rgba(0,229,255,0.5);}
+    .pkg-btn-out{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12);}
+    .pkg-btn-out:hover{border-color:var(--blue);color:var(--blue);}
+    .view-all-wrap{text-align:center;margin-top:3rem;}
+    .view-all{display:inline-flex;align-items:center;gap:0.6rem;color:var(--blue);font-size:0.8rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:gap 0.2s;}
+    .view-all:hover{gap:1.2rem;}
 
-    /* ── WHY ── */
-    #why { background: var(--dark2); }
-    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 4rem; }
-    .why-photo { aspect-ratio: 4/5; background: var(--dark3); border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); position: relative; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.8rem; overflow: hidden; }
-    .why-photo::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--blue-glow), transparent 60%); }
-    .why-photo-icon { font-size: 5rem; opacity: 0.07; }
-    .why-photo p { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-    .why-badge { position: absolute; bottom: 1.5rem; left: 1.5rem; background: var(--blue); color: #000; padding: 0.5rem 1rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; }
-    .why-text { display: flex; flex-direction: column; gap: 1.5rem; }
-    .why-text p { font-size: 1rem; font-weight: 300; color: var(--muted); line-height: 1.85; }
-    .why-text p strong { color: var(--text); font-weight: 600; }
-    .why-text p em { color: var(--blue); font-style: normal; }
-    .longevity-block { background: var(--dark3); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; margin-top: 0.5rem; }
-    .longevity-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; }
-    .longevity-text { font-size: 0.9rem; font-weight: 300; color: var(--muted); line-height: 1.75; }
-    .services-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 1px; }
-    .svc-item { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); transition: padding-left 0.2s; }
-    .svc-item:hover { padding-left: 0.4rem; }
-    .svc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
-    .svc-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    /* SPECIALTIES */
+    #specialties{background:var(--dark2);}
+    .spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+    .spec-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:2rem;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;position:relative;overflow:hidden;}
+    .spec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity 0.3s;}
+    .spec-card:hover{transform:translateY(-5px);border-color:rgba(0,229,255,0.2);box-shadow:0 15px 40px rgba(0,0,0,0.4);}
+    .spec-card:hover::before{opacity:1;}
+    .spec-icon{font-size:2rem;margin-bottom:1rem;}
+    .spec-name{font-family:var(--ff-display);font-size:1.5rem;color:var(--text);letter-spacing:0.03em;margin-bottom:0.6rem;}
+    .spec-desc{font-size:0.83rem;font-weight:300;color:var(--muted);line-height:1.75;}
 
-    /* ── PRICING PREVIEW ── */
-    #pricing-preview { background: var(--dark); }
-    .pkg-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 4rem; }
-    .pkg-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; padding: 2rem; transition: transform 0.25s, border-color 0.25s; }
-    .pkg-card:hover { transform: translateY(-5px); border-color: rgba(0,229,255,0.25); }
-    .pkg-card.featured { border-color: var(--blue); background: var(--dark4); }
-    .pkg-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.8rem; }
-    .pkg-name { font-family: var(--ff-display); font-size: 1.8rem; color: var(--text); letter-spacing: 0.03em; margin-bottom: 0.5rem; }
-    .pkg-price { font-family: var(--ff-display); font-size: 3.5rem; color: var(--blue); line-height: 1; margin-bottom: 0.3rem; }
-    .pkg-price-sub { font-size: 0.78rem; color: var(--muted); font-weight: 300; margin-bottom: 1rem; }
-    .pkg-desc { font-size: 0.85rem; font-weight: 300; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
-    .pkg-btn { display: block; width: 100%; padding: 0.75rem; text-align: center; font-family: var(--ff-body); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px; text-decoration: none; cursor: none; transition: transform 0.15s; }
-    .pkg-btn:hover { transform: translateY(-2px); }
-    .pkg-btn-blue { background: var(--blue); color: #000; border: none; }
-    .pkg-btn-blue:hover { background: #33ecff; }
-    .pkg-btn-out { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,0.15); }
-    .pkg-btn-out:hover { border-color: var(--blue); color: var(--blue); }
-    .view-all-wrap { text-align: center; margin-top: 3rem; }
-    .view-all { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--blue); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; transition: gap 0.2s; }
-    .view-all:hover { gap: 1rem; }
+    /* NUTRITION */
+    #nutrition-strip{background:var(--dark3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 4rem;position:relative;overflow:hidden;}
+    #nutrition-strip::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,0.06),transparent 70%);bottom:-200px;right:-100px;pointer-events:none;}
+    .nut-inner{display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center;position:relative;}
+    .nut-text h3{font-family:var(--ff-display);font-size:clamp(2.2rem,4vw,3.8rem);color:var(--text);line-height:0.93;letter-spacing:0.02em;margin-bottom:1rem;}
+    .nut-text h3 span{color:var(--blue);text-shadow:0 0 20px rgba(0,229,255,0.3);}
+    .nut-text p{font-size:0.95rem;font-weight:300;color:var(--muted);line-height:1.8;max-width:560px;}
+    .nut-text p strong{color:var(--text);font-weight:600;}
+    .nut-price{text-align:center;flex-shrink:0;}
+    .nut-price-num{font-family:var(--ff-display);font-size:5.5rem;color:var(--blue);line-height:1;text-shadow:0 0 30px rgba(0,229,255,0.4);}
+    .nut-price-label{font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 
-    /* ── SPECIALTIES ── */
-    #specialties { background: var(--dark2); }
-    .spec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
-    .spec-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; padding: 2rem; transition: transform 0.25s, border-color 0.25s; }
-    .spec-card:hover { transform: translateY(-5px); border-color: rgba(0,229,255,0.2); }
-    .spec-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .spec-name { font-family: var(--ff-display); font-size: 1.5rem; letter-spacing: 0.03em; color: var(--text); margin-bottom: 0.6rem; }
-    .spec-desc { font-size: 0.85rem; font-weight: 300; color: var(--muted); line-height: 1.7; }
+    /* TESTIMONIALS */
+    #testimonials{background:var(--dark);}
+    .t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+    .t-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:2rem;transition:transform 0.3s,border-color 0.3s;}
+    .t-card:hover{transform:translateY(-4px);border-color:rgba(0,229,255,0.18);}
+    .t-stars{color:var(--blue);font-size:0.7rem;letter-spacing:2px;margin-bottom:0.8rem;text-shadow:0 0 8px rgba(0,229,255,0.4);}
+    .t-quote{font-size:0.9rem;font-weight:300;color:var(--text);line-height:1.78;margin-bottom:1.5rem;}
+    .t-author{display:flex;align-items:center;gap:0.8rem;}
+    .t-av{width:40px;height:40px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--ff-display);font-size:1rem;color:#000;flex-shrink:0;box-shadow:0 0 15px rgba(0,229,255,0.35);}
+    .t-name{font-size:0.88rem;font-weight:600;color:var(--text);}
+    .t-result{font-size:0.7rem;color:var(--blue);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:0.15rem;}
 
-    /* ── NUTRITION CTA ── */
-    #nutrition-strip { background: var(--dark3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4rem; }
-    .nutrition-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
-    .nutrition-text h3 { font-family: var(--ff-display); font-size: clamp(2rem, 4vw, 3.5rem); letter-spacing: 0.03em; color: var(--text); line-height: 0.95; margin-bottom: 0.8rem; }
-    .nutrition-text h3 span { color: var(--blue); }
-    .nutrition-text p { font-size: 0.95rem; font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 560px; }
-    .nutrition-price { text-align: center; flex-shrink: 0; }
-    .nutrition-price-num { font-family: var(--ff-display); font-size: 5rem; color: var(--blue); line-height: 1; }
-    .nutrition-price-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 0.2rem; }
+    /* CTA */
+    #cta{position:relative;overflow:hidden;padding:8rem 4rem;text-align:center;}
+    #cta::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,0.08) 0%,transparent 50%,rgba(0,229,255,0.05) 100%);}
+    #cta::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:55px 55px;}
+    .cta-inner{position:relative;z-index:1;}
+    #cta h2{font-family:var(--ff-display);font-size:clamp(3.5rem,7vw,7.5rem);color:var(--text);letter-spacing:0.02em;line-height:0.9;margin-bottom:1.2rem;}
+    #cta h2 span{color:var(--blue);text-shadow:0 0 40px rgba(0,229,255,0.5);}
+    #cta p{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:3rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.75;}
 
-    /* ── TESTIMONIALS ── */
-    #testimonials { background: var(--dark); }
-    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
-    .testimonial-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; padding: 2rem; position: relative; }
-    .t-stars { color: var(--blue); font-size: 0.72rem; letter-spacing: 2px; margin-bottom: 0.8rem; }
-    .t-quote { font-size: 0.92rem; font-weight: 300; color: var(--text); line-height: 1.75; margin-bottom: 1.5rem; }
-    .t-author { display: flex; align-items: center; gap: 0.8rem; }
-    .t-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-family: var(--ff-display); font-size: 1rem; color: #000; flex-shrink: 0; }
-    .t-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
-    .t-result { font-size: 0.72rem; color: var(--blue); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.15rem; }
+    /* CONTACT */
+    #contact{background:var(--dark2);}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-top:4rem;}
+    .c-info{display:flex;flex-direction:column;gap:2rem;}
+    .c-item .c-label{font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--blue);margin-bottom:0.3rem;}
+    .c-item .c-value{font-size:1rem;color:var(--text);}
+    .c-item .c-value a{color:var(--text);text-decoration:none;transition:color 0.2s;}
+    .c-item .c-value a:hover{color:var(--blue);}
+    .c-form{display:flex;flex-direction:column;gap:1rem;}
+    .f-group{display:flex;flex-direction:column;gap:0.35rem;}
+    .f-group label{font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+    .f-group input,.f-group select,.f-group textarea{background:var(--dark3);border:1px solid rgba(255,255,255,0.07);border-radius:2px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.93rem;padding:0.75rem 1rem;transition:border-color 0.2s;outline:none;cursor:none;}
+    .f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 1px rgba(0,229,255,0.1);}
+    .f-group select option{background:var(--dark3);}
+    .f-group textarea{resize:vertical;min-height:95px;}
+    .f-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .f-note{font-size:0.72rem;color:var(--muted);line-height:1.6;}
+    .btn-submit{background:var(--blue);color:#000;padding:1rem;font-family:'Barlow',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;width:100%;transition:box-shadow 0.2s,transform 0.15s;box-shadow:0 0 20px rgba(0,229,255,0.25);}
+    .btn-submit:hover{box-shadow:0 0 40px rgba(0,229,255,0.5);transform:translateY(-2px);}
 
-    /* ── CTA BANNER ── */
-    #cta { background: var(--blue); padding: 5.5rem 4rem; text-align: center; }
-    #cta h2 { font-family: var(--ff-display); font-size: clamp(3rem, 6vw, 6.5rem); color: #000; letter-spacing: 0.03em; line-height: 0.93; margin-bottom: 1.2rem; }
-    #cta p { font-size: 1.05rem; font-weight: 300; color: rgba(0,0,0,0.6); margin-bottom: 2.5rem; max-width: 480px; margin-left: auto; margin-right: auto; }
-    .btn-dark { background: #000; color: var(--blue); padding: 1rem 2.6rem; font-family: var(--ff-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border: none; border-radius: 2px; cursor: none; text-decoration: none; display: inline-block; transition: transform 0.15s, background 0.2s; }
-    .btn-dark:hover { background: #111; transform: translateY(-2px); }
+    /* FOOTER */
+    footer{background:var(--dark);border-top:1px solid var(--border);padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;}
+    .footer-logo{font-family:var(--ff-display);font-size:2rem;color:var(--text);}.footer-logo span{color:var(--blue);}
+    .footer-copy{font-size:0.76rem;color:var(--muted);}
+    .footer-links{display:flex;gap:2rem;}
+    .footer-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}.footer-links a:hover{color:var(--blue);}
 
-    /* ── CONTACT ── */
-    #contact { background: var(--dark2); }
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 4rem; }
-    .contact-info { display: flex; flex-direction: column; gap: 2rem; }
-    .c-item { display: flex; flex-direction: column; gap: 0.3rem; }
-    .c-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blue); }
-    .c-value { font-size: 1rem; color: var(--text); }
-    .c-value a { color: var(--text); text-decoration: none; transition: color 0.2s; }
-    .c-value a:hover { color: var(--blue); }
-    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-    .form-group label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-    .form-group input, .form-group select, .form-group textarea { background: var(--dark3); border: 1px solid rgba(255,255,255,0.08); border-radius: 2px; color: var(--text); font-family: var(--ff-body); font-size: 0.95rem; padding: 0.75rem 1rem; transition: border-color 0.2s; outline: none; cursor: none; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--blue); }
-    .form-group select option { background: var(--dark3); }
-    .form-group textarea { resize: vertical; min-height: 100px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .disclaimer { font-size: 0.75rem; font-weight: 300; color: var(--muted); line-height: 1.6; margin-top: 0.5rem; }
+    /* CHAT */
+    .chat-toggle{position:fixed;bottom:2rem;right:2rem;width:58px;height:58px;background:var(--blue);border:none;border-radius:50%;cursor:none;z-index:200;display:flex;align-items:center;justify-content:center;box-shadow:0 0 25px rgba(0,229,255,0.45);transition:transform 0.2s,box-shadow 0.2s;}
+    .chat-toggle:hover{transform:scale(1.1);box-shadow:0 0 45px rgba(0,229,255,0.7);}
+    .chat-toggle svg{width:24px;height:24px;}
+    .chat-toggle .close-icon{display:none;}
+    .chat-toggle.open .chat-icon{display:none;}.chat-toggle.open .close-icon{display:block;}
+    .chatbox{position:fixed;bottom:6.5rem;right:2rem;width:380px;max-height:560px;background:var(--dark3);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;z-index:199;overflow:hidden;transform:scale(0.85) translateY(20px);transform-origin:bottom right;opacity:0;pointer-events:none;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s;}
+    .chatbox.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+    .chat-header{background:var(--dark4);border-bottom:1px solid var(--border);padding:1rem 1.2rem;display:flex;align-items:center;gap:0.8rem;}
+    .chat-av{width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--ff-display);font-size:1rem;color:#000;flex-shrink:0;box-shadow:0 0 10px rgba(0,229,255,0.4);}
+    .chat-title{font-size:0.88rem;font-weight:600;color:var(--text);}
+    .chat-status{font-size:0.68rem;color:#4caf50;display:flex;align-items:center;gap:0.3rem;}
+    .chat-status::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:#4caf50;box-shadow:0 0 5px #4caf50;}
+    .chat-key-row{padding:0.8rem 1rem;background:rgba(0,229,255,0.04);border-bottom:1px solid var(--border);display:flex;gap:0.5rem;}
+    .chat-key-row input{flex:1;background:var(--dark);border:1px solid rgba(255,255,255,0.08);border-radius:3px;color:var(--text);font-size:0.73rem;padding:0.4rem 0.7rem;font-family:'Barlow',sans-serif;outline:none;cursor:none;}
+    .chat-key-row input:focus{border-color:var(--blue);}
+    .chat-key-row button{background:var(--blue);color:#000;border:none;border-radius:3px;font-size:0.68rem;font-weight:700;padding:0.4rem 0.8rem;cursor:none;letter-spacing:0.06em;text-transform:uppercase;}
+    .chat-msgs{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.7rem;scroll-behavior:smooth;}
+    .chat-msgs::-webkit-scrollbar{width:2px;}.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);}
+    .msg{max-width:86%;padding:0.65rem 0.9rem;border-radius:6px;font-size:0.84rem;line-height:1.55;animation:msgIn 0.25s ease;}
+    .msg.bot{background:var(--dark4);border:1px solid rgba(255,255,255,0.04);color:var(--text);align-self:flex-start;}
+    .msg.user{background:var(--blue);color:#000;align-self:flex-end;font-weight:500;}
+    .msg.typing{background:var(--dark4);border:1px solid rgba(255,255,255,0.04);align-self:flex-start;display:flex;gap:4px;align-items:center;padding:0.75rem 1rem;}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:bounce 1.2s infinite;}
+    .dot:nth-child(2){animation-delay:0.2s;}.dot:nth-child(3){animation-delay:0.4s;}
+    .chat-chips{display:flex;gap:0.4rem;flex-wrap:wrap;padding:0 1rem 0.6rem;}
+    .chip{background:transparent;border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:0.68rem;font-family:'Barlow',sans-serif;padding:0.28rem 0.65rem;cursor:none;transition:border-color 0.15s,color 0.15s;}
+    .chip:hover{border-color:var(--blue);color:var(--blue);}
+    .chat-input-row{border-top:1px solid var(--border);padding:0.75rem 1rem;display:flex;gap:0.6rem;background:var(--dark4);}
+    .chat-input{flex:1;background:var(--dark);border:1px solid rgba(255,255,255,0.07);border-radius:4px;color:var(--text);font-size:0.84rem;font-family:'Barlow',sans-serif;padding:0.6rem 0.8rem;outline:none;resize:none;cursor:none;transition:border-color 0.2s;}
+    .chat-input:focus{border-color:var(--blue);}
+    .chat-send{background:var(--blue);border:none;border-radius:4px;width:36px;height:36px;cursor:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow 0.15s;}
+    .chat-send:hover{box-shadow:0 0 15px rgba(0,229,255,0.5);}
+    .chat-send svg{width:15px;height:15px;}
 
-    /* ── FOOTER ── */
-    footer { background: var(--dark); border-top: 1px solid var(--border); padding: 3rem 4rem; display: flex; align-items: center; justify-content: space-between; }
-    .footer-logo { font-family: var(--ff-display); font-size: 2rem; color: var(--text); }
-    .footer-logo span { color: var(--blue); }
-    .footer-copy { font-size: 0.78rem; color: var(--muted); }
-    .footer-links { display: flex; gap: 2rem; }
-    .footer-links a { font-size: 0.78rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--blue); }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
 
-    /* ── CHATBOX ── */
-    .chat-toggle { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: var(--blue); border: none; border-radius: 50%; cursor: none; z-index: 200; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(0,229,255,0.35); transition: transform 0.2s, box-shadow 0.2s; }
-    .chat-toggle:hover { transform: scale(1.08); box-shadow: 0 6px 32px rgba(0,229,255,0.5); }
-    .chat-toggle svg { width: 26px; height: 26px; }
-    .chat-toggle .close-icon { display: none; }
-    .chat-toggle.open .chat-icon { display: none; }
-    .chat-toggle.open .close-icon { display: block; }
-    .chatbox { position: fixed; bottom: 6.5rem; right: 2rem; width: 380px; max-height: 560px; background: var(--dark3); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; z-index: 199; overflow: hidden; transform: scale(0.85) translateY(20px); transform-origin: bottom right; opacity: 0; pointer-events: none; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s; }
-    .chatbox.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
-    .chat-header { background: var(--dark4); border-bottom: 1px solid var(--border); padding: 1rem 1.2rem; display: flex; align-items: center; gap: 0.8rem; }
-    .chat-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-family: var(--ff-display); font-size: 1rem; color: #000; flex-shrink: 0; }
-    .chat-title { font-size: 0.9rem; font-weight: 600; color: var(--text); }
-    .chat-status { font-size: 0.7rem; color: #4caf50; display: flex; align-items: center; gap: 0.3rem; }
-    .chat-status::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: #4caf50; }
-    .chat-key-section { padding: 0.8rem 1rem; background: rgba(0,229,255,0.05); border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; }
-    .chat-key-section input { flex: 1; background: var(--dark); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; color: var(--text); font-size: 0.75rem; padding: 0.4rem 0.7rem; font-family: var(--ff-body); outline: none; cursor: none; }
-    .chat-key-section input:focus { border-color: var(--blue); }
-    .chat-key-section button { background: var(--blue); color: #000; border: none; border-radius: 3px; font-size: 0.7rem; font-weight: 700; padding: 0.4rem 0.8rem; cursor: none; letter-spacing: 0.06em; text-transform: uppercase; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; scroll-behavior: smooth; }
-    .chat-messages::-webkit-scrollbar { width: 3px; }
-    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); }
-    .msg { max-width: 85%; padding: 0.65rem 0.9rem; border-radius: 6px; font-size: 0.86rem; line-height: 1.55; animation: msgIn 0.25s ease; }
-    .msg.bot { background: var(--dark4); border: 1px solid rgba(255,255,255,0.05); color: var(--text); align-self: flex-start; }
-    .msg.user { background: var(--blue); color: #000; align-self: flex-end; font-weight: 500; }
-    .msg.typing { background: var(--dark4); border: 1px solid rgba(255,255,255,0.05); align-self: flex-start; display: flex; gap: 4px; align-items: center; padding: 0.75rem 1rem; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: bounce 1.2s infinite; }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-    .chat-suggestions { display: flex; gap: 0.4rem; flex-wrap: wrap; padding: 0 1rem 0.6rem; }
-    .suggestion-chip { background: transparent; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: 0.7rem; font-family: var(--ff-body); padding: 0.3rem 0.7rem; cursor: none; transition: border-color 0.15s, color 0.15s; }
-    .suggestion-chip:hover { border-color: var(--blue); color: var(--blue); }
-    .chat-input-area { border-top: 1px solid var(--border); padding: 0.8rem 1rem; display: flex; gap: 0.6rem; background: var(--dark4); }
-    .chat-input { flex: 1; background: var(--dark); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: var(--text); font-size: 0.86rem; font-family: var(--ff-body); padding: 0.6rem 0.8rem; outline: none; resize: none; cursor: none; transition: border-color 0.2s; }
-    .chat-input:focus { border-color: var(--blue); }
-    .chat-send { background: var(--blue); border: none; border-radius: 4px; width: 38px; height: 38px; cursor: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
-    .chat-send:hover { background: #33ecff; }
-    .chat-send svg { width: 16px; height: 16px; }
-
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
-
-    @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; }
-      section { padding: 5rem 1.5rem; }
-      #hero { padding: 8rem 1.5rem 5rem; }
-      .hero-title { font-size: clamp(3.5rem, 13vw, 6rem); }
-      .why-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .pkg-grid { grid-template-columns: 1fr; }
-      .spec-grid { grid-template-columns: 1fr; }
-      .nutrition-inner { grid-template-columns: 1fr; }
-      .testimonial-grid { grid-template-columns: 1fr; }
-      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .form-row { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
-      .chatbox { width: calc(100vw - 2rem); right: 1rem; }
-      #nutrition-strip { padding: 3rem 1.5rem; }
+    @media(max-width:900px){
+      nav{padding:1rem 1.5rem;}.nav-links{display:none;}
+      section{padding:5rem 1.5rem;}
+      #hero .hero-content{padding:0 1.5rem;}
+      #stats-strip{padding:2rem 1.5rem;}
+      .why-grid,.contact-grid{grid-template-columns:1fr;gap:3rem;}
+      .pkg-grid,.spec-grid,.t-grid{grid-template-columns:1fr;}
+      .nut-inner{grid-template-columns:1fr;}
+      .f-row{grid-template-columns:1fr;}
+      footer{flex-direction:column;gap:1.5rem;text-align:center;}
+      .chatbox{width:calc(100vw - 2rem);right:1rem;}
+      #cta{padding:5rem 1.5rem;}
     }
   </style>
 </head>
 <body>
-
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- NAV -->
   <nav>
     <a href="index.html" class="nav-logo">BAM<span>FIT</span></a>
     <ul class="nav-links">
@@ -260,52 +256,62 @@
     <a href="#contact" class="nav-cta">Get Started</a>
   </nav>
 
-  <!-- HERO -->
+  <!-- 3D HERO -->
   <section id="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-glow"></div>
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">Personal Training &bull; Phoenix, AZ</div>
+      <div class="hero-tag"><span class="hero-tag-dot"></span>Personal Training &bull; Phoenix, AZ</div>
       <h1 class="hero-title">
-        BAM FIT
-        <span class="accent">BY ANY MEANS</span>
-        <span class="sub-line">FITNESS</span>
+        <span class="line1">BAM FIT</span>
+        <span class="line2">BY ANY MEANS</span>
+        <span class="line3">FITNESS</span>
       </h1>
-      <div class="hero-tagline">&#8212; THE GOAL IS LONGEVITY &#8212;</div>
-      <p class="hero-desc">Everyone deserves to feel good. You only get one body — so why not make it a great one? Specializing in strength, functional fitness, weight loss, mobility, and PNF stretching.</p>
+      <div class="hero-tagline">&#8212;&nbsp;&nbsp;THE GOAL IS LONGEVITY&nbsp;&nbsp;&#8212;</div>
+      <p class="hero-desc">Everyone deserves to feel good. You only get one body — so why not make it the best version it can be? Strength, mobility, weight loss, PNF stretching, and more.</p>
       <div class="hero-btns">
-        <a href="pricing.html" class="btn-primary">View Packages</a>
-        <a href="about.html" class="btn-outline">Meet Anthony</a>
+        <a href="pricing.html" class="btn-glow">View Packages</a>
+        <a href="about.html" class="btn-ghost">Meet Anthony</a>
       </div>
-      <div class="hero-stats">
-        <div><div class="stat-num">6</div><div class="stat-label">Specialties</div></div>
-        <div><div class="stat-num">1:1</div><div class="stat-label">Personal Training</div></div>
-        <div><div class="stat-num">100%</div><div class="stat-label">Commitment</div></div>
-      </div>
+    </div>
+    <div class="hero-scroll">
+      <span class="scroll-label">Scroll</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- WHY BAM FIT -->
+  <!-- STATS -->
+  <div id="stats-strip">
+    <div class="strip-stat"><div class="strip-num">1:1</div><div class="strip-label">Personal Training</div></div>
+    <div class="strip-divider"></div>
+    <div class="strip-stat"><div class="strip-num">6</div><div class="strip-label">Specialties</div></div>
+    <div class="strip-divider"></div>
+    <div class="strip-stat"><div class="strip-num">$38</div><div class="strip-label">Per Session (Best Rate)</div></div>
+    <div class="strip-divider"></div>
+    <div class="strip-stat"><div class="strip-num">100%</div><div class="strip-label">Customized</div></div>
+  </div>
+
+  <!-- WHY -->
   <section id="why">
     <div class="section-tag">Why BAM FIT</div>
     <h2 class="section-title">ONE BODY.<br><span>MAKE IT COUNT.</span></h2>
     <div class="why-grid">
       <div class="why-photo reveal">
-        <div class="why-photo-icon">&#127947;</div>
+        <div class="why-photo-icon">&#128248;</div>
         <p>Add Your Photo Here</p>
-        <div class="why-badge">Anthony B. Iacono &bull; Certified Trainer</div>
+        <div class="photo-badge">Anthony B. Iacono &bull; Trainer</div>
       </div>
       <div>
         <div class="why-text reveal">
-          <p><strong>Besides looking physically good and feeling better mentally</strong>, exercising can help protect you from heart disease, stroke, obesity, diabetes, and high blood pressure.</p>
-          <p>It can make you <em>look younger</em>, increase and maintain bone density, improve the quality of your life, and may keep you from getting sick. The benefits go far beyond the mirror.</p>
-          <p><strong>At BAM FIT</strong>, every session is built around your unique body, goals, and lifestyle — from your first intro stretch to your 25th training session and beyond.</p>
-          <div class="longevity-block">
-            <div class="longevity-label">&#8212; The BAM FIT Mission &#8212;</div>
-            <div class="longevity-text">"Everyone deserves to feel good. You only get one body so why not make it a good one. Set a goal and work towards it — you're more likely to be determined to achieve something when there's a goal."</div>
+          <p><strong>Beyond looking good and feeling better mentally</strong>, exercising protects you from heart disease, stroke, obesity, diabetes, and high blood pressure.</p>
+          <p>It can make you <em>look younger</em>, increase and maintain bone density, improve your quality of life, and may keep you from getting sick. The benefits go far beyond the mirror.</p>
+          <p><strong>At BAM FIT</strong>, every session is built around your unique body, goals, and lifestyle — from your first intro stretch to your 25th session and beyond.</p>
+          <div class="mission-block">
+            <div class="mission-label">The BAM FIT Mission</div>
+            <div class="mission-text">"Everyone deserves to feel good. You only get one body so why not make it a good one."</div>
           </div>
         </div>
-        <div class="services-list reveal">
+        <div class="svc-list reveal">
           <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Strength Training</div></div>
           <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Functional Fitness</div></div>
           <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Weight Loss</div></div>
@@ -321,22 +327,22 @@
   <section id="pricing-preview">
     <div class="section-tag">Training Packages</div>
     <h2 class="section-title">SIMPLE.<br><span>TRANSPARENT.</span> REAL.</h2>
-    <p class="section-sub">Session packages, custom routines, and PNF stretching — all priced clearly with zero hidden fees.</p>
+    <p class="section-sub">Every package clearly priced. No contracts, no hidden fees. Just honest 1-on-1 training.</p>
     <div class="pkg-grid reveal">
       <div class="pkg-card">
         <div class="pkg-label">Session Package</div>
         <div class="pkg-name">6 SESSIONS</div>
         <div class="pkg-price">$265</div>
-        <div class="pkg-price-sub">$44/session &bull; Save vs. pay-by-day</div>
-        <div class="pkg-desc">Perfect for getting started and building consistency. Six focused sessions with Anthony tailored entirely to your goals and fitness level.</div>
+        <div class="pkg-price-sub">~$44/session</div>
+        <div class="pkg-desc">Build your foundation. Six focused sessions with Anthony to establish your form, set your program, and start building real momentum.</div>
         <a href="pricing.html" class="pkg-btn pkg-btn-out">See All Packages &rarr;</a>
       </div>
       <div class="pkg-card featured">
         <div class="pkg-label">Best Value</div>
         <div class="pkg-name">25 SESSIONS</div>
         <div class="pkg-price">$952</div>
-        <div class="pkg-price-sub">$38/session &bull; Maximum savings</div>
-        <div class="pkg-desc">The full commitment. Twenty-five sessions gives you the time and repetition needed to truly transform — and lock in the lowest per-session rate available.</div>
+        <div class="pkg-price-sub">$38/session &bull; Lowest rate available</div>
+        <div class="pkg-desc">Twenty-five sessions gives you the volume and time to fully transform — and locks in the lowest per-session cost Anthony offers.</div>
         <a href="pricing.html" class="pkg-btn pkg-btn-blue">Get Started</a>
       </div>
       <div class="pkg-card">
@@ -344,70 +350,45 @@
         <div class="pkg-name">3-DAY PLAN</div>
         <div class="pkg-price">$80</div>
         <div class="pkg-price-sub">Train on your own schedule</div>
-        <div class="pkg-desc">A fully custom 3-day strength training routine built around your goals, equipment access, and experience level — yours to keep and follow independently.</div>
-        <a href="pricing.html" class="pkg-btn pkg-btn-out">See All Routines &rarr;</a>
+        <div class="pkg-desc">A fully custom 3-day strength routine built around your goals and equipment — yours to keep and run independently.</div>
+        <a href="pricing.html" class="pkg-btn pkg-btn-out">See Routines &rarr;</a>
       </div>
       <div class="pkg-card">
         <div class="pkg-label">Drop-In</div>
         <div class="pkg-name">PAY BY DAY</div>
-        <div class="pkg-price">$25<span style="font-size:1.5rem;color:var(--muted);font-family:var(--ff-body);font-weight:300"> / 30 min</span></div>
+        <div class="pkg-price">$25<span style="font-size:1.4rem;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:300"> / 30 min</span></div>
         <div class="pkg-price-sub">$45 / 55-minute session</div>
-        <div class="pkg-desc">No commitment needed. Show up when you can — perfect for trying BAM FIT before committing to a package or for occasional drop-in training.</div>
+        <div class="pkg-desc">No commitment. Show up when you can — perfect for trying BAM FIT before committing to a package.</div>
         <a href="#contact" class="pkg-btn pkg-btn-out">Book a Session</a>
       </div>
     </div>
-    <div class="view-all-wrap"><a href="pricing.html" class="view-all">View All Pricing &amp; Packages &rarr;</a></div>
+    <div class="view-all-wrap"><a href="pricing.html" class="view-all">View All Pricing &rarr;</a></div>
   </section>
 
   <!-- SPECIALTIES -->
   <section id="specialties">
     <div class="section-tag">Specialties</div>
     <h2 class="section-title">BUILT FOR<br><span>YOUR GOALS</span></h2>
-    <p class="section-sub">Every service at BAM FIT is designed around one thing — lasting results that improve your quality of life.</p>
     <div class="spec-grid">
-      <div class="spec-card reveal">
-        <div class="spec-icon">&#127947;</div>
-        <div class="spec-name">STRENGTH TRAINING</div>
-        <div class="spec-desc">Progressive, science-backed strength programming that builds real muscle, increases bone density, and makes everyday life easier. No fluff — just effective lifts.</div>
-      </div>
-      <div class="spec-card reveal">
-        <div class="spec-icon">&#9889;</div>
-        <div class="spec-name">FUNCTIONAL FITNESS</div>
-        <div class="spec-desc">Movement patterns that transfer to real life — carry groceries without pain, climb stairs without getting winded, play with your kids without giving out.</div>
-      </div>
-      <div class="spec-card reveal">
-        <div class="spec-icon">&#128293;</div>
-        <div class="spec-name">WEIGHT LOSS</div>
-        <div class="spec-desc">Sustainable fat loss through smart programming and nutrition guidance — no crash diets, no misery. Just real, consistent progress your body can keep.</div>
-      </div>
-      <div class="spec-card reveal">
-        <div class="spec-icon">&#129368;</div>
-        <div class="spec-name">MOBILITY TRAINING</div>
-        <div class="spec-desc">Restore range of motion, reduce chronic tightness, and move pain-free. Mobility work is the foundation that makes every other training quality possible.</div>
-      </div>
-      <div class="spec-card reveal">
-        <div class="spec-icon">&#129299;</div>
-        <div class="spec-name">ASSISTED PNF STRETCHING</div>
-        <div class="spec-desc">Proprioceptive Neuromuscular Facilitation targets the golgi tendon to unlock flexibility gains most people never achieve solo. Results after session one.</div>
-      </div>
-      <div class="spec-card reveal">
-        <div class="spec-icon">&#127758;</div>
-        <div class="spec-name">LIFESTYLE COACHING</div>
-        <div class="spec-desc">Fitness doesn't stop when you leave the gym. Daily habits, sleep, stress, and nutrition all factor into your results — and Anthony coaches all of it.</div>
-      </div>
+      <div class="spec-card reveal"><div class="spec-icon">&#127947;</div><div class="spec-name">STRENGTH TRAINING</div><div class="spec-desc">Progressive, science-backed programming that builds real muscle, increases bone density, and makes everyday life easier.</div></div>
+      <div class="spec-card reveal"><div class="spec-icon">&#9889;</div><div class="spec-name">FUNCTIONAL FITNESS</div><div class="spec-desc">Movement that transfers to real life — carry things without pain, climb stairs without getting winded, stay active without injury.</div></div>
+      <div class="spec-card reveal"><div class="spec-icon">&#128293;</div><div class="spec-name">WEIGHT LOSS</div><div class="spec-desc">Sustainable fat loss through smart programming and nutrition guidance. No crash diets — just real, consistent progress.</div></div>
+      <div class="spec-card reveal"><div class="spec-icon">&#129368;</div><div class="spec-name">MOBILITY TRAINING</div><div class="spec-desc">Restore range of motion, reduce chronic tightness, and move pain-free. Mobility is the foundation everything else is built on.</div></div>
+      <div class="spec-card reveal"><div class="spec-icon">&#129299;</div><div class="spec-name">ASSISTED PNF STRETCHING</div><div class="spec-desc">Proprioceptive Neuromuscular Facilitation targets the golgi tendon to unlock flexibility gains you can't achieve alone.</div></div>
+      <div class="spec-card reveal"><div class="spec-icon">&#127758;</div><div class="spec-name">LIFESTYLE COACHING</div><div class="spec-desc">Fitness doesn't stop when you leave. Sleep, stress, nutrition, and daily habits all factor in — and Anthony coaches all of it.</div></div>
     </div>
   </section>
 
-  <!-- NUTRITION STRIP -->
+  <!-- NUTRITION -->
   <div id="nutrition-strip">
-    <div class="nutrition-inner reveal">
-      <div class="nutrition-text">
+    <div class="nut-inner reveal">
+      <div class="nut-text">
         <h3>NUTRITION &amp;<br><span>SUPPLEMENTATION</span></h3>
-        <p>Did you know only 68% of Americans take supplements? The #1 supplement to take is the multivitamin — and most people skip it. Monthly meal plans customized to your body's needs and goals, with ongoing adjustments as your body responds. <strong style="color:var(--text)">Credits expire after 90 days of purchase.</strong></p>
+        <p>Only 68% of Americans take supplements. The #1 supplement to take is the multivitamin — and most people skip it. Monthly meal plans customized to your body's needs and goals, with ongoing adjustments. <strong>Credits expire after 90 days of purchase.</strong></p>
       </div>
-      <div class="nutrition-price">
-        <div class="nutrition-price-num">$100</div>
-        <div class="nutrition-price-label">Add-On Fee</div>
+      <div class="nut-price">
+        <div class="nut-price-num">$100</div>
+        <div class="nut-price-label">Monthly Add-On</div>
       </div>
     </div>
   </div>
@@ -416,53 +397,55 @@
   <section id="testimonials">
     <div class="section-tag">Client Words</div>
     <h2 class="section-title">RESULTS THAT<br><span>SPEAK</span></h2>
-    <div class="testimonial-grid">
-      <div class="testimonial-card reveal">
+    <div class="t-grid">
+      <div class="t-card reveal">
         <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="t-quote">Anthony doesn't just count reps — he actually teaches you why each movement matters. My back pain is completely gone after 8 weeks of working together. This is how training should feel.</p>
-        <div class="t-author"><div class="t-avatar">JM</div><div><div class="t-name">James M.</div><div class="t-result">Pain-free after 8 weeks</div></div></div>
+        <p class="t-quote">Anthony doesn't just count reps — he teaches you why each movement matters. My back pain of two years is completely gone after 8 sessions. This is how training should feel.</p>
+        <div class="t-author"><div class="t-av">JM</div><div><div class="t-name">James M.</div><div class="t-result">Pain-free after 8 sessions</div></div></div>
       </div>
-      <div class="testimonial-card reveal">
+      <div class="t-card reveal">
         <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
         <p class="t-quote">The PNF stretching sessions alone changed my life. I could barely touch my knees before. After 4 sessions I'm touching the floor. My golf game improved overnight — not kidding.</p>
-        <div class="t-author"><div class="t-avatar">RC</div><div><div class="t-name">Rick C.</div><div class="t-result">PNF Stretching Client</div></div></div>
+        <div class="t-author"><div class="t-av">RC</div><div><div class="t-name">Rick C.</div><div class="t-result">PNF Stretching Client</div></div></div>
       </div>
-      <div class="testimonial-card reveal">
+      <div class="t-card reveal">
         <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="t-quote">I did the 25-session package and it was the best investment I've made in myself. Down 31 lbs, moving better at 47 than I did at 30. Anthony keeps it real — no shortcuts, real work, real results.</p>
-        <div class="t-author"><div class="t-avatar">DW</div><div><div class="t-name">Diane W.</div><div class="t-result">−31 lbs &bull; 25 sessions</div></div></div>
+        <p class="t-quote">I did the 25-session package and it was the best investment I've made in myself. Down 31 lbs, moving better at 47 than I did at 30. Real work, real results. Anthony keeps it 100%.</p>
+        <div class="t-author"><div class="t-av">DW</div><div><div class="t-name">Diane W.</div><div class="t-result">&minus;31 lbs &bull; 25 sessions</div></div></div>
       </div>
     </div>
   </section>
 
-  <!-- CTA BANNER -->
+  <!-- CTA -->
   <section id="cta">
-    <h2>EVERY BODY<br>DESERVES THIS.</h2>
-    <p>You only get one. Let's make it the best version it can be. Reach out today — no pressure, just a real conversation about your goals.</p>
-    <a href="#contact" class="btn-dark">Get In Touch</a>
+    <div class="cta-inner">
+      <h2>EVERY BODY<br><span>DESERVES THIS.</span></h2>
+      <p>You only get one. Let's make it the best version it can be. Reach out today — no pressure, just a real conversation about your goals.</p>
+      <a href="#contact" class="btn-glow">Get In Touch</a>
+    </div>
   </section>
 
   <!-- CONTACT -->
   <section id="contact">
     <div class="section-tag">Get Started</div>
     <h2 class="section-title">LET'S TALK<br><span>GOALS</span></h2>
-    <p class="section-sub">Ready to start or have a question? Reach out directly — Anthony responds personally.</p>
+    <p class="section-sub">Ready to start? Anthony responds personally to every message.</p>
     <div class="contact-grid">
-      <div class="contact-info reveal">
+      <div class="c-info reveal">
         <div class="c-item"><div class="c-label">Name</div><div class="c-value">Anthony B. Iacono</div></div>
         <div class="c-item"><div class="c-label">Business</div><div class="c-value">BAM FIT — By Any Means Fitness</div></div>
         <div class="c-item"><div class="c-label">Email</div><div class="c-value"><a href="mailto:abiacono@gmail.com">abiacono@gmail.com</a></div></div>
         <div class="c-item"><div class="c-label">Location</div><div class="c-value">Phoenix, AZ Area</div></div>
-        <div class="c-item"><div class="c-label">Note</div><div class="c-value" style="font-size:0.85rem;color:var(--muted);font-weight:300;">Credits expire after 90 days of purchase. All packages are 1 day minimum per week for weekly training sessions.</div></div>
+        <div class="c-item"><div class="c-label">Note</div><div class="c-value" style="font-size:0.82rem;color:var(--muted);font-weight:300;">Credits expire 90 days after purchase. Minimum 1 day per week for weekly training packages.</div></div>
       </div>
-      <form class="contact-form" onsubmit="handleSubmit(event)">
-        <div class="form-row">
-          <div class="form-group"><label>First Name</label><input type="text" placeholder="Your name" required /></div>
-          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last name" required /></div>
+      <form class="c-form" onsubmit="handleSubmit(event)">
+        <div class="f-row">
+          <div class="f-group"><label>First Name</label><input type="text" placeholder="Your name" required/></div>
+          <div class="f-group"><label>Last Name</label><input type="text" placeholder="Last name" required/></div>
         </div>
-        <div class="form-group"><label>Email</label><input type="email" placeholder="you@email.com" required /></div>
-        <div class="form-group"><label>Phone (optional)</label><input type="tel" placeholder="(555) 000-0000" /></div>
-        <div class="form-group">
+        <div class="f-group"><label>Email</label><input type="email" placeholder="you@email.com" required/></div>
+        <div class="f-group"><label>Phone (optional)</label><input type="tel" placeholder="(555) 000-0000"/></div>
+        <div class="f-group">
           <label>I'm interested in</label>
           <select>
             <option>Training Package (Sessions)</option>
@@ -470,125 +453,234 @@
             <option>PNF Stretching</option>
             <option>Nutrition &amp; Meal Planning</option>
             <option>Pay-By-Day Sessions</option>
-            <option>Not sure yet — tell me more</option>
+            <option>Not sure yet</option>
           </select>
         </div>
-        <div class="form-group"><label>Tell Anthony your goals</label><textarea placeholder="What are you working towards? Any injuries or limitations I should know about?"></textarea></div>
-        <p class="disclaimer">&#9432; Credits expire 90 days after purchase. 1 session minimum per week for weekly packages.</p>
-        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:0.9rem;border:none;">Send Message &rarr;</button>
+        <div class="f-group"><label>Your Goals</label><textarea placeholder="What are you working towards? Any injuries or limitations?"></textarea></div>
+        <p class="f-note">&#9432; Credits expire 90 days after purchase. 1 session minimum per week for weekly packages.</p>
+        <button type="submit" class="btn-submit">Send Message &rarr;</button>
       </form>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-logo">BAM<span>FIT</span></div>
     <div class="footer-copy">&copy; 2025 BAM FIT — By Any Means Fitness. Anthony B. Iacono.</div>
-    <div class="footer-links">
-      <a href="about.html">About</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="results.html">Results</a>
-      <a href="mailto:abiacono@gmail.com">Email</a>
-    </div>
+    <div class="footer-links"><a href="about.html">About</a><a href="pricing.html">Pricing</a><a href="results.html">Results</a><a href="mailto:abiacono@gmail.com">Email</a></div>
   </footer>
 
-  <!-- AI CHATBOX -->
+  <!-- CHAT -->
   <button class="chat-toggle" id="chatToggle" onclick="toggleChat()">
     <svg class="chat-icon" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
     <svg class="close-icon" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
   </button>
   <div class="chatbox" id="chatbox">
-    <div class="chat-header">
-      <div class="chat-avatar">B</div>
-      <div><div class="chat-title">BAM FIT Assistant</div><div class="chat-status">Online</div></div>
+    <div class="chat-header"><div class="chat-av">B</div><div><div class="chat-title">BAM FIT Assistant</div><div class="chat-status">Online</div></div></div>
+    <div class="chat-key-row" id="keySection"><input type="password" id="apiKeyInput" placeholder="Paste Anthropic API key to enable AI..."/><button onclick="saveApiKey()">Save</button></div>
+    <div class="chat-msgs" id="chatMsgs"><div class="msg bot">Hey! Welcome to BAM FIT. Ask me anything about training packages, PNF stretching, nutrition, or getting started with Anthony!</div></div>
+    <div class="chat-chips" id="chips">
+      <button class="chip" onclick="sendSug('What does a session package cost?')">Session pricing?</button>
+      <button class="chip" onclick="sendSug('What is PNF stretching?')">What is PNF?</button>
+      <button class="chip" onclick="sendSug('Do you offer nutrition plans?')">Nutrition plans?</button>
     </div>
-    <div class="chat-key-section" id="keySection">
-      <input type="password" id="apiKeyInput" placeholder="Paste your Anthropic API key to enable AI..." />
-      <button onclick="saveApiKey()">Save</button>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-      <div class="msg bot">Hey! Welcome to BAM FIT. Ask me anything about training packages, PNF stretching, nutrition, or how to get started with Anthony. I'm here to help!</div>
-    </div>
-    <div class="chat-suggestions" id="suggestions">
-      <button class="suggestion-chip" onclick="sendSuggestion('What does a session package cost?')">Session pricing?</button>
-      <button class="suggestion-chip" onclick="sendSuggestion('What is PNF stretching?')">What is PNF?</button>
-      <button class="suggestion-chip" onclick="sendSuggestion('Do you offer nutrition plans?')">Nutrition plans?</button>
-    </div>
-    <div class="chat-input-area">
+    <div class="chat-input-row">
       <textarea class="chat-input" id="chatInput" placeholder="Ask anything..." rows="1" onkeydown="handleKey(event)"></textarea>
-      <button class="chat-send" onclick="sendMessage()"><svg fill="none" stroke="#000" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg></button>
+      <button class="chat-send" onclick="sendMsg()"><svg fill="none" stroke="#000" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg></button>
     </div>
   </div>
 
   <script>
-    const cursor = document.getElementById('cursor');
-    const ring   = document.getElementById('cursorRing');
-    let mx=0,my=0,rx=0,ry=0;
-    document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
-    (function anim(){ rx+=(mx-rx)*0.18; ry+=(my-ry)*0.18; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(anim); })();
-    document.querySelectorAll('a,button,input,select,textarea').forEach(el=>{
-      el.addEventListener('mouseenter',()=>{ cursor.style.width='18px'; cursor.style.height='18px'; ring.style.width='50px'; ring.style.height='50px'; });
-      el.addEventListener('mouseleave',()=>{ cursor.style.width='12px'; cursor.style.height='12px'; ring.style.width='36px'; ring.style.height='36px'; });
+  // ── CURSOR ──
+  const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function a(){rx+=(mx-rx)*0.16;ry+=(my-ry)*0.16;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+  document.querySelectorAll('a,button,input,select,textarea').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='16px';cur.style.height='16px';ring.style.width='48px';ring.style.height='48px';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='34px';ring.style.height='34px';});
+  });
+
+  // ── THREE.JS 3D HERO ──
+  (function() {
+    const canvas = document.getElementById('hero-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 28);
+
+    // Particle field
+    const pCount = 2200;
+    const pGeo = new THREE.BufferGeometry();
+    const positions = new Float32Array(pCount * 3);
+    const sizes = new Float32Array(pCount);
+    for (let i = 0; i < pCount; i++) {
+      positions[i*3]   = (Math.random()-0.5)*120;
+      positions[i*3+1] = (Math.random()-0.5)*80;
+      positions[i*3+2] = (Math.random()-0.5)*60;
+      sizes[i] = Math.random() * 2.5 + 0.3;
+    }
+    pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    pGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    const pMat = new THREE.PointsMaterial({
+      color: 0x00e5ff, size: 0.18, transparent: true, opacity: 0.55,
+      sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false
+    });
+    const particles = new THREE.Points(pGeo, pMat);
+    scene.add(particles);
+
+    // Wireframe torus knot — main 3D centerpiece
+    const tkGeo = new THREE.TorusKnotGeometry(7, 1.8, 180, 20, 2, 3);
+    const tkMat = new THREE.MeshBasicMaterial({
+      color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.08
+    });
+    const torusKnot = new THREE.Mesh(tkGeo, tkMat);
+    torusKnot.position.set(14, 0, -5);
+    scene.add(torusKnot);
+
+    // Second torus knot — smaller, glowing
+    const tk2Geo = new THREE.TorusKnotGeometry(3.5, 0.8, 120, 16, 3, 5);
+    const tk2Mat = new THREE.MeshBasicMaterial({
+      color: 0x00ffff, wireframe: true, transparent: true, opacity: 0.12
+    });
+    const tk2 = new THREE.Mesh(tk2Geo, tk2Mat);
+    tk2.position.set(-16, 4, -8);
+    scene.add(tk2);
+
+    // Icosahedron
+    const icoGeo = new THREE.IcosahedronGeometry(4, 1);
+    const icoMat = new THREE.MeshBasicMaterial({
+      color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.07
+    });
+    const ico = new THREE.Mesh(icoGeo, icoMat);
+    ico.position.set(-6, -8, -3);
+    scene.add(ico);
+
+    // Floating rings
+    const rings = [];
+    for (let i = 0; i < 5; i++) {
+      const rGeo = new THREE.TorusGeometry(2 + i * 1.2, 0.04, 8, 60);
+      const rMat = new THREE.MeshBasicMaterial({
+        color: 0x00e5ff, transparent: true, opacity: 0.06 + i * 0.015
+      });
+      const r = new THREE.Mesh(rGeo, rMat);
+      r.position.set((Math.random()-0.5)*30, (Math.random()-0.5)*20, (Math.random()-0.5)*10 - 5);
+      r.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+      scene.add(r);
+      rings.push(r);
+    }
+
+    // Connection lines between particles
+    const lineGeo = new THREE.BufferGeometry();
+    const linePositions = new Float32Array(300 * 3);
+    for (let i = 0; i < 300; i++) {
+      linePositions[i*3]   = (Math.random()-0.5)*80;
+      linePositions[i*3+1] = (Math.random()-0.5)*60;
+      linePositions[i*3+2] = (Math.random()-0.5)*40;
+    }
+    lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+    const lineMat = new THREE.LineBasicMaterial({
+      color: 0x00e5ff, transparent: true, opacity: 0.04, blending: THREE.AdditiveBlending
+    });
+    const lines = new THREE.Line(lineGeo, lineMat);
+    scene.add(lines);
+
+    // Mouse parallax
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', e => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
-    const obs = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }}); },{threshold:0.1});
-    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    let t = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      t += 0.005;
 
-    function handleSubmit(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type="submit"]');
-      btn.textContent = "Message Sent! Anthony will be in touch.";
-      btn.style.background = '#2e7d32';
-      btn.disabled = true;
-      setTimeout(()=>{ btn.textContent="Send Message →"; btn.style.background=''; btn.disabled=false; e.target.reset(); }, 4000);
+      // Gentle camera parallax
+      camera.position.x += (mouseX * 3 - camera.position.x) * 0.03;
+      camera.position.y += (-mouseY * 2 - camera.position.y) * 0.03;
+      camera.lookAt(0, 0, 0);
+
+      // Rotate objects
+      torusKnot.rotation.x += 0.003;
+      torusKnot.rotation.y += 0.004;
+      tk2.rotation.x -= 0.004;
+      tk2.rotation.z += 0.003;
+      ico.rotation.x += 0.006;
+      ico.rotation.y += 0.004;
+      particles.rotation.y += 0.0003;
+      particles.rotation.x += 0.0001;
+
+      rings.forEach((r, i) => {
+        r.rotation.x += 0.002 + i * 0.001;
+        r.rotation.y += 0.003 + i * 0.0005;
+        r.position.y += Math.sin(t + i) * 0.005;
+      });
+
+      // Pulse opacity
+      tkMat.opacity = 0.06 + Math.sin(t * 0.8) * 0.03;
+      tk2Mat.opacity = 0.10 + Math.sin(t * 1.2) * 0.04;
+      pMat.opacity = 0.45 + Math.sin(t * 0.5) * 0.1;
+
+      renderer.render(scene, camera);
     }
+    animate();
 
-    let isOpen=false, apiKey=localStorage.getItem('bamfit_api_key')||'', messages=[];
-    const SYSTEM = `You are the BAM FIT AI assistant for Anthony B. Iacono's personal training business — BAM FIT (By Any Means Fitness) based in Phoenix, AZ.
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  })();
 
-Help visitors with questions about:
-TRAINING PACKAGES:
-- 6 sessions: $265
-- 10 sessions: $420
-- 15 sessions: $600
-- 25 sessions: $952 (best value)
-- Minimum 1 day per week for weekly training packages
-PAY BY DAY: $25 / 30 min, $45 / 55 min
-CUSTOM ROUTINES: 3-day strength $80, 5-day strength $150
-PNF STRETCHING: $20 intro (1st timers), $25 / 25 min, $40 / 50 min
-PNF = Proprioceptive Neuromuscular Facilitation — stretches the golgi tendon; benefits include increased range of motion, improved flexibility, enhanced athletic performance, better posture, alignment, and neuromuscular coordination.
-NUTRITION: $100 add-on — monthly meal plans customized to your body's needs and goals. Credits expire after 90 days of purchase.
+  // ── SCROLL REVEAL ──
+  const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // ── FORM ──
+  function handleSubmit(e){
+    e.preventDefault();
+    const btn=e.target.querySelector('.btn-submit');
+    btn.textContent='Message Sent! Anthony will be in touch.';
+    btn.style.background='#2e7d32';btn.disabled=true;
+    setTimeout(()=>{btn.textContent='Send Message →';btn.style.background='';btn.disabled=false;e.target.reset();},4000);
+  }
+
+  // ── CHAT ──
+  let isOpen=false,apiKey=localStorage.getItem('bamfit_api_key')||'',msgs=[];
+  const SYS=`You are the BAM FIT AI assistant for Anthony B. Iacono's personal training business in Phoenix, AZ.
+PRICING: 6 sessions $265, 10 sessions $420, 15 sessions $600, 25 sessions $952 (best value). Pay by day: $25/30min, $45/55min. Custom routines: 3-day $80, 5-day $150. PNF: $20 intro (1st timers), $25/25min, $40/50min. Nutrition add-on: $100/month. Credits expire 90 days. Min 1 day/week for packages.
+PNF = Proprioceptive Neuromuscular Facilitation — stretches the golgi tendon. Benefits: range of motion, flexibility, athletic performance, posture, alignment, neuromuscular coordination.
 SPECIALTIES: Strength training, functional fitness, weight loss, mobility, assisted PNF stretching, everyday lifestyle.
-MISSION: "THE GOAL IS LONGEVITY. Everyone deserves to feel good, you only get one body so why not make it a good one."
+MISSION: THE GOAL IS LONGEVITY. Everyone deserves to feel good, you only get one body.
 CONTACT: abiacono@gmail.com
-
-Tone: energetic, real, direct — like Anthony himself. Keep responses concise unless more detail is asked for. Always encourage people to reach out to Anthony directly.`;
-
-    if (apiKey) document.getElementById('keySection').style.display='none';
-
-    function toggleChat(){ isOpen=!isOpen; document.getElementById('chatbox').classList.toggle('open',isOpen); document.getElementById('chatToggle').classList.toggle('open',isOpen); }
-    function saveApiKey(){ const v=document.getElementById('apiKeyInput').value.trim(); if(!v) return; apiKey=v; localStorage.setItem('bamfit_api_key',v); document.getElementById('keySection').style.display='none'; addBotMsg("Locked in! Ask me anything about BAM FIT packages, PNF stretching, nutrition, or getting started."); }
-    function addBotMsg(t){ const d=document.createElement('div'); d.className='msg bot'; d.textContent=t; document.getElementById('chatMessages').appendChild(d); scrollChat(); }
-    function addUserMsg(t){ const d=document.createElement('div'); d.className='msg user'; d.textContent=t; document.getElementById('chatMessages').appendChild(d); scrollChat(); }
-    function addTyping(){ const d=document.createElement('div'); d.className='msg typing'; d.id='typing'; d.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>'; document.getElementById('chatMessages').appendChild(d); scrollChat(); return d; }
-    function scrollChat(){ const el=document.getElementById('chatMessages'); el.scrollTop=el.scrollHeight; }
-    function hideSuggestions(){ const s=document.getElementById('suggestions'); if(s) s.style.display='none'; }
-
-    async function sendMessage(){
-      const input=document.getElementById('chatInput');
-      const text=input.value.trim(); if(!text) return;
-      input.value=''; hideSuggestions(); addUserMsg(text); messages.push({role:'user',content:text});
-      if(!apiKey){ addBotMsg("Please enter your Anthropic API key above to enable AI responses."); return; }
-      const typing=addTyping();
-      try {
-        const res=await fetch('https://api.anthropic.com/v1/messages',{ method:'POST', headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}, body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:SYSTEM,messages}) });
-        const data=await res.json(); typing.remove();
-        if(data.content&&data.content[0]){ const reply=data.content[0].text; messages.push({role:'assistant',content:reply}); addBotMsg(reply); }
-        else if(data.error){ addBotMsg("API error: "+(data.error.message||'Check your key and try again.')); }
-      } catch(err){ typing.remove(); addBotMsg("Connection issue — please try again."); }
-    }
-    function sendSuggestion(t){ document.getElementById('chatInput').value=t; sendMessage(); }
-    function handleKey(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMessage(); } }
+Be direct, energetic, and real. Keep responses concise. Always encourage contacting Anthony directly.`;
+  if(apiKey) document.getElementById('keySection').style.display='none';
+  function toggleChat(){isOpen=!isOpen;document.getElementById('chatbox').classList.toggle('open',isOpen);document.getElementById('chatToggle').classList.toggle('open',isOpen);}
+  function saveApiKey(){const v=document.getElementById('apiKeyInput').value.trim();if(!v)return;apiKey=v;localStorage.setItem('bamfit_api_key',v);document.getElementById('keySection').style.display='none';addBot("Locked in! Ask me anything about BAM FIT.");}
+  function addBot(t){const d=document.createElement('div');d.className='msg bot';d.textContent=t;document.getElementById('chatMsgs').appendChild(d);scroll();}
+  function addUser(t){const d=document.createElement('div');d.className='msg user';d.textContent=t;document.getElementById('chatMsgs').appendChild(d);scroll();}
+  function addTyping(){const d=document.createElement('div');d.className='msg typing';d.id='typing';d.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>';document.getElementById('chatMsgs').appendChild(d);scroll();return d;}
+  function scroll(){const el=document.getElementById('chatMsgs');el.scrollTop=el.scrollHeight;}
+  function hideChips(){const c=document.getElementById('chips');if(c)c.style.display='none';}
+  async function sendMsg(){
+    const inp=document.getElementById('chatInput');const txt=inp.value.trim();if(!txt)return;
+    inp.value='';hideChips();addUser(txt);msgs.push({role:'user',content:txt});
+    if(!apiKey){addBot('Please enter your Anthropic API key above to enable AI responses.');return;}
+    const typing=addTyping();
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:SYS,messages:msgs})});
+      const data=await res.json();typing.remove();
+      if(data.content&&data.content[0]){const r=data.content[0].text;msgs.push({role:'assistant',content:r});addBot(r);}
+      else{addBot('API error: '+(data.error?.message||'Check your key.'));}
+    }catch(e){typing.remove();addBot('Connection issue — please try again.');}
+  }
+  function sendSug(t){document.getElementById('chatInput').value=t;sendMsg();}
+  function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
   </script>
 </body>
 </html>
