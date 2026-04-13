@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Anthony | BAM FIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+    body{font-family:'Barlow',sans-serif;background:#080808;color:#e8e8e0;overflow-x:hidden;cursor:none;}
+    .cursor{position:fixed;width:12px;height:12px;background:#00e5ff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid #00e5ff;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+    :root{--blue:#00e5ff;--dark:#080808;--dark2:#0f0f0f;--dark3:#171717;--dark4:#202020;--border:rgba(0,229,255,0.18);--text:#e8e8e0;--muted:#7a7a72;--ff-display:'Bebas Neue',sans-serif;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--blue);}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(8,8,8,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--ff-display);font-size:2.2rem;letter-spacing:0.06em;color:var(--text);text-decoration:none;}.nav-logo span{color:var(--blue);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;transition:color 0.2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--blue);}
+    .nav-cta{background:var(--blue);color:#000;padding:0.55rem 1.4rem;border-radius:2px;font-weight:700;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;}
+    #hero-banner{min-height:62vh;display:flex;align-items:flex-end;padding:10rem 4rem 5rem;position:relative;overflow:hidden;background:var(--dark2);}
+    .banner-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);background-size:55px 55px;}
+    .banner-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(0,229,255,0.09) 0%,transparent 65%);top:50%;right:5%;transform:translateY(-50%);pointer-events:none;}
+    .banner-content{position:relative;z-index:2;}
+    .breadcrumb{display:flex;align-items:center;gap:0.6rem;font-size:0.72rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.6s ease 0.1s forwards;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;}.breadcrumb a:hover{color:var(--blue);}.breadcrumb span{color:var(--blue);}
+    .banner-title{font-family:var(--ff-display);font-size:clamp(4rem,9vw,8.5rem);line-height:0.9;color:var(--text);opacity:0;animation:fadeUp 0.6s ease 0.25s forwards;}
+    .banner-title span{color:var(--blue);}
+    .banner-sub{font-size:1.05rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:540px;margin-top:1.2rem;opacity:0;animation:fadeUp 0.6s ease 0.4s forwards;}
+    section{padding:7rem 4rem;}
+    .section-tag{display:inline-flex;align-items:center;gap:0.6rem;color:var(--blue);font-size:0.72rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:1rem;}
+    .section-tag::before{content:'';display:block;width:30px;height:1px;background:var(--blue);}
+    .section-title{font-family:var(--ff-display);font-size:clamp(2.8rem,5vw,4.5rem);line-height:0.95;color:var(--text);margin-bottom:1rem;}
+    .section-title span{color:var(--blue);}
+    .section-sub{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:540px;}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    #story{background:var(--dark);}
+    .story-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:start;margin-top:4rem;}
+    .story-photo{aspect-ratio:3/4;background:var(--dark3);border-radius:4px;border:1px solid rgba(255,255,255,0.05);position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.8rem;overflow:hidden;}
+    .story-photo::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,0.08),transparent 60%);}
+    .story-photo-icon{font-size:5rem;opacity:0.07;}
+    .story-photo p{font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+    .photo-badge{position:absolute;bottom:1.5rem;left:1.5rem;background:var(--blue);color:#000;padding:0.5rem 1rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;}
+    .story-text{display:flex;flex-direction:column;gap:1.5rem;}
+    .story-text p{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.85;}
+    .story-text p strong{color:var(--text);font-weight:600;}
+    .story-text p em{color:var(--blue);font-style:normal;}
+    .mission-block{background:var(--dark3);border:1px solid var(--border);border-radius:4px;padding:1.8rem;margin-top:0.5rem;}
+    .mission-label{font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--blue);margin-bottom:0.7rem;}
+    .mission-text{font-family:var(--ff-display);font-size:1.8rem;color:var(--text);line-height:1.1;}
+    #what-i-do{background:var(--dark2);}
+    .what-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+    .what-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2rem;transition:transform 0.25s,border-color 0.25s;}
+    .what-card:hover{transform:translateY(-5px);border-color:rgba(0,229,255,0.2);}
+    .what-icon{font-size:2rem;margin-bottom:0.8rem;}
+    .what-name{font-family:var(--ff-display);font-size:1.5rem;color:var(--text);margin-bottom:0.6rem;}
+    .what-desc{font-size:0.85rem;font-weight:300;color:var(--muted);line-height:1.7;}
+    #why-exercise{background:var(--dark);}
+    .benefits-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:4rem;}
+    .benefits-text p{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.85;margin-bottom:1.5rem;}
+    .benefits-text p strong{color:var(--text);font-weight:600;}
+    .benefits-text p em{color:var(--blue);font-style:normal;}
+    .benefits-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .benefit-pill{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:1.2rem 1rem;display:flex;align-items:center;gap:0.8rem;transition:border-color 0.2s;}
+    .benefit-pill:hover{border-color:rgba(0,229,255,0.2);}
+    .bp-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+    .bp-text{font-size:0.82rem;font-weight:500;color:var(--text);line-height:1.3;}
+    #nutrition-phil{background:var(--dark2);}
+    .nut-phil-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:4rem;}
+    .nut-stat{background:var(--dark3);border:1px solid var(--border);border-radius:4px;padding:3rem;text-align:center;}
+    .ns-num{font-family:var(--ff-display);font-size:6rem;color:var(--blue);line-height:1;}
+    .ns-label{font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:0.3rem;margin-bottom:1.5rem;}
+    .ns-desc{font-size:0.88rem;font-weight:300;color:var(--muted);line-height:1.75;}
+    .nut-phil-text{display:flex;flex-direction:column;gap:1.5rem;}
+    .nut-phil-text h3{font-family:var(--ff-display);font-size:2.5rem;color:var(--text);line-height:0.95;}
+    .nut-phil-text h3 span{color:var(--blue);}
+    .nut-phil-text p{font-size:0.95rem;font-weight:300;color:var(--muted);line-height:1.8;}
+    .nut-phil-text p strong{color:var(--text);font-weight:600;}
+    .nut-phil-text p em{color:var(--blue);font-style:normal;}
+    #about-cta{background:var(--blue);padding:6rem 4rem;display:flex;align-items:center;justify-content:space-between;gap:3rem;flex-wrap:wrap;}
+    #about-cta h2{font-family:var(--ff-display);font-size:clamp(2.5rem,5vw,5rem);color:#000;line-height:0.95;}
+    #about-cta p{font-size:1rem;font-weight:300;color:rgba(0,0,0,0.6);margin-top:0.8rem;max-width:380px;}
+    .cta-btns{display:flex;gap:1rem;flex-shrink:0;}
+    .btn-dark{background:#000;color:var(--blue);padding:1rem 2.2rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:transform 0.15s;}
+    .btn-dark:hover{transform:translateY(-2px);}
+    .btn-outline-dark{background:transparent;color:#000;padding:1rem 2.2rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:2px solid rgba(0,0,0,0.3);border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:border-color 0.15s,transform 0.15s;}
+    .btn-outline-dark:hover{border-color:#000;transform:translateY(-2px);}
+    footer{background:var(--dark);border-top:1px solid var(--border);padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;}
+    .footer-logo{font-family:var(--ff-display);font-size:2rem;color:var(--text);}.footer-logo span{color:var(--blue);}
+    .footer-copy{font-size:0.78rem;color:var(--muted);}
+    .footer-links{display:flex;gap:2rem;}
+    .footer-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}.footer-links a:hover{color:var(--blue);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+    @media(max-width:900px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}section{padding:5rem 1.5rem;}#hero-banner{padding:8rem 1.5rem 4rem;}.story-grid,.benefits-layout,.nut-phil-grid{grid-template-columns:1fr;gap:2.5rem;}.what-grid{grid-template-columns:1fr;}#about-cta{flex-direction:column;padding:4rem 1.5rem;}footer{flex-direction:column;gap:1.5rem;text-align:center;}}
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div>
+  <nav>
+    <a href="index.html" class="nav-logo">BAM<span>FIT</span></a>
+    <ul class="nav-links">
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="results.html">Results</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">Get Started</a>
+  </nav>
+  <section id="hero-banner">
+    <div class="banner-grid"></div><div class="banner-glow"></div>
+    <div class="banner-content">
+      <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; <span>About</span></div>
+      <h1 class="banner-title">MEET<br><span>ANTHONY</span></h1>
+      <p class="banner-sub">By Any Means Fitness. One mission — help you build the strongest, healthiest, most capable version of yourself. You only get one body. Let's make it count.</p>
+    </div>
+  </section>
+  <section id="story">
+    <div class="section-tag">The Story</div>
+    <h2 class="section-title">THE MAN BEHIND<br><span>BAM FIT</span></h2>
+    <div class="story-grid">
+      <div class="story-photo reveal">
+        <div class="story-photo-icon">&#128248;</div><p>Add Photo Here</p>
+        <div class="photo-badge">Anthony B. Iacono &bull; Founder</div>
+      </div>
+      <div class="story-text reveal">
+        <p><strong>BAM FIT — By Any Means Fitness</strong> was built on a simple but powerful belief: <em>everyone deserves to feel good in their body</em>. Not just athletes. Not just people with hours to spare. Everyone.</p>
+        <p>Anthony B. Iacono specializes in <strong>six core disciplines</strong> — strength training, functional fitness, weight loss, mobility, assisted PNF stretching, and everyday lifestyle coaching — because he understands fitness is not one-size-fits-all. Your body, your goals, and your life are unique. Your training should be too.</p>
+        <p>From the first-time client who has never stepped foot in a gym to the seasoned athlete who needs to move better and recover faster — <em>Anthony meets you exactly where you are</em> and builds from there. No judgment, no shortcuts, no cookie-cutter plans.</p>
+        <p><strong>The goal is always longevity.</strong> Not a six-week crash result that fades by month three. Anthony coaches toward a lifetime of feeling strong, moving well, and being fully capable of whatever life demands of you.</p>
+        <div class="mission-block">
+          <div class="mission-label">The BAM FIT Philosophy</div>
+          <div class="mission-text">THE GOAL IS LONGEVITY</div>
+          <p style="font-size:0.85rem;font-weight:300;color:var(--muted);line-height:1.7;margin-top:0.8rem;">Everyone deserves to feel good. You only get one body — so why not make it a great one? Set a goal and work towards it. You are more likely to be determined to achieve something when there's a goal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="what-i-do">
+    <div class="section-tag">Specialties</div>
+    <h2 class="section-title">6 THINGS<br><span>ANTHONY DOES BEST</span></h2>
+    <p class="section-sub">Every service at BAM FIT is built around lasting results that actually improve your daily quality of life.</p>
+    <div class="what-grid">
+      <div class="what-card reveal"><div class="what-icon">&#127947;</div><div class="what-name">STRENGTH TRAINING</div><div class="what-desc">Progressive, purposeful resistance training that builds real muscle, increases bone density, and makes your body capable of whatever you want to do with it.</div></div>
+      <div class="what-card reveal"><div class="what-icon">&#9889;</div><div class="what-name">FUNCTIONAL FITNESS</div><div class="what-desc">Movement that transfers to real life — carry things without pain, move without restriction, stay active without injury. Built for your lifestyle, not just the gym.</div></div>
+      <div class="what-card reveal"><div class="what-icon">&#128293;</div><div class="what-name">WEIGHT LOSS</div><div class="what-desc">Sustainable, intelligent fat loss through smart programming and nutrition strategy. No crash diets, no misery — just consistent, compounding progress your body actually keeps.</div></div>
+      <div class="what-card reveal"><div class="what-icon">&#129368;</div><div class="what-name">MOBILITY TRAINING</div><div class="what-desc">Restore your range of motion, eliminate chronic tightness, and move the way your body was designed to. Mobility is the foundation every other fitness quality is built on.</div></div>
+      <div class="what-card reveal"><div class="what-icon">&#129299;</div><div class="what-name">ASSISTED PNF STRETCHING</div><div class="what-desc">Proprioceptive Neuromuscular Facilitation — the gold standard in flexibility improvement. Anthony assists every stretch manually to unlock gains you simply cannot achieve on your own.</div></div>
+      <div class="what-card reveal"><div class="what-icon">&#127758;</div><div class="what-name">EVERYDAY LIFESTYLE</div><div class="what-desc">Fitness does not stop when you leave the session. Daily habits, sleep, stress, nutrition, and movement all factor into your results — and Anthony coaches all of it.</div></div>
+    </div>
+  </section>
+  <section id="why-exercise">
+    <div class="section-tag">Why It Matters</div>
+    <h2 class="section-title">YOUR BODY<br><span>DEPENDS ON THIS</span></h2>
+    <div class="benefits-layout">
+      <div class="benefits-text reveal">
+        <p><strong>Besides looking physically good and feeling better mentally</strong>, regular exercise does something most people do not fully appreciate — it protects you from the diseases and conditions that cut lives short and reduce quality of life for millions.</p>
+        <p>Exercise can help protect you from <em>heart disease, stroke, obesity, diabetes, and high blood pressure</em>. It can make you look younger, increase and maintain bone density, improve your quality of life, and may keep you from getting sick as often.</p>
+        <p>This is why Anthony centers everything on <strong>longevity over aesthetics</strong>. You will look better and feel better — but the deeper mission is to still be strong, mobile, and fully capable at 60, 70, and beyond.</p>
+      </div>
+      <div class="benefits-grid reveal">
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Heart Disease Prevention</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Stroke Protection</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Obesity Management</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Diabetes Prevention</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Blood Pressure Control</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Look and Feel Younger</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Bone Density</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Mental Health Boost</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Immune System Support</div></div>
+        <div class="benefit-pill"><div class="bp-dot"></div><div class="bp-text">Lifelong Quality of Life</div></div>
+      </div>
+    </div>
+  </section>
+  <section id="nutrition-phil">
+    <div class="section-tag">Nutrition Philosophy</div>
+    <h2 class="section-title">WHAT YOU EAT<br><span>IS HALF THE BATTLE</span></h2>
+    <div class="nut-phil-grid">
+      <div class="nut-stat reveal">
+        <div class="ns-num">68%</div>
+        <div class="ns-label">of Americans take supplements</div>
+        <div class="ns-desc">Statistically recorded within the last year. That means roughly 1 in 3 people are not even covering their baseline nutritional gaps — and it shows in how they feel every day.</div>
+      </div>
+      <div class="nut-phil-text reveal">
+        <h3>THE NUMBER ONE SUPPLEMENT<br><span>YOU ARE SKIPPING</span></h3>
+        <p>The most common gap Anthony sees is people who do not take a <strong>multivitamin</strong>. It is the single most important supplement you can take — covering nutritional deficiencies that affect energy, immunity, hormones, and recovery.</p>
+        <p>"I cannot tell you how many times I have met someone who does not take a multivitamin. They provide all-around optimal health which sometimes plays a more crucial role in some people's lives compared to others — because we already lack the nutrients needed to feel good daily."</p>
+        <p>Anthony offers a <em>$100 nutrition and supplementation add-on</em> to any training package — monthly meal plans customized and configured to your body's needs and goals, with adjustments based on how your body responds. <strong>Credits expire after 90 days of purchase.</strong></p>
+      </div>
+    </div>
+  </section>
+  <section id="about-cta">
+    <div>
+      <h2>READY TO START<br>YOUR JOURNEY?</h2>
+      <p>Reach out to Anthony directly. No pitch, no pressure — just a real conversation about where you are and where you want to be.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="index.html#contact" class="btn-dark">Get In Touch</a>
+      <a href="pricing.html" class="btn-outline-dark">See Pricing</a>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">BAM<span>FIT</span></div>
+    <div class="footer-copy">&copy; 2025 BAM FIT &mdash; By Any Means Fitness. Anthony B. Iacono.</div>
+    <div class="footer-links"><a href="pricing.html">Pricing</a><a href="results.html">Results</a><a href="mailto:abiacono@gmail.com">Email</a></div>
+  </footer>
+  <script>
+    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+    (function a(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;cursor.style.left=mx+'px';cursor.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+    document.querySelectorAll('a,button').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.width='18px';cursor.style.height='18px';ring.style.width='50px';ring.style.height='50px';});
+      el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';});
+    });
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  </script>
+</body>
+</html>

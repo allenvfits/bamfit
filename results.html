@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Results | BAM FIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+    body{font-family:'Barlow',sans-serif;background:#080808;color:#e8e8e0;overflow-x:hidden;cursor:none;}
+    .cursor{position:fixed;width:12px;height:12px;background:#00e5ff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid #00e5ff;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+    :root{--blue:#00e5ff;--dark:#080808;--dark2:#0f0f0f;--dark3:#171717;--dark4:#202020;--border:rgba(0,229,255,0.18);--text:#e8e8e0;--muted:#7a7a72;--ff-display:'Bebas Neue',sans-serif;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--blue);}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(8,8,8,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--ff-display);font-size:2.2rem;letter-spacing:0.06em;color:var(--text);text-decoration:none;}.nav-logo span{color:var(--blue);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;transition:color 0.2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--blue);}
+    .nav-cta{background:var(--blue);color:#000;padding:0.55rem 1.4rem;border-radius:2px;font-weight:700;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;transition:background 0.2s;}
+    .nav-cta:hover{background:#33ecff;}
+    /* HERO */
+    #hero-banner{min-height:65vh;display:flex;align-items:flex-end;padding:10rem 4rem 5rem;position:relative;overflow:hidden;background:var(--dark2);}
+    .banner-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);background-size:55px 55px;}
+    .banner-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(0,229,255,0.09) 0%,transparent 65%);top:50%;right:5%;transform:translateY(-50%);pointer-events:none;}
+    .banner-content{position:relative;z-index:2;max-width:800px;}
+    .breadcrumb{display:flex;align-items:center;gap:0.6rem;font-size:0.72rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.6s ease 0.1s forwards;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s;}.breadcrumb a:hover{color:var(--blue);}.breadcrumb span{color:var(--blue);}
+    .banner-title{font-family:var(--ff-display);font-size:clamp(4rem,9vw,8.5rem);line-height:0.9;color:var(--text);opacity:0;animation:fadeUp 0.6s ease 0.25s forwards;}
+    .banner-title span{color:var(--blue);}
+    .banner-sub{font-size:1.05rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:520px;margin-top:1.2rem;opacity:0;animation:fadeUp 0.6s ease 0.4s forwards;}
+    .banner-stats{display:flex;gap:3rem;margin-top:3rem;opacity:0;animation:fadeUp 0.6s ease 0.55s forwards;flex-wrap:wrap;}
+    .bstat-num{font-family:var(--ff-display);font-size:3.2rem;color:var(--blue);line-height:1;}
+    .bstat-label{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem;}
+    /* SHARED */
+    section{padding:7rem 4rem;}
+    .section-tag{display:inline-flex;align-items:center;gap:0.6rem;color:var(--blue);font-size:0.72rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:1rem;}
+    .section-tag::before{content:'';display:block;width:30px;height:1px;background:var(--blue);}
+    .section-title{font-family:var(--ff-display);font-size:clamp(2.8rem,5vw,4.5rem);line-height:0.95;color:var(--text);margin-bottom:1rem;}
+    .section-title span{color:var(--blue);}
+    .section-sub{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:540px;}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    /* TICKER */
+    #ticker{background:var(--blue);padding:1.2rem 0;overflow:hidden;}
+    .ticker-track{display:flex;animation:tickerScroll 28s linear infinite;white-space:nowrap;}
+    .ticker-item{display:inline-flex;align-items:center;gap:1rem;padding:0 2.5rem;font-family:var(--ff-display);font-size:1.15rem;letter-spacing:0.04em;color:#000;}
+    .ticker-dot{width:6px;height:6px;background:rgba(0,0,0,0.3);border-radius:50%;flex-shrink:0;}
+    @keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    /* FILTER */
+    #filter-bar{background:var(--dark2);padding:1.8rem 4rem;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
+    .filter-label{font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-right:0.5rem;}
+    .filter-btn{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted);font-family:'Barlow',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 0.9rem;border-radius:20px;cursor:none;transition:border-color 0.2s,color 0.2s,background 0.2s;}
+    .filter-btn:hover{border-color:rgba(0,229,255,0.35);color:var(--text);}
+    .filter-btn.active{background:var(--blue);border-color:var(--blue);color:#000;}
+    /* FEATURED STORIES */
+    #featured{background:var(--dark);}
+    .featured-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:4rem;}
+    .story-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;}
+    .story-card:hover{transform:translateY(-6px);border-color:rgba(0,229,255,0.25);box-shadow:0 20px 50px rgba(0,0,0,0.45);}
+    .story-img{position:relative;background:var(--dark4);aspect-ratio:16/9;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+    .story-img::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(0,229,255,0.08),transparent 60%);z-index:1;}
+    .story-img-icon{font-size:4rem;opacity:0.07;}
+    .story-img-label{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:1rem;background:linear-gradient(transparent,rgba(0,0,0,0.7));font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+    .ba-tag{position:absolute;top:1rem;left:1rem;z-index:3;background:var(--blue);color:#000;font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.22rem 0.65rem;border-radius:2px;}
+    .story-body{padding:2rem;flex:1;display:flex;flex-direction:column;}
+    .story-meta{display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;flex-wrap:wrap;}
+    .story-plan{background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.22);color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:2px;}
+    .story-dur{font-size:0.7rem;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+    .result-bar{display:flex;gap:1.5rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+    .result-pill .rv{font-family:var(--ff-display);font-size:2rem;color:var(--blue);line-height:1;}
+    .result-pill .rk{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:0.1rem;}
+    .story-quote{font-size:0.92rem;font-weight:300;color:var(--text);line-height:1.75;flex:1;margin-bottom:1.5rem;font-style:italic;}
+    .story-quote::before{content:'\201C';color:var(--blue);font-size:1.4rem;font-style:normal;line-height:0;vertical-align:-0.3em;margin-right:0.2rem;}
+    .story-author{display:flex;align-items:center;gap:0.8rem;margin-top:auto;}
+    .s-avatar{width:42px;height:42px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--ff-display);font-size:1.1rem;color:#000;flex-shrink:0;}
+    .s-name{font-size:0.9rem;font-weight:600;color:var(--text);}
+    .s-detail{font-size:0.72rem;font-weight:300;color:var(--muted);margin-top:0.1rem;}
+    .s-stars{color:var(--blue);font-size:0.7rem;letter-spacing:2px;margin-top:0.15rem;}
+    /* AGGREGATE NUMBERS */
+    #numbers{background:var(--dark2);}
+    .nums-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;border:1px solid rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;margin-top:4rem;}
+    .num-cell{background:var(--dark3);padding:3rem 2rem;text-align:center;transition:background 0.2s;position:relative;}
+    .num-cell:hover{background:var(--dark4);}
+    .num-cell::after{content:'';position:absolute;right:0;top:20%;bottom:20%;width:1px;background:rgba(255,255,255,0.04);}
+    .num-cell:last-child::after{display:none;}
+    .num-big{font-family:var(--ff-display);font-size:5rem;color:var(--blue);line-height:1;}
+    .num-label{font-size:0.75rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:0.5rem;}
+    .num-sub{font-size:0.78rem;font-weight:300;color:var(--muted);margin-top:0.4rem;line-height:1.5;}
+    /* MASONRY QUOTES */
+    #quotes{background:var(--dark);}
+    .masonry{columns:3;gap:1.5rem;margin-top:4rem;}
+    .q-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:1.8rem;break-inside:avoid;margin-bottom:1.5rem;transition:transform 0.25s,border-color 0.25s;}
+    .q-card:hover{transform:translateY(-3px);border-color:rgba(0,229,255,0.18);}
+    .q-stars{color:var(--blue);font-size:0.7rem;letter-spacing:2px;margin-bottom:0.8rem;}
+    .q-text{font-size:0.9rem;font-weight:300;color:var(--text);line-height:1.75;margin-bottom:1.2rem;}
+    .q-author{display:flex;align-items:center;gap:0.7rem;}
+    .q-av{width:36px;height:36px;border-radius:50%;background:var(--dark4);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--ff-display);font-size:0.88rem;color:var(--blue);flex-shrink:0;}
+    .q-name{font-size:0.84rem;font-weight:600;color:var(--text);}
+    .q-plan{font-size:0.68rem;color:var(--blue);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:0.1rem;}
+    .q-tag{display:inline-block;margin-top:0.8rem;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.2);color:var(--blue);font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:2px;}
+    /* BEFORE AFTER */
+    #before-after{background:var(--dark2);}
+    .ba-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+    .ba-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:6px;overflow:hidden;transition:transform 0.25s,border-color 0.25s;}
+    .ba-card:hover{transform:translateY(-4px);border-color:rgba(0,229,255,0.2);}
+    .ba-imgs{display:grid;grid-template-columns:1fr 1fr;gap:1px;}
+    .ba-img{aspect-ratio:3/4;background:var(--dark4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;position:relative;}
+    .ba-lbl{position:absolute;top:0.5rem;left:0.5rem;background:rgba(0,0,0,0.65);color:var(--muted);font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.2rem 0.5rem;border-radius:2px;}
+    .ba-img.after .ba-lbl{background:rgba(0,229,255,0.2);color:var(--blue);}
+    .ba-ph-icon{font-size:2.5rem;opacity:0.07;}
+    .ba-ph-text{font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);opacity:0.5;}
+    .ba-body{padding:1.5rem;}
+    .ba-person{font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem;}
+    .ba-stats{display:flex;gap:1.5rem;margin-bottom:0.8rem;flex-wrap:wrap;}
+    .ba-sv{font-family:var(--ff-display);font-size:1.6rem;color:var(--blue);line-height:1;}
+    .ba-sk{font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+    .ba-quote{font-size:0.8rem;font-weight:300;color:var(--muted);line-height:1.65;font-style:italic;}
+    .ba-plan{display:inline-block;margin-top:0.8rem;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.2);color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:2px;}
+    /* WHO WE HELP */
+    #who{background:var(--dark);}
+    .who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:4rem;}
+    .who-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:2rem 1.5rem;text-align:center;transition:transform 0.25s,border-color 0.25s;}
+    .who-card:hover{transform:translateY(-4px);border-color:rgba(0,229,255,0.2);}
+    .who-icon{font-size:2.5rem;margin-bottom:1rem;}
+    .who-type{font-family:var(--ff-display);font-size:1.5rem;color:var(--text);margin-bottom:0.5rem;}
+    .who-desc{font-size:0.82rem;font-weight:300;color:var(--muted);line-height:1.65;}
+    /* VIDEO */
+    #videos{background:var(--dark2);}
+    .video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+    .vid-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:6px;overflow:hidden;transition:transform 0.25s,border-color 0.25s;cursor:none;}
+    .vid-card:hover{transform:translateY(-4px);border-color:rgba(0,229,255,0.22);}
+    .vid-thumb{position:relative;aspect-ratio:16/9;background:var(--dark4);display:flex;align-items:center;justify-content:center;}
+    .vid-thumb::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(0,229,255,0.07),transparent 60%);}
+    .play-btn{width:60px;height:60px;border-radius:50%;background:rgba(0,229,255,0.12);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:background 0.2s,transform 0.2s;}
+    .vid-card:hover .play-btn{background:var(--blue);transform:scale(1.08);}
+    .play-arrow{width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:18px solid var(--blue);margin-left:4px;}
+    .vid-card:hover .play-arrow{border-left-color:#000;}
+    .vid-info{padding:1.2rem 1.5rem;}
+    .vid-name{font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.25rem;}
+    .vid-tag{font-size:0.72rem;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-top:0.3rem;}
+    .vid-note{font-size:0.7rem;color:var(--muted);font-style:italic;margin-top:0.15rem;}
+    /* CTA */
+    #results-cta{background:var(--blue);padding:6rem 4rem;display:flex;align-items:center;justify-content:space-between;gap:3rem;flex-wrap:wrap;}
+    #results-cta h2{font-family:var(--ff-display);font-size:clamp(2.5rem,5vw,5rem);color:#000;line-height:0.95;}
+    #results-cta p{font-size:1rem;font-weight:300;color:rgba(0,0,0,0.6);margin-top:0.8rem;max-width:380px;}
+    .cta-btns{display:flex;gap:1rem;flex-shrink:0;}
+    .btn-dark{background:#000;color:var(--blue);padding:1rem 2.2rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:transform 0.15s;}
+    .btn-dark:hover{transform:translateY(-2px);}
+    .btn-out-dark{background:transparent;color:#000;padding:1rem 2.2rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:2px solid rgba(0,0,0,0.3);border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:border-color 0.15s,transform 0.15s;}
+    .btn-out-dark:hover{border-color:#000;transform:translateY(-2px);}
+    footer{background:var(--dark);border-top:1px solid var(--border);padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;}
+    .footer-logo{font-family:var(--ff-display);font-size:2rem;color:var(--text);}.footer-logo span{color:var(--blue);}
+    .footer-copy{font-size:0.78rem;color:var(--muted);}
+    .footer-links{display:flex;gap:2rem;}
+    .footer-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}.footer-links a:hover{color:var(--blue);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+    @media(max-width:1000px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}section,#filter-bar,#results-cta{padding-left:1.5rem;padding-right:1.5rem;}#hero-banner{padding:8rem 1.5rem 4rem;}.featured-grid{grid-template-columns:1fr;}.masonry{columns:1;}.nums-grid{grid-template-columns:repeat(2,1fr);}.ba-grid,.video-grid{grid-template-columns:1fr;}.who-grid{grid-template-columns:repeat(2,1fr);}#results-cta{flex-direction:column;}footer{flex-direction:column;gap:1.5rem;text-align:center;}}
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div>
+  <nav>
+    <a href="index.html" class="nav-logo">BAM<span>FIT</span></a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="results.html" class="active">Results</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">Get Started</a>
+  </nav>
+
+  <section id="hero-banner">
+    <div class="banner-grid"></div><div class="banner-glow"></div>
+    <div class="banner-content">
+      <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; <span>Results</span></div>
+      <h1 class="banner-title">REAL PEOPLE.<br><span>REAL PROOF.</span></h1>
+      <p class="banner-sub">No filters, no photoshop, no cherry-picked exceptions. Every result on this page was earned through real work, real consistency, and Anthony's full commitment.</p>
+      <div class="banner-stats">
+        <div><div class="bstat-num">1:1</div><div class="bstat-label">Personal Training</div></div>
+        <div><div class="bstat-num">6</div><div class="bstat-label">Specialties</div></div>
+        <div><div class="bstat-num">100%</div><div class="bstat-label">Customized</div></div>
+        <div><div class="bstat-num">4.9<span style="font-size:1.8rem">&#9733;</span></div><div class="bstat-label">Client Rating</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div id="ticker">
+    <div class="ticker-track" id="tickerTrack">
+      <span class="ticker-item">BAM FIT <span class="ticker-dot"></span></span>
+      <span class="ticker-item">By Any Means Fitness <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Strength Training <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Functional Fitness <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Weight Loss <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Mobility <span class="ticker-dot"></span></span>
+      <span class="ticker-item">PNF Stretching <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Everyday Lifestyle <span class="ticker-dot"></span></span>
+      <span class="ticker-item">THE GOAL IS LONGEVITY <span class="ticker-dot"></span></span>
+      <span class="ticker-item">BAM FIT <span class="ticker-dot"></span></span>
+      <span class="ticker-item">By Any Means Fitness <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Strength Training <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Functional Fitness <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Weight Loss <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Mobility <span class="ticker-dot"></span></span>
+      <span class="ticker-item">PNF Stretching <span class="ticker-dot"></span></span>
+      <span class="ticker-item">Everyday Lifestyle <span class="ticker-dot"></span></span>
+      <span class="ticker-item">THE GOAL IS LONGEVITY <span class="ticker-dot"></span></span>
+    </div>
+  </div>
+
+  <!-- FILTER -->
+  <div id="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="filterCards('all',this)">All Results</button>
+    <button class="filter-btn" onclick="filterCards('fat-loss',this)">Fat Loss</button>
+    <button class="filter-btn" onclick="filterCards('muscle',this)">Muscle Gain</button>
+    <button class="filter-btn" onclick="filterCards('strength',this)">Strength</button>
+    <button class="filter-btn" onclick="filterCards('pnf',this)">PNF Stretching</button>
+    <button class="filter-btn" onclick="filterCards('lifestyle',this)">Lifestyle</button>
+  </div>
+
+  <!-- FEATURED STORIES -->
+  <section id="featured">
+    <div class="section-tag">Transformations</div>
+    <h2 class="section-title">CLIENT<br><span>SPOTLIGHTS</span></h2>
+    <p class="section-sub">In-depth stories from BAM FIT clients who committed to the process and got results that changed their lives.</p>
+    <div class="featured-grid">
+      <div class="story-card reveal" data-cat="fat-loss">
+        <div class="story-img">
+          <div class="ba-tag">Before &amp; After</div>
+          <div class="story-img-icon">&#128248;</div>
+          <div class="story-img-label">Replace with client photo &bull; Marcus R.</div>
+        </div>
+        <div class="story-body">
+          <div class="story-meta"><span class="story-plan">25-Session Package</span><span class="story-dur">4 Months</span></div>
+          <div class="result-bar">
+            <div class="result-pill"><div class="rv">&minus;34</div><div class="rk">Lbs Lost</div></div>
+            <div class="result-pill"><div class="rv">+18</div><div class="rk">Lbs Muscle</div></div>
+            <div class="result-pill"><div class="rv">&minus;9%</div><div class="rk">Body Fat</div></div>
+          </div>
+          <p class="story-quote">Anthony doesn't just run the clock — he actually watches every rep, corrects everything in real time, and pushes you exactly as hard as you need. Four months with BAM FIT did more for me than two years at a regular gym. I finally understand what training is supposed to feel like.</p>
+          <div class="story-author">
+            <div class="s-avatar">MR</div>
+            <div><div class="s-name">Marcus R., 37</div><div class="s-detail">Phoenix, AZ</div><div class="s-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="story-card reveal" data-cat="strength">
+        <div class="story-img">
+          <div class="ba-tag">Strength Journey</div>
+          <div class="story-img-icon">&#128248;</div>
+          <div class="story-img-label">Replace with client photo &bull; Diana L.</div>
+        </div>
+        <div class="story-body">
+          <div class="story-meta"><span class="story-plan">15-Session Package</span><span class="story-dur">6 Weeks</span></div>
+          <div class="result-bar">
+            <div class="result-pill"><div class="rv">+55</div><div class="rk">Squat lbs</div></div>
+            <div class="result-pill"><div class="rv">&minus;12</div><div class="rk">Lbs Lost</div></div>
+            <div class="result-pill"><div class="rv">0</div><div class="rk">Back Pain</div></div>
+          </div>
+          <p class="story-quote">I came in with chronic lower back pain I'd been dealing with for three years. Anthony assessed my movement first, fixed the root cause, and six weeks later I hit a new squat PR and my back has never felt better. I didn't expect that. This is next-level coaching.</p>
+          <div class="story-author">
+            <div class="s-avatar">DL</div>
+            <div><div class="s-name">Diana L., 42</div><div class="s-detail">Scottsdale, AZ</div><div class="s-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="story-card reveal" data-cat="pnf lifestyle">
+        <div class="story-img">
+          <div class="ba-tag">PNF Stretching</div>
+          <div class="story-img-icon">&#128248;</div>
+          <div class="story-img-label">Replace with client photo &bull; Rick C.</div>
+        </div>
+        <div class="story-body">
+          <div class="story-meta"><span class="story-plan">50-Min PNF Sessions</span><span class="story-dur">Ongoing</span></div>
+          <div class="result-bar">
+            <div class="result-pill"><div class="rv">+40%</div><div class="rk">Flexibility</div></div>
+            <div class="result-pill"><div class="rv">Zero</div><div class="rk">Hip Pain</div></div>
+            <div class="result-pill"><div class="rv">Golf</div><div class="rk">Improved</div></div>
+          </div>
+          <p class="story-quote">I couldn't come close to touching my knees when I started. After four PNF sessions with Anthony I'm reaching the floor. The assisted stretching is unlike anything I've ever experienced — you feel it working immediately. My golf game improved overnight. No joke.</p>
+          <div class="story-author">
+            <div class="s-avatar">RC</div>
+            <div><div class="s-name">Rick C., 58</div><div class="s-detail">Mesa, AZ</div><div class="s-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="story-card reveal" data-cat="fat-loss lifestyle">
+        <div class="story-img">
+          <div class="ba-tag">Lifestyle Change</div>
+          <div class="story-img-icon">&#128248;</div>
+          <div class="story-img-label">Replace with client photo &bull; Diane W.</div>
+        </div>
+        <div class="story-body">
+          <div class="story-meta"><span class="story-plan">25-Session + Nutrition</span><span class="story-dur">5 Months</span></div>
+          <div class="result-bar">
+            <div class="result-pill"><div class="rv">&minus;31</div><div class="rk">Lbs Lost</div></div>
+            <div class="result-pill"><div class="rv">47</div><div class="rk">Years Old</div></div>
+            <div class="result-pill"><div class="rv">100%</div><div class="rk">Kept Off</div></div>
+          </div>
+          <p class="story-quote">Down 31 lbs and moving better at 47 than I did at 30. The nutrition add-on was the piece I was missing. Anthony's meal plan wasn't a diet — it was learning how to actually eat for my body. I've kept every pound off and I feel incredible every single day.</p>
+          <div class="story-author">
+            <div class="s-avatar">DW</div>
+            <div><div class="s-name">Diane W., 47</div><div class="s-detail">Tempe, AZ</div><div class="s-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGGREGATE NUMBERS -->
+  <section id="numbers">
+    <div class="section-tag">By the Numbers</div>
+    <h2 class="section-title">RESULTS THAT<br><span>ADD UP</span></h2>
+    <p class="section-sub">What happens when people commit to BAM FIT and trust the process from day one to their last session.</p>
+    <div class="nums-grid reveal">
+      <div class="num-cell">
+        <div class="num-big">1:1</div>
+        <div class="num-label">Every Session</div>
+        <div class="num-sub">100% of Anthony's attention on you — always, no exceptions</div>
+      </div>
+      <div class="num-cell">
+        <div class="num-big">6</div>
+        <div class="num-label">Specialties</div>
+        <div class="num-sub">Strength, functional fitness, weight loss, mobility, PNF, lifestyle</div>
+      </div>
+      <div class="num-cell">
+        <div class="num-big">90</div>
+        <div class="num-label">Day Credit Window</div>
+        <div class="num-sub">Use your package at your pace — all credits valid for 90 days</div>
+      </div>
+      <div class="num-cell">
+        <div class="num-big">4.9<span style="font-size:2.5rem">&#9733;</span></div>
+        <div class="num-label">Average Rating</div>
+        <div class="num-sub">Collected from real BAM FIT clients across all service types</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MASONRY QUOTES -->
+  <section id="quotes">
+    <div class="section-tag">Client Reviews</div>
+    <h2 class="section-title">WHAT PEOPLE<br><span>ARE SAYING</span></h2>
+    <p class="section-sub">Unedited words from BAM FIT clients — every type of goal, every fitness level, every age.</p>
+    <div class="masonry">
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">Anthony doesn't just count reps and watch the clock. He explains WHY each movement matters, how it connects to your goals, and what to feel during every rep. After 8 sessions my back pain of 2 years just disappeared.</p>
+        <div class="q-author"><div class="q-av">JM</div><div><div class="q-name">James M.</div><div class="q-plan">10-Session Package</div></div></div>
+        <span class="q-tag">Pain-Free After 8 Sessions</span>
+      </div>
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">The PNF stretching sessions are unlike anything I have ever felt. I was skeptical — now I drive 40 minutes to get there because nothing else comes close. My range of motion has completely transformed in 6 sessions.</p>
+        <div class="q-author"><div class="q-av">KC</div><div><div class="q-name">Karen C.</div><div class="q-plan">50-Min PNF Sessions</div></div></div>
+        <span class="q-tag">Mobility Transformed</span>
+      </div>
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">I got the 5-day custom routine and it is the most thoughtful program I have ever followed. Everything is explained. Everything has a reason. I have been training independently for years and still learned something completely new from how Anthony put it together.</p>
+        <div class="q-author"><div class="q-av">TR</div><div><div class="q-name">Tyler R.</div><div class="q-plan">5-Day Custom Routine</div></div></div>
+        <span class="q-tag">Best Program I've Used</span>
+      </div>
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">The nutrition add-on was a game changer. I had no idea how much I was sabotaging my results with how I was eating. Two months in I looked like I had been training for two years. Anthony's meal plan changed everything for me.</p>
+        <div class="q-author"><div class="q-av">AM</div><div><div class="q-name">Alyssa M.</div><div class="q-plan">15 Sessions + Nutrition</div></div></div>
+        <span class="q-tag">Full Body Recomp</span>
+      </div>
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">I'm 52, I had never trained seriously in my life, and I showed up to BAM FIT with zero confidence. Anthony built me from scratch without ever making me feel behind or out of place. I am now deadlifting more than I ever thought possible. At 52.</p>
+        <div class="q-author"><div class="q-av">BH</div><div><div class="q-name">Bob H.</div><div class="q-plan">6-Session Starter Pack</div></div></div>
+        <span class="q-tag">Started at 52, Never Looked Back</span>
+      </div>
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">I tried the intro PNF stretch on a whim because it was only $20. Left completely hooked. The difference between a solo stretch and what Anthony does is night and day. Booked 50-minute sessions every two weeks ever since.</p>
+        <div class="q-author"><div class="q-av">LN</div><div><div class="q-name">Layla N.</div><div class="q-plan">PNF Stretching &mdash; Regular Client</div></div></div>
+        <span class="q-tag">$20 Intro Changed Everything</span>
+      </div>
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">My husband and I have both been working with Anthony. He coaches us individually during each session but the results have been incredible for both of us. Anthony truly cares about each person. That is rare and it shows in everything he does.</p>
+        <div class="q-author"><div class="q-av">MV</div><div><div class="q-name">Michelle V.</div><div class="q-plan">25 Sessions Each</div></div></div>
+        <span class="q-tag">Two Transformations, One Trainer</span>
+      </div>
+      <div class="q-card reveal">
+        <div class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="q-text">The pay-by-day option let me try BAM FIT with no commitment before I bought a package. One session and I bought the 25. Best fitness decision I have ever made. Do not hesitate — just show up and experience it.</p>
+        <div class="q-author"><div class="q-av">DF</div><div><div class="q-name">David F.</div><div class="q-plan">Drop-In &rarr; 25-Session Package</div></div></div>
+        <span class="q-tag">Converted After One Session</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEFORE AFTER -->
+  <section id="before-after">
+    <div class="section-tag">Visual Transformations</div>
+    <h2 class="section-title">BEFORE<br><span>&amp; AFTER</span></h2>
+    <p class="section-sub">Add real client before and after photos here. All photos used with full client permission only.</p>
+    <div class="ba-grid">
+      <div class="ba-card reveal">
+        <div class="ba-imgs">
+          <div class="ba-img"><span class="ba-lbl">Before</span><div class="ba-ph-icon">&#128248;</div><div class="ba-ph-text">Add Photo</div></div>
+          <div class="ba-img after"><span class="ba-lbl">After</span><div class="ba-ph-icon">&#128248;</div><div class="ba-ph-text">Add Photo</div></div>
+        </div>
+        <div class="ba-body">
+          <div class="ba-person">Marcus R., 37 &mdash; 4 Months</div>
+          <div class="ba-stats">
+            <div><div class="ba-sv">&minus;34lbs</div><div class="ba-sk">Weight Lost</div></div>
+            <div><div class="ba-sv">&minus;9%</div><div class="ba-sk">Body Fat</div></div>
+          </div>
+          <div class="ba-quote">Committed to the 25-session package and the nutrition add-on. Completely transformed his body composition in under four months.</div>
+          <span class="ba-plan">25 Sessions + Nutrition</span>
+        </div>
+      </div>
+      <div class="ba-card reveal">
+        <div class="ba-imgs">
+          <div class="ba-img"><span class="ba-lbl">Before</span><div class="ba-ph-icon">&#128248;</div><div class="ba-ph-text">Add Photo</div></div>
+          <div class="ba-img after"><span class="ba-lbl">After</span><div class="ba-ph-icon">&#128248;</div><div class="ba-ph-text">Add Photo</div></div>
+        </div>
+        <div class="ba-body">
+          <div class="ba-person">Diane W., 47 &mdash; 5 Months</div>
+          <div class="ba-stats">
+            <div><div class="ba-sv">&minus;31lbs</div><div class="ba-sk">Weight Lost</div></div>
+            <div><div class="ba-sv">100%</div><div class="ba-sk">Kept Off</div></div>
+          </div>
+          <div class="ba-quote">Training plus nutrition coaching together. Felt better at 47 than she did at 30. Every pound kept off over a year later.</div>
+          <span class="ba-plan">25 Sessions + Nutrition</span>
+        </div>
+      </div>
+      <div class="ba-card reveal">
+        <div class="ba-imgs">
+          <div class="ba-img"><span class="ba-lbl">Before</span><div class="ba-ph-icon">&#128248;</div><div class="ba-ph-text">Add Photo</div></div>
+          <div class="ba-img after"><span class="ba-lbl">After</span><div class="ba-ph-icon">&#128248;</div><div class="ba-ph-text">Add Photo</div></div>
+        </div>
+        <div class="ba-body">
+          <div class="ba-person">Diana L., 42 &mdash; 6 Weeks</div>
+          <div class="ba-stats">
+            <div><div class="ba-sv">+55lbs</div><div class="ba-sk">Squat 1RM</div></div>
+            <div><div class="ba-sv">0</div><div class="ba-sk">Back Pain</div></div>
+          </div>
+          <div class="ba-quote">Three years of chronic back pain resolved in six weeks. Strength PRs across the board. Movement quality transformed completely.</div>
+          <span class="ba-plan">15-Session Package</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE HELP -->
+  <section id="who">
+    <div class="section-tag">Who BAM FIT Serves</div>
+    <h2 class="section-title">BUILT FOR<br><span>EVERYONE</span></h2>
+    <p class="section-sub">From age 18 to 65+, total beginner to competitive athlete — the BAM FIT system adapts entirely to you.</p>
+    <div class="who-grid">
+      <div class="who-card reveal">
+        <div class="who-icon">&#128198;</div>
+        <div class="who-type">BEGINNERS</div>
+        <div class="who-desc">Never trained before? Perfect. Anthony builds from your absolute baseline — no judgment, no assumptions, just a solid foundation built right from day one.</div>
+      </div>
+      <div class="who-card reveal">
+        <div class="who-icon">&#128188;</div>
+        <div class="who-type">BUSY PEOPLE</div>
+        <div class="who-desc">Full-time job, family, life. Every BAM FIT program is built around your actual schedule — not an idealized version of it. The 30-min pay-by-day option exists for a reason.</div>
+      </div>
+      <div class="who-card reveal">
+        <div class="who-icon">&#129304;</div>
+        <div class="who-type">OVER 40s</div>
+        <div class="who-desc">Age changes what your body needs, not what it is capable of. Anthony coaches clients in their 40s, 50s, and 60s toward strength, mobility, and longevity every day.</div>
+      </div>
+      <div class="who-card reveal">
+        <div class="who-icon">&#129368;</div>
+        <div class="who-type">MOBILITY FOCUSED</div>
+        <div class="who-desc">Chronic tightness, limited range of motion, or post-injury recovery. PNF stretching and mobility coaching are among Anthony's top specialties — and the results are immediate.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO TESTIMONIALS -->
+  <section id="videos">
+    <div class="section-tag">Video Testimonials</div>
+    <h2 class="section-title">HEAR IT<br><span>DIRECTLY</span></h2>
+    <p class="section-sub">Real BAM FIT clients, in their own words. Replace the placeholder cards below with your YouTube or Loom links.</p>
+    <div class="video-grid">
+      <div class="vid-card reveal">
+        <div class="vid-thumb"><div class="play-btn"><div class="play-arrow"></div></div></div>
+        <div class="vid-info">
+          <div class="vid-name">Marcus R. &mdash; 4-Month Journey</div>
+          <div class="vid-tag">&minus;34 lbs &bull; 25 Sessions</div>
+          <div class="vid-note">Replace with YouTube or Loom embed link</div>
+        </div>
+      </div>
+      <div class="vid-card reveal">
+        <div class="vid-thumb"><div class="play-btn"><div class="play-arrow"></div></div></div>
+        <div class="vid-info">
+          <div class="vid-name">Rick C. &mdash; PNF Stretching Story</div>
+          <div class="vid-tag">Flexibility Breakthrough</div>
+          <div class="vid-note">Replace with YouTube or Loom embed link</div>
+        </div>
+      </div>
+      <div class="vid-card reveal">
+        <div class="vid-thumb"><div class="play-btn"><div class="play-arrow"></div></div></div>
+        <div class="vid-info">
+          <div class="vid-name">Diane W. &mdash; Nutrition + Training</div>
+          <div class="vid-tag">&minus;31 lbs &bull; 5 Months</div>
+          <div class="vid-note">Replace with YouTube or Loom embed link</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="results-cta">
+    <div>
+      <h2>YOUR RESULT<br>STARTS TODAY.</h2>
+      <p>Every transformation on this page started with one decision. Reach out to Anthony and let's talk about yours. No pressure — just a real conversation.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="index.html#contact" class="btn-dark">Contact Anthony</a>
+      <a href="pricing.html" class="btn-out-dark">View Pricing</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">BAM<span>FIT</span></div>
+    <div class="footer-copy">&copy; 2025 BAM FIT &mdash; By Any Means Fitness. Anthony B. Iacono.</div>
+    <div class="footer-links"><a href="about.html">About</a><a href="pricing.html">Pricing</a><a href="mailto:abiacono@gmail.com">Email</a></div>
+  </footer>
+
+  <script>
+    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+    (function a(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;cursor.style.left=mx+'px';cursor.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+    document.querySelectorAll('a,button').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.width='18px';cursor.style.height='18px';ring.style.width='50px';ring.style.height='50px';});
+      el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';});
+    });
+    function filterCards(cat,btn){
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.story-card').forEach(card=>{
+        if(cat==='all'){card.style.display='flex';return;}
+        card.style.display=(card.dataset.cat||'').includes(cat)?'flex':'none';
+      });
+    }
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.08});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  </script>
+</body>
+</html>
