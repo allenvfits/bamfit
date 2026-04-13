@@ -503,141 +503,90 @@
   // ── THREE.JS 3D HERO ──
   (function() {
     const canvas = document.getElementById('hero-canvas');
+    const W = window.innerWidth, H = window.innerHeight;
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(W, H);
     renderer.setClearColor(0x000000, 0);
-
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 28);
+    const camera = new THREE.PerspectiveCamera(75, W / H, 0.1, 2000);
+    camera.position.z = 5;
 
-    // Particle field
-    const pCount = 2200;
-    const pGeo = new THREE.BufferGeometry();
-    const positions = new Float32Array(pCount * 3);
-    const sizes = new Float32Array(pCount);
-    for (let i = 0; i < pCount; i++) {
-      positions[i*3]   = (Math.random()-0.5)*120;
-      positions[i*3+1] = (Math.random()-0.5)*80;
-      positions[i*3+2] = (Math.random()-0.5)*60;
-      sizes[i] = Math.random() * 2.5 + 0.3;
+    // GALAXY SPIRAL — 15000 particles in two spiral arms
+    const COUNT = 15000;
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(COUNT * 3);
+    const col = new Float32Array(COUNT * 3);
+    for (let i = 0; i < COUNT; i++) {
+      const arm = Math.floor(Math.random() * 3);
+      const r = Math.random() * 12 + 0.5;
+      const spin = r * 0.8;
+      const branchAngle = (arm / 3) * Math.PI * 2;
+      const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 0.5;
+      const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 0.5;
+      const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 0.5;
+      pos[i*3]   = Math.cos(branchAngle + spin) * r + randomX;
+      pos[i*3+1] = randomY * 0.4;
+      pos[i*3+2] = Math.sin(branchAngle + spin) * r + randomZ;
+      // Color: bright yellow center fading to dark gold edges
+      const t = r / 12;
+      col[i*3]   = 1.0;
+      col[i*3+1] = 0.84 - t * 0.5;
+      col[i*3+2] = 0.0 + t * 0.05;
     }
-    pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    pGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-    const pMat = new THREE.PointsMaterial({
-      color: 0xFFD600, size: 0.18, transparent: true, opacity: 0.55,
-      sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false
-    });
-    const particles = new THREE.Points(pGeo, pMat);
-    scene.add(particles);
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const mat = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.9, sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false });
+    const galaxy = new THREE.Points(geo, mat);
+    scene.add(galaxy);
 
-    // Wireframe torus knot — main 3D centerpiece
-    const tkGeo = new THREE.TorusKnotGeometry(7, 1.8, 180, 20, 2, 3);
-    const tkMat = new THREE.MeshBasicMaterial({
-      color: 0xFFD600, wireframe: true, transparent: true, opacity: 0.08
-    });
-    const torusKnot = new THREE.Mesh(tkGeo, tkMat);
-    torusKnot.position.set(14, 0, -5);
-    scene.add(torusKnot);
+    // CORE GLOW — bright center sphere
+    const coreGeo = new THREE.SphereGeometry(0.3, 16, 16);
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0xFFD600, transparent: true, opacity: 0.6 });
+    scene.add(new THREE.Mesh(coreGeo, coreMat));
 
-    // Second torus knot — smaller, glowing
-    const tk2Geo = new THREE.TorusKnotGeometry(3.5, 0.8, 120, 16, 3, 5);
-    const tk2Mat = new THREE.MeshBasicMaterial({
-      color: 0xFFD600, wireframe: true, transparent: true, opacity: 0.12
-    });
-    const tk2 = new THREE.Mesh(tk2Geo, tk2Mat);
-    tk2.position.set(-16, 4, -8);
-    scene.add(tk2);
-
-    // Icosahedron
-    const icoGeo = new THREE.IcosahedronGeometry(4, 1);
-    const icoMat = new THREE.MeshBasicMaterial({
-      color: 0xFFD600, wireframe: true, transparent: true, opacity: 0.07
-    });
-    const ico = new THREE.Mesh(icoGeo, icoMat);
-    ico.position.set(-6, -8, -3);
-    scene.add(ico);
-
-    // Floating rings
-    const rings = [];
-    for (let i = 0; i < 5; i++) {
-      const rGeo = new THREE.TorusGeometry(2 + i * 1.2, 0.04, 8, 60);
-      const rMat = new THREE.MeshBasicMaterial({
-        color: 0xFFD600, transparent: true, opacity: 0.06 + i * 0.015
-      });
-      const r = new THREE.Mesh(rGeo, rMat);
-      r.position.set((Math.random()-0.5)*30, (Math.random()-0.5)*20, (Math.random()-0.5)*10 - 5);
-      r.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-      scene.add(r);
-      rings.push(r);
+    // OUTER RINGS
+    for (let i = 0; i < 3; i++) {
+      const rg = new THREE.TorusGeometry(2 + i * 1.5, 0.015, 6, 100);
+      const rm = new THREE.MeshBasicMaterial({ color: 0xFFD600, transparent: true, opacity: 0.15 - i * 0.04 });
+      const ring = new THREE.Mesh(rg, rm);
+      ring.rotation.x = Math.PI / 2 + i * 0.3;
+      scene.add(ring);
     }
 
-    // Connection lines between particles
-    const lineGeo = new THREE.BufferGeometry();
-    const linePositions = new Float32Array(300 * 3);
-    for (let i = 0; i < 300; i++) {
-      linePositions[i*3]   = (Math.random()-0.5)*80;
-      linePositions[i*3+1] = (Math.random()-0.5)*60;
-      linePositions[i*3+2] = (Math.random()-0.5)*40;
+    // FLOATING DEBRIS — small fast particles
+    const dGeo = new THREE.BufferGeometry();
+    const dPos = new Float32Array(800 * 3);
+    for (let i = 0; i < 800; i++) {
+      dPos[i*3]   = (Math.random() - 0.5) * 30;
+      dPos[i*3+1] = (Math.random() - 0.5) * 15;
+      dPos[i*3+2] = (Math.random() - 0.5) * 20 - 5;
     }
-    lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-    const lineMat = new THREE.LineBasicMaterial({
-      color: 0xFFD600, transparent: true, opacity: 0.04, blending: THREE.AdditiveBlending
-    });
-    const lines = new THREE.Line(lineGeo, lineMat);
-    scene.add(lines);
+    dGeo.setAttribute('position', new THREE.BufferAttribute(dPos, 3));
+    scene.add(new THREE.Points(dGeo, new THREE.PointsMaterial({ color: 0xFFFFAA, size: 0.04, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false })));
 
-    // Mouse parallax
-    let mouseX = 0, mouseY = 0;
-    document.addEventListener('mousemove', e => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-    });
+    let mx = 0, my = 0;
+    document.addEventListener('mousemove', e => { mx = (e.clientX / W - 0.5); my = (e.clientY / H - 0.5); });
 
     let t = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      t += 0.005;
-
-      // Gentle camera parallax
-      camera.position.x += (mouseX * 3 - camera.position.x) * 0.03;
-      camera.position.y += (-mouseY * 2 - camera.position.y) * 0.03;
+    (function anim() {
+      requestAnimationFrame(anim); t += 0.003;
+      galaxy.rotation.y = t;
+      galaxy.rotation.x = Math.sin(t * 0.3) * 0.15;
+      camera.position.x += (mx * 2 - camera.position.x) * 0.05;
+      camera.position.y += (-my * 1.5 - camera.position.y) * 0.05;
       camera.lookAt(0, 0, 0);
-
-      // Rotate objects
-      torusKnot.rotation.x += 0.003;
-      torusKnot.rotation.y += 0.004;
-      tk2.rotation.x -= 0.004;
-      tk2.rotation.z += 0.003;
-      ico.rotation.x += 0.006;
-      ico.rotation.y += 0.004;
-      particles.rotation.y += 0.0003;
-      particles.rotation.x += 0.0001;
-
-      rings.forEach((r, i) => {
-        r.rotation.x += 0.002 + i * 0.001;
-        r.rotation.y += 0.003 + i * 0.0005;
-        r.position.y += Math.sin(t + i) * 0.005;
-      });
-
-      // Pulse opacity
-      tkMat.opacity = 0.06 + Math.sin(t * 0.8) * 0.03;
-      tk2Mat.opacity = 0.10 + Math.sin(t * 1.2) * 0.04;
-      pMat.opacity = 0.45 + Math.sin(t * 0.5) * 0.1;
-
       renderer.render(scene, camera);
-    }
-    animate();
+    })();
 
     window.addEventListener('resize', () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
     });
   })();
 
-  // ── SCROLL REVEAL ──
+    // ── SCROLL REVEAL ──
   const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.08});
   document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 

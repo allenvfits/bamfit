@@ -1,164 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pricing | BAM FIT</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet"/>
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
     body{font-family:'Barlow',sans-serif;background:#0a0a00;color:#e8e8e0;overflow-x:hidden;cursor:none;}
-    .cursor{position:fixed;width:12px;height:12px;background:#FFD600;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
-    .cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid #FFD600;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
-    :root{--blue:#FFD600;--dark:#0a0a00;--dark2:#111100;--dark3:#141400;--dark4:#1a1a00;--border:rgba(255,214,0,0.18);--text:#e8e8e0;--muted:#7a7a72;--ff-display:'Bebas Neue',sans-serif;--ff-body:'Barlow',sans-serif;}
-    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--dark);}::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(8,8,8,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
-    .nav-logo{font-family:var(--ff-display);font-size:2.2rem;letter-spacing:0.06em;color:var(--text);text-decoration:none;}
-    .nav-logo span{color:var(--blue);}
+    .cursor{position:fixed;width:10px;height:10px;background:#FFD600;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;}
+    .cursor-ring{position:fixed;width:34px;height:34px;border:1px solid rgba(255,214,0,0.6);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+    :root{--blue:#FFD600;--dark:#0a0a00;--dark2:#111100;--dark3:#141400;--dark4:#1a1a00;--border:rgba(255,214,0,0.15);--text:#e8e8e0;--muted:#7a7a72;--ff-display:'Bebas Neue',sans-serif;}
+    ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--blue);}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(10,10,0,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--ff-display);font-size:2.2rem;color:var(--text);text-decoration:none;}.nav-logo span{color:var(--blue);}
     .nav-links{display:flex;gap:2.5rem;list-style:none;}
     .nav-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;transition:color 0.2s;}
     .nav-links a:hover,.nav-links a.active{color:var(--blue);}
-    .nav-cta{background:var(--blue);color:#000;padding:0.55rem 1.4rem;border-radius:2px;font-weight:700;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;transition:background 0.2s,transform 0.15s;}
-    .nav-cta:hover{background:#ffe033;transform:translateY(-1px);}
-    #hero-banner{min-height:58vh;display:flex;align-items:flex-end;padding:10rem 4rem 5rem;position:relative;overflow:hidden;background:var(--dark2);}
-    .banner-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,214,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,214,0,0.04) 1px,transparent 1px);background-size:55px 55px;}
-    .banner-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(255,214,0,0.09) 0%,transparent 65%);top:50%;right:5%;transform:translateY(-50%);pointer-events:none;}
-    .banner-content{position:relative;z-index:2;max-width:700px;}
+    .nav-cta{background:var(--blue);color:#000;padding:0.55rem 1.4rem;border-radius:2px;font-weight:700;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;}
+    /* HERO */
+    #hero-banner{min-height:48vh;display:flex;align-items:flex-end;padding:9rem 4rem 4rem;position:relative;overflow:hidden;background:var(--dark2);}
+    #hero-canvas{position:absolute;inset:0;z-index:0;pointer-events:none;}
+    .banner-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,214,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,214,0,0.03) 1px,transparent 1px);background-size:55px 55px;z-index:1;}
+    .banner-content{position:relative;z-index:2;}
     .breadcrumb{display:flex;align-items:center;gap:0.6rem;font-size:0.72rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.6s ease 0.1s forwards;}
-    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s;}.breadcrumb a:hover{color:var(--blue);}.breadcrumb span{color:var(--blue);}
-    .banner-title{font-family:var(--ff-display);font-size:clamp(4rem,9vw,8rem);line-height:0.9;letter-spacing:0.02em;color:var(--text);opacity:0;animation:fadeUp 0.6s ease 0.25s forwards;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;}.breadcrumb a:hover{color:var(--blue);}.breadcrumb span{color:var(--blue);}
+    .banner-title{font-family:var(--ff-display);font-size:clamp(4rem,9vw,8rem);line-height:0.9;color:var(--text);opacity:0;animation:fadeUp 0.6s ease 0.25s forwards;}
     .banner-title span{color:var(--blue);}
-    .banner-sub{font-size:1.05rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:520px;margin-top:1.2rem;opacity:0;animation:fadeUp 0.6s ease 0.4s forwards;}
-    section{padding:7rem 4rem;}
-    .section-tag{display:inline-flex;align-items:center;gap:0.6rem;color:var(--blue);font-size:0.72rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:1rem;}
-    .section-tag::before{content:'';display:block;width:30px;height:1px;background:var(--blue);}
-    .section-title{font-family:var(--ff-display);font-size:clamp(2.8rem,5vw,4.5rem);line-height:0.95;letter-spacing:0.03em;color:var(--text);margin-bottom:1rem;}
+    .banner-sub{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:520px;margin-top:1rem;opacity:0;animation:fadeUp 0.6s ease 0.4s forwards;}
+    /* SHARED */
+    section{padding:3.5rem 4rem;}
+    .section-tag{display:inline-flex;align-items:center;gap:0.6rem;color:var(--blue);font-size:0.72rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.8rem;}
+    .section-tag::before{content:'';display:block;width:28px;height:1px;background:var(--blue);}
+    .section-title{font-family:var(--ff-display);font-size:clamp(2.5rem,4.5vw,4rem);line-height:0.95;color:var(--text);margin-bottom:0.8rem;}
     .section-title span{color:var(--blue);}
-    .section-sub{font-size:1rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:560px;}
+    .section-sub{font-size:0.95rem;font-weight:300;color:var(--muted);line-height:1.75;max-width:560px;}
     .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease;}
     .reveal.visible{opacity:1;transform:translateY(0);}
+    .info-bar{background:var(--dark3);border:1px solid var(--border);border-radius:4px;padding:1rem 1.5rem;margin-bottom:2rem;font-size:0.84rem;color:var(--muted);line-height:1.6;display:flex;align-items:center;gap:0.8rem;}
+    .info-bar::before{content:'i';font-size:1rem;color:var(--blue);flex-shrink:0;font-style:italic;font-weight:700;}
     /* SESSIONS */
     #sessions{background:var(--dark);}
-    .info-bar{background:var(--dark3);border:1px solid var(--border);border-radius:4px;padding:1.2rem 1.8rem;margin-bottom:3rem;font-size:0.85rem;font-weight:400;color:var(--muted);line-height:1.7;display:flex;align-items:center;gap:1rem;}
-    .info-bar::before{content:'ℹ';font-size:1.2rem;color:var(--blue);flex-shrink:0;}
-    .sessions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
-    .sess-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2rem 1.5rem;display:flex;flex-direction:column;position:relative;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;}
-    .sess-card:hover{transform:translateY(-6px);border-color:rgba(255,214,0,0.25);box-shadow:0 20px 50px rgba(0,0,0,0.4);}
-    .sess-card.best-val{border-color:var(--blue);background:var(--dark4);}
-    .best-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--blue);color:#000;font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.28rem 1rem;border-radius:20px;white-space:nowrap;}
-    .sess-big{font-family:var(--ff-display);font-size:5rem;line-height:1;color:var(--text);}
-    .sess-card.best-val .sess-big{color:var(--blue);}
-    .sess-unit-label{font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;}
-    .sess-price{font-family:var(--ff-display);font-size:2.8rem;color:var(--blue);line-height:1;margin:0.5rem 0 0.2rem;}
-    .sess-rate{font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;}
-    .sess-tag{display:inline-block;background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.25);color:var(--blue);font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:2px;margin-bottom:0.8rem;}
-    .sess-desc{font-size:0.8rem;font-weight:300;color:var(--muted);line-height:1.7;flex:1;margin-bottom:1.5rem;}
-    .btn-s{display:block;width:100%;padding:0.75rem;text-align:center;font-family:var(--ff-body);font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;text-decoration:none;cursor:none;transition:transform 0.15s;border:none;}
+    .sessions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:1.5rem;}
+    .sess-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:1.8rem 1.4rem;display:flex;flex-direction:column;position:relative;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;}
+    .sess-card:hover{transform:translateY(-5px);border-color:rgba(255,214,0,0.25);box-shadow:0 15px 40px rgba(0,0,0,0.4);}
+    .sess-card.best{border-color:var(--blue);background:var(--dark4);}
+    .best-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:#000;font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:0.22rem 0.9rem;border-radius:20px;white-space:nowrap;}
+    .sess-big{font-family:var(--ff-display);font-size:4.5rem;line-height:1;color:var(--text);}
+    .sess-card.best .sess-big{color:var(--blue);}
+    .sess-unit{font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;}
+    .sess-price{font-family:var(--ff-display);font-size:2.5rem;color:var(--blue);line-height:1;margin:0.4rem 0 0.2rem;}
+    .sess-rate{font-size:0.72rem;color:var(--muted);margin-bottom:0.6rem;}
+    .sess-tag{display:inline-block;background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.25);color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:2px;margin-bottom:0.6rem;}
+    .sess-desc{font-size:0.78rem;font-weight:300;color:var(--muted);line-height:1.65;flex:1;margin-bottom:1.2rem;}
+    .btn-s{display:block;width:100%;padding:0.7rem;text-align:center;font-family:'Barlow',sans-serif;font-size:0.76rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;text-decoration:none;cursor:none;transition:transform 0.15s;border:none;}
     .btn-s:hover{transform:translateY(-2px);}
-    .btn-blue{background:var(--blue);color:#000;}.btn-blue:hover{background:#ffe033;}
-    .btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.15);}.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+    .btn-yellow{background:var(--blue);color:#000;}.btn-yellow:hover{background:#ffe033;}
+    .btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12);}.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
     /* PAY BY DAY */
     #payday{background:var(--dark2);}
-    .payday-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem;}
-    .payday-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2.5rem;display:flex;align-items:center;gap:2rem;transition:transform 0.25s,border-color 0.25s;}
-    .payday-card:hover{transform:translateY(-4px);border-color:rgba(255,214,0,0.2);}
-    .pd-price{font-family:var(--ff-display);font-size:5rem;color:var(--blue);line-height:1;flex-shrink:0;}
-    .pd-info h4{font-family:var(--ff-display);font-size:1.8rem;letter-spacing:0.03em;color:var(--text);margin-bottom:0.4rem;}
-    .pd-info p{font-size:0.84rem;font-weight:300;color:var(--muted);line-height:1.7;}
+    .payday-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
+    .payday-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:2rem;display:flex;align-items:center;gap:1.5rem;transition:transform 0.25s,border-color 0.25s;}
+    .payday-card:hover{transform:translateY(-3px);border-color:rgba(255,214,0,0.2);}
+    .pd-price{font-family:var(--ff-display);font-size:4.5rem;color:var(--blue);line-height:1;flex-shrink:0;}
+    .pd-info h4{font-family:var(--ff-display);font-size:1.6rem;color:var(--text);margin-bottom:0.35rem;}
+    .pd-info p{font-size:0.82rem;font-weight:300;color:var(--muted);line-height:1.65;}
     /* ROUTINES */
     #routines{background:var(--dark);}
-    .routines-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem;}
-    .routine-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2.5rem;transition:transform 0.25s,border-color 0.25s;}
-    .routine-card:hover{transform:translateY(-4px);border-color:rgba(255,214,0,0.2);}
-    .r-label{font-size:0.68rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);margin-bottom:0.6rem;}
-    .r-name{font-family:var(--ff-display);font-size:2.5rem;color:var(--text);letter-spacing:0.03em;margin-bottom:0.5rem;}
-    .r-price{font-family:var(--ff-display);font-size:3.5rem;color:var(--blue);line-height:1;margin-bottom:1rem;}
-    .r-list{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
-    .r-list li{display:flex;align-items:center;gap:0.7rem;font-size:0.84rem;color:var(--text);font-weight:400;}
-    .r-list li::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+    .routines-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
+    .routine-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:2rem;transition:transform 0.25s,border-color 0.25s;}
+    .routine-card:hover{transform:translateY(-3px);border-color:rgba(255,214,0,0.2);}
+    .r-label{font-size:0.65rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);margin-bottom:0.5rem;}
+    .r-name{font-family:var(--ff-display);font-size:2.2rem;color:var(--text);margin-bottom:0.4rem;}
+    .r-price{font-family:var(--ff-display);font-size:3rem;color:var(--blue);line-height:1;margin-bottom:0.8rem;}
+    .r-list{list-style:none;display:flex;flex-direction:column;gap:0.5rem;}
+    .r-list li{display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:var(--text);}
+    .r-list li::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;}
     /* PNF */
     #pnf{background:var(--dark2);}
-    .pnf-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:4rem;align-items:start;}
-    .pnf-info h3{font-family:var(--ff-display);font-size:2.2rem;color:var(--text);letter-spacing:0.03em;margin-bottom:1rem;}
-    .pnf-info p{font-size:0.9rem;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:1rem;}
-    .pnf-benefits{margin-top:1.5rem;display:flex;flex-direction:column;gap:0.55rem;}
-    .pnf-benefit{display:flex;align-items:center;gap:0.8rem;font-size:0.86rem;color:var(--text);}
-    .pnf-benefit::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;}
-    .pnf-cards{display:flex;flex-direction:column;gap:1rem;}
-    .pnf-row{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:1.8rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transition:transform 0.25s,border-color 0.25s;}
+    .pnf-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:1.5rem;align-items:start;}
+    .pnf-info h3{font-family:var(--ff-display);font-size:2rem;color:var(--text);margin-bottom:0.8rem;}
+    .pnf-info p{font-size:0.9rem;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:0.8rem;}
+    .pnf-benefits{margin-top:1rem;display:flex;flex-direction:column;gap:0.5rem;}
+    .pnf-benefit{display:flex;align-items:center;gap:0.7rem;font-size:0.85rem;color:var(--text);}
+    .pnf-benefit::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+    .pnf-cards{display:flex;flex-direction:column;gap:0.9rem;}
+    .pnf-row{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transition:transform 0.2s,border-color 0.2s;}
     .pnf-row:hover{transform:translateX(4px);border-color:rgba(255,214,0,0.2);}
     .pnf-row.intro{border-color:var(--blue);background:var(--dark4);}
-    .pnf-row-left h4{font-family:var(--ff-display);font-size:1.5rem;color:var(--text);letter-spacing:0.03em;margin-bottom:0.25rem;}
-    .pnf-row-left p{font-size:0.76rem;font-weight:300;color:var(--muted);}
-    .intro-tag{display:inline-block;margin-top:0.3rem;background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.25);color:var(--blue);font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:2px;}
-    .pnf-big-price{font-family:var(--ff-display);font-size:3rem;color:var(--blue);line-height:1;flex-shrink:0;}
+    .pnf-row-left h4{font-family:var(--ff-display);font-size:1.4rem;color:var(--text);margin-bottom:0.2rem;}
+    .pnf-row-left p{font-size:0.74rem;font-weight:300;color:var(--muted);}
+    .intro-tag{display:inline-block;margin-top:0.25rem;background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.25);color:var(--blue);font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.12rem 0.45rem;border-radius:2px;}
+    .pnf-big-price{font-family:var(--ff-display);font-size:2.8rem;color:var(--blue);line-height:1;flex-shrink:0;}
     /* NUTRITION */
     #nutrition{background:var(--dark);}
-    .nut-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:4rem;align-items:start;}
-    .nut-card{background:var(--dark3);border:1px solid var(--border);border-radius:4px;padding:3rem;text-align:center;}
-    .nut-icon{font-size:3rem;margin-bottom:1rem;}
-    .nut-price{font-family:var(--ff-display);font-size:5rem;color:var(--blue);line-height:1;margin-bottom:0.3rem;}
-    .nut-label{font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;}
-    .nut-list{list-style:none;display:flex;flex-direction:column;gap:0.7rem;text-align:left;margin-bottom:1.5rem;}
-    .nut-list li{display:flex;align-items:flex-start;gap:0.7rem;font-size:0.86rem;color:var(--text);line-height:1.45;}
-    .nut-list li::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px;}
-    .nut-note{font-size:0.72rem;font-weight:300;color:var(--muted);line-height:1.65;border-top:1px solid rgba(255,255,255,0.06);padding-top:1rem;}
-    .nut-text{display:flex;flex-direction:column;gap:1.5rem;}
-    .nut-text h3{font-family:var(--ff-display);font-size:2.2rem;color:var(--text);letter-spacing:0.03em;line-height:0.95;margin-bottom:0.5rem;}
+    .nut-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:1.5rem;align-items:start;}
+    .nut-card{background:var(--dark3);border:1px solid var(--border);border-radius:4px;padding:2.5rem;text-align:center;}
+    .nut-icon{font-size:2.5rem;margin-bottom:0.8rem;}
+    .nut-price{font-family:var(--ff-display);font-size:4.5rem;color:var(--blue);line-height:1;margin-bottom:0.3rem;}
+    .nut-label{font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+    .nut-list{list-style:none;display:flex;flex-direction:column;gap:0.6rem;text-align:left;margin-bottom:1.2rem;}
+    .nut-list li{display:flex;align-items:flex-start;gap:0.6rem;font-size:0.84rem;color:var(--text);line-height:1.4;}
+    .nut-list li::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px;}
+    .nut-note{font-size:0.7rem;font-weight:300;color:var(--muted);line-height:1.6;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.8rem;}
+    .nut-text{display:flex;flex-direction:column;gap:1.2rem;}
+    .nut-text h3{font-family:var(--ff-display);font-size:2.2rem;color:var(--text);line-height:0.95;}
     .nut-text h3 span{color:var(--blue);}
     .nut-text p{font-size:0.9rem;font-weight:300;color:var(--muted);line-height:1.8;}
     .nut-text p strong{color:var(--text);font-weight:600;}
     .stat-box{background:var(--dark3);border:1px solid var(--border);border-radius:4px;padding:1.5rem;}
-    .stat-box-num{font-family:var(--ff-display);font-size:3.5rem;color:var(--blue);line-height:1;}
-    .stat-box-label{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem;}
+    .stat-box-num{font-family:var(--ff-display);font-size:3rem;color:var(--blue);line-height:1;}
+    .stat-box-label{font-size:0.68rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem;}
     /* COMPARE */
     #compare{background:var(--dark2);}
-    .ctable{width:100%;border-collapse:collapse;margin-top:3rem;}
-    .ctable th,.ctable td{padding:1rem 1.2rem;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);}
-    .ctable thead th{font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+    .ctable{width:100%;border-collapse:collapse;margin-top:1.5rem;}
+    .ctable th,.ctable td{padding:0.85rem 1.2rem;text-align:left;border-bottom:1px solid rgba(255,255,255,0.04);}
+    .ctable thead th{font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
     .ctable tbody tr:hover td{background:rgba(255,255,255,0.02);}
-    .f-name{font-size:0.88rem;color:var(--text);}
-    .f-sub{font-size:0.72rem;color:var(--muted);margin-top:0.1rem;}
-    .tv{font-size:0.88rem;font-weight:600;color:var(--text);}
+    .f-name{font-size:0.86rem;color:var(--text);}
+    .f-sub{font-size:0.7rem;color:var(--muted);margin-top:0.1rem;}
+    .tv{font-size:0.86rem;font-weight:600;color:var(--text);}
     .tv.b{color:var(--blue);}
-    .crow td{padding-top:2rem;padding-bottom:0.4rem;}
-    .clabel{font-size:0.65rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);}
+    .crow td{padding-top:1.5rem;padding-bottom:0.3rem;}
+    .clabel{font-size:0.62rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);}
     /* CTA */
-    #pcta{background:#FFD600;padding:5.5rem 4rem;display:flex;align-items:center;justify-content:space-between;gap:3rem;flex-wrap:wrap;}
-    #pcta h2{font-family:var(--ff-display);font-size:clamp(2.5rem,5vw,5rem);color:#000;line-height:0.95;letter-spacing:0.02em;}
+    #pcta{background:#FFD600;padding:4rem;display:flex;align-items:center;justify-content:space-between;gap:3rem;flex-wrap:wrap;}
+    #pcta h2{font-family:var(--ff-display);font-size:clamp(2.2rem,4.5vw,4.5rem);color:#000;line-height:0.95;}
     #pcta p{font-size:1rem;font-weight:300;color:rgba(0,0,0,0.6);margin-top:0.8rem;max-width:380px;}
-    .btn-dark{background:#000;color:var(--blue);padding:1rem 2.2rem;font-family:var(--ff-body);font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:transform 0.15s,background 0.2s;}
-    .btn-dark:hover{background:#111;transform:translateY(-2px);}
+    .btn-dark{background:#000;color:#FFD600;padding:1rem 2.2rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:transform 0.15s;}
+    .btn-dark:hover{transform:translateY(-2px);}
     footer{background:var(--dark);border-top:1px solid var(--border);padding:3rem 4rem;display:flex;align-items:center;justify-content:space-between;}
-    .footer-logo{font-family:var(--ff-display);font-size:2rem;color:var(--text);}
-    .footer-logo span{color:var(--blue);}
+    .footer-logo{font-family:var(--ff-display);font-size:2rem;color:var(--text);}.footer-logo span{color:var(--blue);}
     .footer-copy{font-size:0.78rem;color:var(--muted);}
     .footer-links{display:flex;gap:2rem;}
-    .footer-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}
-    .footer-links a:hover{color:var(--blue);}
+    .footer-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}.footer-links a:hover{color:var(--blue);}
     @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
-    @media(max-width:1000px){
-      nav{padding:1rem 1.5rem;}.nav-links{display:none;}
-      section,#pcta{padding-left:1.5rem;padding-right:1.5rem;}
-      #hero-banner{padding:8rem 1.5rem 4rem;}
-      .sessions-grid{grid-template-columns:1fr 1fr;}
-      .payday-grid,.routines-grid,.pnf-layout,.nut-layout{grid-template-columns:1fr;}
-      #pcta{flex-direction:column;}
-      footer{flex-direction:column;gap:1.5rem;text-align:center;}
-    }
+    @media(max-width:1000px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}section,#pcta{padding-left:1.5rem;padding-right:1.5rem;}#hero-banner{padding:7rem 1.5rem 3rem;}.sessions-grid{grid-template-columns:1fr 1fr;}.payday-grid,.routines-grid,.pnf-layout,.nut-layout{grid-template-columns:1fr;}#pcta{flex-direction:column;}footer{flex-direction:column;gap:1.5rem;text-align:center;}}
     @media(max-width:600px){.sessions-grid{grid-template-columns:1fr;}}
-  
-    #hero-canvas{position:absolute;inset:0;z-index:0;}
-    #hero-banner{position:relative;overflow:hidden;}
   </style>
 </head>
 <body>
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div>
   <nav>
     <a href="index.html" class="nav-logo">BAM<span>FIT</span></a>
     <ul class="nav-links">
@@ -171,49 +153,48 @@
   </nav>
 
   <section id="hero-banner">
-    <div class="banner-grid"></div><div class="banner-glow"></div>
     <canvas id="hero-canvas"></canvas>
+    <div class="banner-grid"></div>
     <div class="banner-content">
       <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; <span>Pricing</span></div>
       <h1 class="banner-title">REAL PRICING.<br><span>ZERO BS.</span></h1>
-      <p class="banner-sub">Every package listed clearly. No contracts, no hidden fees. Just honest 1-on-1 training with Anthony. Credits expire 90 days after purchase.</p>
+      <p class="banner-sub">Every package listed clearly. No contracts, no hidden fees. Credits expire 90 days after purchase.</p>
     </div>
   </section>
 
   <section id="sessions">
     <div class="section-tag">Training Packages</div>
     <h2 class="section-title">SESSION<br><span>PACKAGES</span></h2>
-    <p class="section-sub">The more sessions you commit to, the lower your per-session cost. Buy more, save more — and build the consistency that changes your body.</p>
-    <div class="info-bar">Minimum 1 day per week commitment for weekly training packages. All credits expire 90 days after purchase date.</div>
-    <div class="sessions-grid">
-      <div class="sess-card reveal">
-        <div class="sess-big">6</div><div class="sess-unit-label">Sessions</div>
-        <div class="sess-price">$265</div><div class="sess-rate">~$44 per session</div>
-        <div class="sess-tag">Starter Pack</div>
-        <div class="sess-desc">Build your foundation. Six focused sessions with Anthony to establish your form, set your program, and build real momentum from day one.</div>
+    <div class="info-bar">Minimum 1 day per week for weekly training packages. All credits expire 90 days after purchase.</div>
+    <div class="sessions-grid reveal">
+      <div class="sess-card">
+        <div class="sess-big">6</div><div class="sess-unit">Sessions</div>
+        <div class="sess-price">$265</div><div class="sess-rate">~$44/session</div>
+        <div class="sess-tag">Starter</div>
+        <div class="sess-desc">Build your foundation. Six focused sessions with Anthony to establish form and build momentum.</div>
         <a href="index.html#contact" class="btn-s btn-ghost">Book Now</a>
       </div>
-      <div class="sess-card reveal">
-        <div class="sess-big">10</div><div class="sess-unit-label">Sessions</div>
-        <div class="sess-price">$420</div><div class="sess-rate">$42 per session</div>
-        <div class="sess-tag">Most Popular</div>
-        <div class="sess-desc">Hit your stride. Ten sessions gives you enough time to see real changes in strength, body composition, and how you feel every single day.</div>
+      <div class="sess-card">
+        <div class="sess-big">10</div><div class="sess-unit">Sessions</div>
+        <div class="sess-price">$420</div><div class="sess-rate">$42/session</div>
+        <div class="sess-tag">Popular</div>
+        <div class="sess-desc">Ten sessions gives you enough time to see real changes in strength and body composition.</div>
         <a href="index.html#contact" class="btn-s btn-ghost">Book Now</a>
       </div>
-      <div class="sess-card reveal">
-        <div class="sess-big">15</div><div class="sess-unit-label">Sessions</div>
-        <div class="sess-price">$600</div><div class="sess-rate">$40 per session</div>
+      <div class="sess-card">
+        <div class="sess-big">15</div><div class="sess-unit">Sessions</div>
+        <div class="sess-price">$600</div><div class="sess-rate">$40/session</div>
         <div class="sess-tag">Serious Results</div>
-        <div class="sess-desc">Where transformations happen. Fifteen sessions is where habits lock in, strength climbs, and your body visibly changes in ways others notice.</div>
+        <div class="sess-desc">Where transformations happen. Habits lock in and your body visibly changes.</div>
         <a href="index.html#contact" class="btn-s btn-ghost">Book Now</a>
       </div>
-      <div class="sess-card best-val reveal">
+      <div class="sess-card best">
         <div class="best-badge">Best Value</div>
-        <div class="sess-big">25</div><div class="sess-unit-label">Sessions</div>
+        <div class="sess-big">25</div><div class="sess-unit">Sessions</div>
         <div class="sess-price">$952</div><div class="sess-rate">$38/session &bull; Lowest rate</div>
         <div class="sess-tag">All In</div>
-        <div class="sess-desc">Twenty-five sessions gives you the volume to fully transform — and locks in the lowest per-session rate Anthony offers. For people who are serious about change.</div>
-        <a href="index.html#contact" class="btn-s btn-blue">Get Started</a>
+        <div class="sess-desc">Twenty-five sessions locks in the lowest per-session rate Anthony offers. For people serious about change.</div>
+        <a href="index.html#contact" class="btn-s btn-yellow">Get Started</a>
       </div>
     </div>
   </section>
@@ -221,48 +202,44 @@
   <section id="payday">
     <div class="section-tag">No Commitment</div>
     <h2 class="section-title">PAY BY<br><span>THE DAY</span></h2>
-    <p class="section-sub">Not ready to commit to a package? Show up when you can. Pay as you go — perfect for drop-ins or testing out BAM FIT before committing.</p>
-    <div class="payday-grid">
-      <div class="payday-card reveal">
+    <div class="payday-grid reveal">
+      <div class="payday-card">
         <div class="pd-price">$25</div>
-        <div class="pd-info"><h4>30-MINUTE SESSION</h4><p>A focused, efficient half-hour. Great for targeted work, quick conditioning, or your very first session with Anthony to experience BAM FIT before committing to a package.</p></div>
+        <div class="pd-info"><h4>30-MIN SESSION</h4><p>A focused half-hour. Perfect for targeted work or trying BAM FIT before committing to a package.</p></div>
       </div>
-      <div class="payday-card reveal">
+      <div class="payday-card">
         <div class="pd-price">$45</div>
-        <div class="pd-info"><h4>55-MINUTE SESSION</h4><p>A full training session — warm-up, main work, cooldown. Everything you need in one hour. The preferred drop-in option for a complete, well-rounded training experience.</p></div>
+        <div class="pd-info"><h4>55-MIN SESSION</h4><p>A full training session — warm-up, main work, cooldown. The preferred drop-in option.</p></div>
       </div>
     </div>
   </section>
 
   <section id="routines">
     <div class="section-tag">Train on Your Own</div>
-    <h2 class="section-title">CUSTOM<br><span>WORKOUT ROUTINES</span></h2>
-    <p class="section-sub">Anthony builds the program — you run it on your own time. Fully customized to your goals, equipment, and experience level. Yours to keep.</p>
-    <div class="routines-grid">
-      <div class="routine-card reveal">
+    <h2 class="section-title">CUSTOM<br><span>ROUTINES</span></h2>
+    <div class="routines-grid reveal">
+      <div class="routine-card">
         <div class="r-label">Custom Strength Routine</div>
         <div class="r-name">3-DAY PROGRAM</div>
         <div class="r-price">$80</div>
         <ul class="r-list">
-          <li>Fully personalized 3-day strength split</li>
-          <li>Built around your available equipment</li>
-          <li>Exercise selection matched to your goals</li>
-          <li>Sets, reps, rest periods, and tempo included</li>
+          <li>Fully personalized 3-day split</li>
+          <li>Built for your equipment and goals</li>
+          <li>Sets, reps, rest periods included</li>
           <li>Written coaching notes for every movement</li>
-          <li>Yours to keep and run independently</li>
+          <li>Yours to keep</li>
         </ul>
       </div>
-      <div class="routine-card reveal">
+      <div class="routine-card">
         <div class="r-label">Custom Strength Routine</div>
         <div class="r-name">5-DAY PROGRAM</div>
         <div class="r-price">$150</div>
         <ul class="r-list">
-          <li>Full 5-day customized training split</li>
-          <li>Built around your available equipment</li>
-          <li>Advanced periodized exercise programming</li>
-          <li>Sets, reps, rest periods, and tempo included</li>
-          <li>Written coaching notes for every movement</li>
-          <li>Maximum weekly volume for maximum results</li>
+          <li>Full 5-day customized split</li>
+          <li>Built for your equipment and goals</li>
+          <li>Advanced periodized programming</li>
+          <li>Sets, reps, rest periods included</li>
+          <li>Maximum volume for maximum results</li>
         </ul>
       </div>
     </div>
@@ -271,21 +248,19 @@
   <section id="pnf">
     <div class="section-tag">Flexibility &amp; Recovery</div>
     <h2 class="section-title">ASSISTED PNF<br><span>STRETCHING</span></h2>
-    <div class="pnf-layout">
-      <div class="pnf-info reveal">
-        <h3>What Is PNF Stretching?</h3>
-        <p><strong style="color:var(--text)">PNF (Proprioceptive Neuromuscular Facilitation)</strong> is the stretching of the golgi tendon — one of the most effective flexibility and recovery techniques available. Anthony assists every stretch manually, allowing you to reach ranges of motion you simply cannot achieve on your own.</p>
-        <p>Most clients feel a measurable difference after a single session. Increased range of motion is immediate and compounds — each session builds on the last.</p>
+    <div class="pnf-layout reveal">
+      <div class="pnf-info">
+        <h3>What Is PNF?</h3>
+        <p><strong style="color:var(--text)">Proprioceptive Neuromuscular Facilitation</strong> — the stretching of the golgi tendon. Anthony assists every stretch manually so you reach ranges impossible on your own.</p>
         <div class="pnf-benefits">
           <div class="pnf-benefit">Increased range of motion</div>
           <div class="pnf-benefit">Improved flexibility</div>
           <div class="pnf-benefit">Enhanced athletic performance</div>
           <div class="pnf-benefit">Better posture and alignment</div>
           <div class="pnf-benefit">Improved neuromuscular coordination</div>
-          <div class="pnf-benefit">Reduced risk of injury</div>
         </div>
       </div>
-      <div class="pnf-cards reveal">
+      <div class="pnf-cards">
         <div class="pnf-row intro">
           <div class="pnf-row-left"><h4>INTRO STRETCH</h4><p>First-timers only</p><span class="intro-tag">1st Visit Special</span></div>
           <div class="pnf-big-price">$20</div>
@@ -298,7 +273,7 @@
           <div class="pnf-row-left"><h4>50-MINUTE SESSION</h4><p>Full-body assisted stretch</p></div>
           <div class="pnf-big-price">$40</div>
         </div>
-        <a href="index.html#contact" class="btn-s btn-blue" style="margin-top:0.5rem;">Book a Stretch Session</a>
+        <a href="index.html#contact" class="btn-s btn-yellow" style="margin-top:0.5rem;">Book a Stretch Session</a>
       </div>
     </div>
   </section>
@@ -306,30 +281,26 @@
   <section id="nutrition">
     <div class="section-tag">Nutrition Add-On</div>
     <h2 class="section-title">NUTRITION &amp;<br><span>SUPPLEMENTATION</span></h2>
-    <div class="nut-layout">
-      <div class="nut-card reveal">
+    <div class="nut-layout reveal">
+      <div class="nut-card">
         <div class="nut-icon">&#127869;</div>
         <div class="nut-price">$100</div>
-        <div class="nut-label">Additional Fee &bull; Add to Any Package</div>
+        <div class="nut-label">Monthly Add-On</div>
         <ul class="nut-list">
-          <li>Monthly meal plan customized to your body's needs and goals</li>
-          <li>Adjustments based on how your body responds to the diet</li>
-          <li>Supplementation guidance and recommendations</li>
-          <li>Multivitamin and essential supplement advice</li>
-          <li>Ongoing support as your plan evolves</li>
+          <li>Monthly meal plan customized to your body</li>
+          <li>Adjustments as your body responds</li>
+          <li>Supplementation guidance included</li>
+          <li>Multivitamin and supplement recommendations</li>
         </ul>
-        <div class="nut-note">&#9432; Credits expire 90 days after purchase. Plan adjustments may vary depending on how your body reacts per diet cycle.</div>
+        <div class="nut-note">Credits expire 90 days after purchase.</div>
       </div>
-      <div class="nut-text reveal">
-        <div>
-          <h3>FUEL THE<br><span>RESULTS</span></h3>
-          <p>Did you know that only <strong>68% of Americans take supplements</strong> — statistically recorded within the last year? And the #1 supplement to take is the humble multivitamin. They provide all-around optimal health that sometimes plays a more crucial role in some people's lives than others — because we already lack the nutrients needed to feel good daily.</p>
-          <p>Nutrition is the other half of every result. Training without dialing in your eating means leaving real gains on the table. Anthony configures monthly meal plans around your body's actual needs — not a template, not a generic macro split.</p>
-          <p style="font-size:0.88rem;font-style:italic;color:var(--muted);">"Set a goal and work towards it. You're more likely to be determined to achieve something when there's a goal." — Anthony B. Iacono</p>
-        </div>
+      <div class="nut-text">
+        <h3>FUEL THE<br><span>RESULTS</span></h3>
+        <p>Only <strong>68% of Americans take supplements</strong>. The #1 supplement to take is the multivitamin — and most people skip it entirely. They provide all-around optimal health that sometimes plays a more crucial role in some people's lives than others.</p>
+        <p>Nutrition is the other half of every result. Anthony configures monthly meal plans around your body's actual needs — not a template, not a generic macro split.</p>
         <div class="stat-box">
           <div class="stat-box-num">68%</div>
-          <div class="stat-box-label">of Americans take supplements — are you one of them?</div>
+          <div class="stat-box-label">of Americans take supplements &mdash; are you one of them?</div>
         </div>
       </div>
     </div>
@@ -342,23 +313,23 @@
       <table class="ctable">
         <thead><tr><th style="width:50%">Service</th><th>Price</th><th>Details</th></tr></thead>
         <tbody>
-          <tr class="crow"><td colspan="3"><span class="clabel">Session Packages (min. 1 day/week)</span></td></tr>
-          <tr><td><div class="f-name">6 Sessions</div></td><td><span class="tv b">$265</span></td><td><span class="tv">~$44 / session</span></td></tr>
-          <tr><td><div class="f-name">10 Sessions</div></td><td><span class="tv b">$420</span></td><td><span class="tv">$42 / session</span></td></tr>
-          <tr><td><div class="f-name">15 Sessions</div></td><td><span class="tv b">$600</span></td><td><span class="tv">$40 / session</span></td></tr>
-          <tr><td><div class="f-name">25 Sessions <span style="color:var(--blue);font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">Best Value</span></div></td><td><span class="tv b">$952</span></td><td><span class="tv">$38 / session</span></td></tr>
-          <tr class="crow"><td colspan="3"><span class="clabel">Pay By Day (Drop-In)</span></td></tr>
-          <tr><td><div class="f-name">30-Minute Session</div></td><td><span class="tv b">$25</span></td><td><span class="tv">No commitment</span></td></tr>
-          <tr><td><div class="f-name">55-Minute Session</div></td><td><span class="tv b">$45</span></td><td><span class="tv">No commitment</span></td></tr>
-          <tr class="crow"><td colspan="3"><span class="clabel">Custom Workout Routines</span></td></tr>
-          <tr><td><div class="f-name">3-Day Strength Routine</div><div class="f-sub">Yours to keep</div></td><td><span class="tv b">$80</span></td><td><span class="tv">One-time fee</span></td></tr>
-          <tr><td><div class="f-name">5-Day Strength Routine</div><div class="f-sub">Yours to keep</div></td><td><span class="tv b">$150</span></td><td><span class="tv">One-time fee</span></td></tr>
+          <tr class="crow"><td colspan="3"><span class="clabel">Session Packages (min 1 day/week)</span></td></tr>
+          <tr><td><div class="f-name">6 Sessions</div></td><td><span class="tv b">$265</span></td><td><span class="tv">~$44/session</span></td></tr>
+          <tr><td><div class="f-name">10 Sessions</div></td><td><span class="tv b">$420</span></td><td><span class="tv">$42/session</span></td></tr>
+          <tr><td><div class="f-name">15 Sessions</div></td><td><span class="tv b">$600</span></td><td><span class="tv">$40/session</span></td></tr>
+          <tr><td><div class="f-name">25 Sessions <span style="color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">Best Value</span></div></td><td><span class="tv b">$952</span></td><td><span class="tv">$38/session</span></td></tr>
+          <tr class="crow"><td colspan="3"><span class="clabel">Pay By Day</span></td></tr>
+          <tr><td><div class="f-name">30-Minute Session</div></td><td><span class="tv b">$25</span></td><td><span class="tv">Drop-in</span></td></tr>
+          <tr><td><div class="f-name">55-Minute Session</div></td><td><span class="tv b">$45</span></td><td><span class="tv">Drop-in</span></td></tr>
+          <tr class="crow"><td colspan="3"><span class="clabel">Custom Routines</span></td></tr>
+          <tr><td><div class="f-name">3-Day Strength Routine</div></td><td><span class="tv b">$80</span></td><td><span class="tv">One-time, keep forever</span></td></tr>
+          <tr><td><div class="f-name">5-Day Strength Routine</div></td><td><span class="tv b">$150</span></td><td><span class="tv">One-time, keep forever</span></td></tr>
           <tr class="crow"><td colspan="3"><span class="clabel">PNF Stretching</span></td></tr>
-          <tr><td><div class="f-name">Intro Stretch <span style="color:var(--blue);font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">1st Timers Only</span></div></td><td><span class="tv b">$20</span></td><td><span class="tv">First visit special</span></td></tr>
-          <tr><td><div class="f-name">25-Minute PNF Session</div></td><td><span class="tv b">$25</span></td><td><span class="tv">Targeted stretch</span></td></tr>
-          <tr><td><div class="f-name">50-Minute PNF Session</div></td><td><span class="tv b">$40</span></td><td><span class="tv">Full-body stretch</span></td></tr>
-          <tr class="crow"><td colspan="3"><span class="clabel">Nutrition &amp; Supplementation</span></td></tr>
-          <tr><td><div class="f-name">Nutrition &amp; Supplementation Add-On</div><div class="f-sub">Monthly meal plans + supplement guidance. Credits expire 90 days after purchase.</div></td><td><span class="tv b">$100</span></td><td><span class="tv">Add to any package</span></td></tr>
+          <tr><td><div class="f-name">Intro Stretch <span style="color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">1st Timers</span></div></td><td><span class="tv b">$20</span></td><td><span class="tv">First visit only</span></td></tr>
+          <tr><td><div class="f-name">25-Min PNF Session</div></td><td><span class="tv b">$25</span></td><td><span class="tv">Targeted stretch</span></td></tr>
+          <tr><td><div class="f-name">50-Min PNF Session</div></td><td><span class="tv b">$40</span></td><td><span class="tv">Full-body stretch</span></td></tr>
+          <tr class="crow"><td colspan="3"><span class="clabel">Nutrition</span></td></tr>
+          <tr><td><div class="f-name">Nutrition &amp; Supplementation Add-On</div><div class="f-sub">Monthly meal plan + supplement guidance. 90-day credit expiry.</div></td><td><span class="tv b">$100</span></td><td><span class="tv">Add to any package</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -366,25 +337,90 @@
 
   <section id="pcta">
     <div>
-      <h2>READY TO<br>INVEST IN YOURSELF?</h2>
-      <p>Reach out to Anthony directly at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="82e3e0ebe3e1edecedc2e5efe3ebeeace1edef">[email&#160;protected]</a> — or use the contact form on the home page. No pressure, just a real conversation.</p>
+      <h2>READY TO INVEST<br>IN YOURSELF?</h2>
+      <p>Contact Anthony directly at abiacono@gmail.com — no pressure, just a real conversation.</p>
     </div>
     <a href="index.html#contact" class="btn-dark">Contact Anthony</a>
   </section>
 
   <footer>
     <div class="footer-logo">BAM<span>FIT</span></div>
-    <div class="footer-copy">&copy; 2025 BAM FIT — By Any Means Fitness. Anthony B. Iacono.</div>
-    <div class="footer-links"><a href="about.html">About</a><a href="results.html">Results</a><a href="/cdn-cgi/l/email-protection#b1d0d3d8d0d2dedfdef1d6dcd0d8dd9fd2dedc">Email</a></div>
+    <div class="footer-copy">&copy; 2025 BAM FIT &mdash; By Any Means Fitness. Anthony B. Iacono.</div>
+    <div class="footer-links"><a href="about.html">About</a><a href="results.html">Results</a><a href="mailto:abiacono@gmail.com">Email</a></div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-    let mx=0,my=0,rx=0,ry=0;
-    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-    (function a(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;cursor.style.left=mx+'px';cursor.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
-    document.querySelectorAll('a,button').forEach(el=>{
-      el.addEventListener('mouseenter',()=>{cursor.style.width='18px';cursor.style.height='18px';ring.style.width='50px';ring.style.height='50px';});
-      el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';});
+  <script>
+    var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+    var mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+    (function a(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+    document.querySelectorAll('a,button').forEach(function(el){
+      el.addEventListener('mouseenter',function(){cur.style.width='16px';cur.style.height='16px';ring.style.width='48px';ring.style.height='48px';});
+      el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';ring.style.width='34px';ring.style.height='34px';});
     });
-  
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.08});
+    document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+
+    // 3D FLOATING CRYSTALS
+    (function(){
+      var c=document.getElementById('hero-canvas');
+      if(!c)return;
+      var W=window.innerWidth,H=c.parentElement.offsetHeight||500;
+      var renderer=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+      renderer.setSize(W,H);
+      renderer.setClearColor(0x000000,0);
+      var scene=new THREE.Scene();
+      var camera=new THREE.PerspectiveCamera(60,W/H,0.1,500);
+      camera.position.set(0,0,25);
+      var crystals=[];
+      var data=[
+        {s:3.5,x:12,y:2,z:-3,rx:0.002,ry:0.004,rz:0.001},
+        {s:2.5,x:-11,y:3,z:-5,rx:0.003,ry:0.003,rz:0.002},
+        {s:2.0,x:7,y:-5,z:-4,rx:0.004,ry:0.002,rz:0.003},
+        {s:1.5,x:-7,y:-4,z:-6,rx:0.002,ry:0.005,rz:0.001},
+        {s:1.2,x:15,y:-2,z:-8,rx:0.005,ry:0.003,rz:0.002},
+        {s:1.0,x:-15,y:1,z:-7,rx:0.003,ry:0.004,rz:0.003},
+        {s:0.8,x:4,y:7,z:-10,rx:0.004,ry:0.002,rz:0.005},
+        {s:0.7,x:-4,y:-8,z:-9,rx:0.006,ry:0.003,rz:0.002},
+        {s:0.6,x:18,y:4,z:-6,rx:0.005,ry:0.005,rz:0.003},
+        {s:0.5,x:-14,y:-3,z:-5,rx:0.004,ry:0.006,rz:0.002}
+      ];
+      data.forEach(function(d){
+        var geo=new THREE.OctahedronGeometry(d.s,0);
+        var wGeo=new THREE.WireframeGeometry(geo);
+        var wire=new THREE.LineSegments(wGeo,new THREE.LineBasicMaterial({color:0xFFD600,transparent:true,opacity:0.55,blending:THREE.AdditiveBlending}));
+        wire.position.set(d.x,d.y,d.z);
+        wire.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,0);
+        scene.add(wire);
+        var inner=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:0xFFD600,transparent:true,opacity:0.04}));
+        inner.position.copy(wire.position);inner.rotation.copy(wire.rotation);scene.add(inner);
+        crystals.push({wire:wire,inner:inner,rx:d.rx,ry:d.ry,rz:d.rz,fo:Math.random()*Math.PI*2});
+      });
+      var pg=new THREE.BufferGeometry();
+      var pp=new Float32Array(3000*3);
+      for(var i=0;i<3000;i++){pp[i*3]=(Math.random()-0.5)*100;pp[i*3+1]=(Math.random()-0.5)*70;pp[i*3+2]=(Math.random()-0.5)*50-10;}
+      pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+      scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0xFFD600,size:0.07,transparent:true,opacity:0.3,blending:THREE.AdditiveBlending,depthWrite:false})));
+      var pmx=0,pmy=0,t=0;
+      document.addEventListener('mousemove',function(e){pmx=(e.clientX/window.innerWidth-0.5)*2;pmy=(e.clientY/window.innerHeight-0.5)*2;});
+      (function anim(){
+        requestAnimationFrame(anim); t+=0.012;
+        crystals.forEach(function(cr){
+          cr.wire.rotation.x+=cr.rx;cr.wire.rotation.y+=cr.ry;cr.wire.rotation.z+=cr.rz;
+          cr.wire.position.y+=Math.sin(t*0.5+cr.fo)*0.006;
+          cr.inner.rotation.copy(cr.wire.rotation);cr.inner.position.copy(cr.wire.position);
+        });
+        camera.position.x+=(pmx*4-camera.position.x)*0.04;
+        camera.position.y+=(-pmy*2.5-camera.position.y)*0.04;
+        camera.lookAt(0,0,0);
+        renderer.render(scene,camera);
+      })();
+      window.addEventListener('resize',function(){
+        W=window.innerWidth;H=c.parentElement.offsetHeight||500;
+        renderer.setSize(W,H);camera.aspect=W/H;camera.updateProjectionMatrix();
+      });
+    })();
+  </script>
+</body>
+</html>
