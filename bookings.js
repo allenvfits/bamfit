@@ -1,11 +1,11 @@
 const express   = require('express');
 const router    = express.Router();
-const supabase  = require('../supabase');
-const adminAuth = require('../middleware/auth');
+const supabase  = require('./supabase');
+const adminAuth = require('./auth');
 
 // POST /api/bookings
 // Client books a session
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   const { client_id, package_id, service_type, session_date, duration_mins, notes } = req.body;
 
   if (!client_id || !service_type || !session_date) {
@@ -75,7 +75,7 @@ router.patch('/:id/complete', adminAuth, async (req, res) => {
 });
 
 // PATCH /api/bookings/:id/cancel — admin or client
-router.patch('/:id/cancel', async (req, res) => {
+router.patch('/:id/cancel', adminAuth, async (req, res) => {
   const { data, error } = await supabase
     .from('bookings')
     .update({ status: 'cancelled' })

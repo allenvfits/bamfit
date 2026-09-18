@@ -1,0 +1,12 @@
+:root{color-scheme:dark;--blue:#65d8ff;--y:#65d8ff;--purple:#a78bfa;--dark:#070917;--dark2:#10152c;--dark3:#151a35;--dark4:#1b2040;--border:rgba(130,150,255,.25);--text:#edf1ff;--muted:#a2abc6}
+*{box-sizing:border-box}body{font-family:Barlow,Arial,sans-serif;background:radial-gradient(ellipse at 90% 15%,#48246b33,transparent 48%),radial-gradient(ellipse at 10% 65%,#14618322,transparent 45%),#070917;color:var(--text);cursor:auto}
+a,button{cursor:pointer!important}input,textarea{cursor:text!important}
+nav{background:rgba(7,9,23,.94)!important;border-bottom-color:var(--border)!important}
+.nav-logo,.footer-logo,.f-logo{text-shadow:0 0 24px #a78bfa55}
+.nav-cta,.btn-glow,.btn-yellow,.pb-y,.btn-submit,.best-badge{background:linear-gradient(110deg,#65d8ff,#a78bfa)!important;color:#070917!important;box-shadow:0 0 24px #8b7cfa30}
+.banner-title span,.section-title span,.t2{background:linear-gradient(100deg,#65d8ff,#bba0ff);background-clip:text;-webkit-background-clip:text;color:transparent!important}
+.sess-card,.pkg-card,.story-card,.q-card,.stat-box,.mission-block{border-color:var(--border);box-shadow:inset 0 1px 0 #ffffff0a,0 8px 40px #08081833}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #bba0ff;outline-offset:4px}
+.owner-shell{max-width:760px;margin:120px auto 60px;padding:24px}.owner-shell h1{font-size:2.8rem}.owner-shell p{margin:18px 0;line-height:1.6}.owner-shell input,.owner-shell select{display:block;width:100%;padding:14px;margin:12px 0;background:#10152c;color:#edf1ff;border:1px solid var(--border)}.owner-shell button{padding:14px 22px;border:0;border-radius:6px;font-weight:700;margin:10px 0}.owner-shell a{color:#65d8ff}.notice{white-space:pre-wrap;line-height:1.6}
+@media(max-width:700px){nav{padding:.8rem 1rem!important;flex-wrap:wrap;gap:12px}.nav-links{display:flex!important;order:3;width:100%;justify-content:center;gap:1.1rem!important}.nav-links a{font-size:.72rem!important}.hero-content{padding:0 1.4rem!important}.cursor,.cursor-ring{display:none!important}.owner-shell{margin-top:140px}.banner{padding-top:155px!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal,.hero-eyebrow,.hero-title,.hero-sub,.hero-btns,.hero-stats{opacity:1!important;transform:none!important}}

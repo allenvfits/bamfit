@@ -1,6 +1,6 @@
 const express    = require('express');
 const router     = express.Router();
-const supabase   = require('../supabase');
+const supabase   = require('./supabase');
 const nodemailer = require('nodemailer');
 
 // Email transporter — uses Gmail app password
@@ -34,16 +34,9 @@ router.post('/', async (req, res) => {
   try {
     await transporter.sendMail({
       from: `"BAM FIT Website" <${process.env.EMAIL_USER}>`,
-      to: 'abiacono@gmail.com',
+      to: process.env.OWNER_EMAIL || 'abiacono@gmail.com',
       subject: `New BAM FIT Lead: ${full_name}`,
-      html: `
-        <h2>New contact form submission</h2>
-        <p><strong>Name:</strong> ${full_name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
-        <p><strong>Interested in:</strong> ${interest || 'Not specified'}</p>
-        <p><strong>Message:</strong><br>${message || 'No message'}</p>
-      `,
+      text: `Name: ${full_name}\nEmail: ${email}\nPhone: ${phone || ''}\nInterest: ${interest || ''}\nMessage: ${message || ''}`,
     });
   } catch (emailErr) {
     // Don't fail the request if email fails — lead is still saved

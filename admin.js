@@ -1,7 +1,7 @@
 const express   = require('express');
 const router    = express.Router();
-const supabase  = require('../supabase');
-const adminAuth = require('../middleware/auth');
+const supabase  = require('./supabase');
+const adminAuth = require('./auth');
 
 // All admin routes require the x-admin-secret header
 router.use(adminAuth);
