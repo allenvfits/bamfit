@@ -252,7 +252,7 @@
       var c=document.getElementById('hero-canvas');
       if(!c || !window.THREE || window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
       var W=window.innerWidth,H=c.parentElement.offsetHeight||600;
-      var renderer=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});
+      var renderer;try{renderer=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});}catch(error){c.classList.add("hologram-fallback");return;}
       renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
       renderer.setSize(W,H);
       renderer.setClearColor(0x000000,0);
