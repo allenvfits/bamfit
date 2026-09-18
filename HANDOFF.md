@@ -3,10 +3,12 @@
 Anthony owns the business and must authorize his own Stripe account, bank details, and identity verification. The code is prepared for this model; it does not transfer any external account automatically.
 
 ## Hosting and repository
-Transfer the GitHub repository to Anthony's confirmed GitHub username or organization after he accepts. Deploy into his confirmed Render workspace and place the domain registration/DNS under his control. Keep the developer as an invited collaborator only if he wants ongoing support. The current repository remains allenvfits/bamfit until an actual transfer is completed.
+Allen confirmed that GitHub and Render hosting stay under his accounts, and he will bill Anthony for the service. Keep allenvfits/bamfit and the existing BAM FIT Render service; no external ownership transfer is planned. Anthony remains the business owner and must authorize his own Stripe account for customer payments.
+
+The existing Render service is a static site. It can publish the design, but the Express payment/contact API requires a separate Node web service and API routing, or migration to Node hosting. Do not label payments as live until that runtime, database, and Stripe configuration are complete.
 
 ## Database and email
-Use a dedicated BAM FIT Supabase project owned by Anthony. Apply setup.sql there for the payment connection and paid-order inbox. Existing clients, contact_forms, packages, bookings, pnf_appointments, nutrition_plans and upcoming_bookings schema must already exist for the legacy management routes. Verify that schema before launch. Do not use another client's database. Configure Anthony's email sender and a strong unique ADMIN_SECRET that is delivered securely to Anthony. Do not put credentials into GitHub or browser code.
+Use a dedicated BAM FIT Supabase project managed under the agreed hosting arrangement. Apply setup.sql there for the payment connection and paid-order inbox. Existing clients, contact_forms, packages, bookings, pnf_appointments, nutrition_plans and upcoming_bookings schema must already exist for the legacy management routes. Verify that schema before launch. Do not use another client's database. Configure Anthony's email sender and a strong unique ADMIN_SECRET that is delivered securely to Anthony. Do not put credentials into GitHub or browser code.
 
 ## Connect setup
 1. Configure Stripe Connect OAuth on the platform that provides the integration. Set STRIPE_SECRET_KEY and STRIPE_CONNECT_CLIENT_ID from the same platform and mode. OAuth token exchange requires credentials permitted by Stripe for that endpoint; use restricted credentials where supported.
