@@ -1,11 +1,11 @@
 const express  = require('express');
 const router   = express.Router();
-const supabase = require('../supabase');
-const adminAuth = require('../middleware/auth');
+const supabase = require('./supabase');
+const adminAuth = require('./auth');
 
 // POST /api/clients
 // Create a new client (called on signup or first booking)
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   const { full_name, email, phone, goal } = req.body;
 
   if (!full_name || !email) {

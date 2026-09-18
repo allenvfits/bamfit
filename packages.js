@@ -1,7 +1,7 @@
 const express   = require('express');
 const router    = express.Router();
-const supabase  = require('../supabase');
-const adminAuth = require('../middleware/auth');
+const supabase  = require('./supabase');
+const adminAuth = require('./auth');
 
 // Package config — matches Supabase check constraint
 const PACKAGE_CONFIG = {
@@ -17,7 +17,7 @@ const PACKAGE_CONFIG = {
 
 // POST /api/packages
 // Called automatically after a successful Stripe payment
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   const { client_id, type, stripe_payment_id } = req.body;
 
   if (!client_id || !type) {

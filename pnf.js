@@ -1,11 +1,11 @@
 const express   = require('express');
 const router    = express.Router();
-const supabase  = require('../supabase');
-const adminAuth = require('../middleware/auth');
+const supabase  = require('./supabase');
+const adminAuth = require('./auth');
 
 // POST /api/pnf
 // Book a PNF stretching appointment
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   const { client_id, session_length, session_date, notes } = req.body;
 
   if (!client_id || !session_length || !session_date) {
