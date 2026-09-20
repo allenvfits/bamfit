@@ -1,696 +1,1462 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BAM FIT | By Any Means Fitness</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet"/>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{font-family:'Barlow',sans-serif;background:#070917;color:#e8e8e0;overflow-x:hidden;cursor:none;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="BAM FIT — By Any Means Fitness. Personal training in Phoenix, Arizona. Complete your fitness questionnaire to unlock training options.">
+<title>BAM FIT | By Any Means Fitness</title>
 
-    /* CURSOR */
-    .cursor{position:fixed;width:10px;height:10px;background:#65d8ff;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 12px #65d8ff,0 0 24px rgba(101,216,255,0.5);transition:width .15s,height .15s;}
-    .cursor-ring{position:fixed;width:34px;height:34px;border:1px solid rgba(101,216,255,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    :root{
-      --y:#65d8ff; --yd:rgba(101,216,255,0.15); --ys:rgba(101,216,255,0.07);
-      --dark:#070917; --d2:#0b1024; --d3:#151a35; --d4:#1b2040;
-      --border:rgba(101,216,255,0.14); --text:#e8e8e0; --muted:#a2abc6;
-      --ff:'Bebas Neue',sans-serif;
-    }
-    ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--y);}
+<style>
+:root{
+  --space:#03040d;
+  --space2:#08091b;
+  --glass:rgba(8,11,34,.68);
+  --glass2:rgba(18,16,58,.56);
+  --line:rgba(112,137,255,.18);
+  --cyan:#55eaff;
+  --blue:#3180ff;
+  --violet:#8c5cff;
+  --purple:#bd63ff;
+  --pink:#e877ff;
+  --white:#f7f7ff;
+  --text:#dbdaea;
+  --muted:#9694aa;
+  --display:'Bebas Neue',sans-serif;
+  --body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--space)}
+body{
+  font-family:var(--body);
+  color:var(--white);
+  background:
+    radial-gradient(circle at 15% 10%,rgba(106,56,255,.14),transparent 32rem),
+    radial-gradient(circle at 90% 12%,rgba(37,126,255,.12),transparent 30rem),
+    linear-gradient(180deg,#02030b,#050618 45%,#03040d);
+  overflow-x:hidden
+}
+body.locked{overflow:hidden}
+a{color:inherit}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+::selection{background:rgba(95,115,255,.36);color:#fff}
+::-webkit-scrollbar{width:7px}
+::-webkit-scrollbar-track{background:#02030b}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue),var(--violet));border-radius:20px}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;background:rgba(7,9,23,0.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);}
-    .nav-logo{font-family:var(--ff);font-size:2.2rem;color:var(--text);text-decoration:none;letter-spacing:0.05em;text-shadow:0 0 20px rgba(101,216,255,0.3);}
-    .nav-logo span{color:var(--y);}
-    .nav-links{display:flex;gap:2.2rem;list-style:none;}
-    .nav-links a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;transition:color 0.2s;}
-    .nav-links a:hover{color:var(--y);}
-    .nav-cta{background:var(--y);color:#000;padding:0.5rem 1.3rem;border-radius:2px;font-weight:700;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;box-shadow:0 0 16px rgba(101,216,255,0.35);transition:box-shadow 0.2s,transform 0.15s;}
-    .nav-cta:hover{box-shadow:0 0 30px rgba(101,216,255,0.6);transform:translateY(-1px);}
+body:before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.065;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.28'/%3E%3C/svg%3E");
+  mix-blend-mode:screen
+}
 
-    /* HERO */
-    #hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;}
-    #hero-canvas{position:absolute;inset:0;z-index:0;}
-    .hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 25% 50%,rgba(101,216,255,0.05) 0%,transparent 55%),linear-gradient(180deg,rgba(7,9,23,0.2) 0%,transparent 40%,rgba(7,9,23,0.7) 85%,#070917 100%);}
-    .hero-content{position:relative;z-index:2;padding:0 5rem;max-width:860px;}
-    .hero-eyebrow{display:inline-flex;align-items:center;gap:0.7rem;color:var(--y);font-size:0.72rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:1.2rem;opacity:0;animation:fadeUp 0.7s ease 0.2s forwards;}
-    .hero-eyebrow::before{content:'';display:block;width:36px;height:1px;background:var(--y);box-shadow:0 0 8px var(--y);}
-    .live-dot{width:5px;height:5px;border-radius:50%;background:var(--y);box-shadow:0 0 8px var(--y);animation:livePulse 1.8s infinite;}
-    @keyframes livePulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(1.8);}}
-    h1.hero-title{font-family:var(--ff);font-size:clamp(4.5rem,11vw,10.5rem);line-height:0.86;letter-spacing:0.02em;opacity:0;animation:fadeUp 0.7s ease 0.35s forwards;}
-    .t1{display:block;color:var(--text);}
-    .t2{display:block;color:transparent;-webkit-text-stroke:2px var(--y);filter:drop-shadow(0 0 18px rgba(101,216,255,0.6)) drop-shadow(0 0 40px rgba(101,216,255,0.3));}
-    .t3{display:block;font-size:clamp(1.6rem,3vw,3rem);letter-spacing:0.14em;color:var(--muted);margin-top:0.3rem;}
-    .hero-tagline{font-family:var(--ff);font-size:clamp(0.9rem,1.5vw,1.35rem);letter-spacing:0.22em;color:var(--y);margin:1rem 0;text-shadow:0 0 20px rgba(101,216,255,0.5);opacity:0;animation:fadeUp 0.7s ease 0.5s forwards;}
-    .hero-desc{font-size:0.98rem;font-weight:300;color:var(--muted);line-height:1.8;max-width:480px;margin-bottom:2rem;opacity:0;animation:fadeUp 0.7s ease 0.62s forwards;}
-    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s ease 0.74s forwards;}
-    .btn-glow{background:var(--y);color:#000;padding:0.85rem 2.2rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;text-decoration:none;display:inline-block;box-shadow:0 0 22px rgba(101,216,255,0.45),0 0 60px rgba(101,216,255,0.15);transition:box-shadow 0.2s,transform 0.15s;}
-    .btn-glow:hover{box-shadow:0 0 40px rgba(101,216,255,0.7),0 0 80px rgba(101,216,255,0.25);transform:translateY(-2px);}
-    .btn-ghost{background:transparent;color:var(--text);padding:0.85rem 2.2rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:1px solid rgba(232,232,224,0.18);border-radius:2px;cursor:none;text-decoration:none;display:inline-block;transition:border-color 0.2s,color 0.2s,transform 0.15s;}
-    .btn-ghost:hover{border-color:var(--y);color:var(--y);transform:translateY(-2px);}
-    .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:0.4rem;opacity:0;animation:fadeUp 0.7s ease 1s forwards;}
-    .scroll-line{width:1px;height:44px;background:linear-gradient(180deg,var(--y),transparent);box-shadow:0 0 6px var(--y);animation:scrollAnim 2s ease-in-out infinite;}
-    .scroll-label{font-size:0.6rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);}
-    @keyframes scrollAnim{0%,100%{transform:scaleY(1);opacity:1;}50%{transform:scaleY(0.4);opacity:0.4;}}
+/* moving star layer */
+#starfield{position:fixed;inset:0;pointer-events:none;z-index:-2}
 
-    /* STATS STRIP */
-    #stats{background:var(--d3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2rem 4rem;display:flex;align-items:center;justify-content:space-around;gap:1.5rem;flex-wrap:wrap;}
-    .stat-item{text-align:center;}
-    .stat-num{font-family:var(--ff);font-size:3rem;color:var(--y);line-height:1;text-shadow:0 0 16px rgba(101,216,255,0.4);}
-    .stat-lbl{font-size:0.68rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem;}
-    .stat-div{width:1px;height:44px;background:var(--border);}
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;height:74px;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;padding:0 4vw;
+  background:rgba(3,4,14,.54);
+  border-bottom:1px solid rgba(112,137,255,.12);
+  backdrop-filter:blur(20px)
+}
+.brand{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+.logo{
+  width:39px;height:39px;border-radius:50%;position:relative;
+  border:1px solid rgba(85,234,255,.38);
+  box-shadow:0 0 28px rgba(49,128,255,.18),inset 0 0 18px rgba(140,92,255,.09)
+}
+.logo:before,.logo:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%}
+.logo:before{width:21px;height:21px;border:1px solid var(--violet)}
+.logo:after{width:6px;height:6px;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.brand-name{font-family:var(--display);font-size:2rem;letter-spacing:.08em}
+.brand-name span{color:var(--cyan);text-shadow:0 0 18px rgba(85,234,255,.48)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  text-decoration:none;color:#9592a8;font-size:.69rem;font-weight:800;
+  letter-spacing:.15em;text-transform:uppercase;transition:.25s
+}
+.nav-links a:hover{color:#fff}
+.nav-lock{
+  border:1px solid rgba(140,92,255,.22);
+  background:rgba(111,70,255,.08);
+  color:#b9adff;
+  border-radius:999px;padding:.47rem .82rem;
+  font-size:.58rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase
+}
+.nav-cta{
+  border:0;border-radius:999px;padding:.72rem 1.15rem;
+  color:#fff;background:linear-gradient(135deg,#7040ff,#247dff);
+  font-size:.67rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  box-shadow:0 10px 28px rgba(60,61,226,.24)
+}
+.menu{display:none;background:none;border:0;color:#fff;font-size:1.4rem}
 
-    /* SHARED */
-    section{padding:3.5rem 4rem;}
-    .stag{display:inline-flex;align-items:center;gap:0.55rem;color:var(--y);font-size:0.7rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;margin-bottom:0.7rem;}
-    .stag::before{content:'';display:block;width:26px;height:1px;background:var(--y);box-shadow:0 0 6px var(--y);}
-    .stitle{font-family:var(--ff);font-size:clamp(2.5rem,4.5vw,4rem);line-height:0.93;color:var(--text);margin-bottom:0.8rem;}
-    .stitle span{color:var(--y);text-shadow:0 0 20px rgba(101,216,255,0.3);}
-    .ssub{font-size:0.95rem;font-weight:300;color:var(--muted);line-height:1.78;max-width:520px;}
-    .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
-    .reveal.visible{opacity:1;transform:translateY(0);}
+/* HERO */
+.hero{
+  min-height:100svh;position:relative;overflow:hidden;
+  display:flex;align-items:center;padding:108px 4vw 64px;
+  isolation:isolate
+}
+.hero-art{
+  position:absolute;inset:-3%;z-index:-8;
+  background-image:url("bamfit-atlas-hero.webp");
+  background-size:cover;background-position:center;
+  transform:scale(1.05);
+  animation:heroFloat 12s ease-in-out infinite alternate;
+  will-change:transform
+}
+@keyframes heroFloat{
+  from{transform:scale(1.05) translate3d(-.5%,0,0)}
+  to{transform:scale(1.09) translate3d(.8%,-.6%,0)}
+}
+.hero-art:after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(2,3,11,.96) 0%,rgba(2,3,11,.83) 27%,rgba(2,3,11,.28) 54%,rgba(2,3,11,.07) 76%,rgba(2,3,11,.25) 100%),
+    linear-gradient(180deg,rgba(3,4,14,.24),transparent 28%,transparent 78%,#02030b 100%)
+}
+.holo-scan{
+  position:absolute;inset:0;z-index:-6;pointer-events:none;opacity:.23;
+  background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(82,232,255,.035) 6px 7px);
+  animation:scanMove 8s linear infinite
+}
+@keyframes scanMove{to{background-position:0 100px}}
+.hero-glitch{
+  position:absolute;inset:0;z-index:-5;pointer-events:none;
+  background:
+    radial-gradient(circle at 68% 36%,rgba(82,232,255,.12),transparent 18rem),
+    radial-gradient(circle at 82% 55%,rgba(178,89,255,.10),transparent 21rem);
+  animation:glowPulse 4s ease-in-out infinite alternate
+}
+@keyframes glowPulse{to{opacity:.55;filter:brightness(1.25)}}
+.hero-inner{width:min(1300px,100%);margin:0 auto}
+.hero-copy{width:min(640px,50vw)}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.65rem;padding:.43rem .8rem;border-radius:999px;
+  border:1px solid rgba(109,127,255,.18);background:rgba(49,61,145,.08);
+  color:#cbc8ff;font-size:.62rem;font-weight:800;letter-spacing:.19em;text-transform:uppercase;
+  margin-bottom:1.25rem
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 13px var(--cyan);animation:pulse 1.7s infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(1.7)}}
+h1{
+  font-family:var(--display);font-size:clamp(5.1rem,10vw,10.2rem);line-height:.79;
+  font-weight:400;letter-spacing:.01em
+}
+h1 span{display:block}
+h1 .outline{
+  color:transparent;-webkit-text-stroke:1.7px rgba(153,124,255,.95);
+  text-shadow:0 0 30px rgba(100,58,255,.25);margin-left:clamp(.1rem,2vw,1.6rem)
+}
+.kicker{
+  font-family:var(--display);font-size:clamp(1.15rem,2vw,1.95rem);letter-spacing:.18em;
+  margin:1.05rem 0 .75rem;
+  background:linear-gradient(90deg,var(--cyan),#98a6ff,var(--pink));-webkit-background-clip:text;color:transparent
+}
+.hero p{color:#aaa8bc;line-height:1.8;max-width:560px}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.65rem}
+.primary,.secondary{
+  border-radius:999px;padding:.9rem 1.5rem;text-decoration:none;
+  font-size:.71rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;transition:.25s
+}
+.primary{
+  border:0;color:#fff;background:linear-gradient(135deg,#7040ff,#247dff);
+  box-shadow:0 14px 34px rgba(62,58,222,.27)
+}
+.primary:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(63,59,222,.42)}
+.secondary{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.025);color:#e0deed}
+.secondary:hover{border-color:rgba(85,234,255,.4);transform:translateY(-2px)}
+.hero-tags{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:1.8rem;color:#817e91;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+.hero-tags span:before{content:"✦";color:var(--violet);margin-right:.4rem}
 
-    /* WHY */
-    #why{background:var(--d2);position:relative;overflow:hidden;}
-    #why::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(101,216,255,0.05),transparent 70%);top:-100px;right:-80px;pointer-events:none;}
-    .why-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:3.5rem;align-items:center;margin-top:2.5rem;}
-    .why-photo{aspect-ratio:4/5;background:var(--d3);border-radius:4px;border:1px solid rgba(101,216,255,0.1);position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.8rem;overflow:hidden;}
-    .why-photo::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(101,216,255,0.07),transparent 55%);}
-    .why-photo-icon{font-size:5rem;opacity:0.06;}
-    .why-photo p{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
-    .photo-badge{position:absolute;bottom:1.2rem;left:1.2rem;background:var(--y);color:#000;padding:0.45rem 0.9rem;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;box-shadow:0 0 16px rgba(101,216,255,0.4);}
-    .why-text{display:flex;flex-direction:column;gap:1.2rem;}
-    .why-text p{font-size:0.96rem;font-weight:300;color:var(--muted);line-height:1.85;}
-    .why-text p strong{color:var(--text);font-weight:600;}
-    .why-text p em{color:var(--y);font-style:normal;}
-    .mission-block{background:var(--d4);border:1px solid var(--border);border-radius:4px;padding:1.5rem;position:relative;overflow:hidden;box-shadow:inset 0 0 30px rgba(101,216,255,0.03);}
-    .mission-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--y);box-shadow:0 0 10px var(--y);}
-    .mission-lbl{font-size:0.62rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--y);margin-bottom:0.5rem;}
-    .mission-txt{font-family:var(--ff);font-size:1.6rem;color:var(--text);line-height:1.1;}
-    .svc-list{margin-top:1.2rem;display:flex;flex-direction:column;}
-    .svc-item{display:flex;align-items:center;gap:0.9rem;padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.04);transition:padding-left 0.2s;}
-    .svc-item:hover{padding-left:0.5rem;}
-    .svc-dot{width:5px;height:5px;border-radius:50%;background:var(--y);flex-shrink:0;box-shadow:0 0 6px var(--y);}
-    .svc-name{font-size:0.88rem;font-weight:600;color:var(--text);}
+/* QUESTIONNAIRE GATE */
+.gate{
+  position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:1rem;
+  background:
+    radial-gradient(circle at 70% 20%,rgba(81,64,255,.17),transparent 26rem),
+    rgba(1,2,9,.83);
+  backdrop-filter:blur(16px);
+  transition:.5s ease;
+  overflow:hidden;
+}
+.gate.hidden{opacity:0;visibility:hidden;pointer-events:none}
 
-    /* PRICING */
-    #pricing{background:var(--dark);position:relative;}
-    #pricing::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(101,216,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(101,216,255,0.025) 1px,transparent 1px);background-size:55px 55px;pointer-events:none;}
-    .pkg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin-top:2.5rem;position:relative;}
-    .pkg-card{background:rgba(20,20,0,0.85);border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:1.8rem;backdrop-filter:blur(8px);transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;}
-    .pkg-card:hover{transform:translateY(-5px);border-color:rgba(101,216,255,0.3);box-shadow:0 16px 50px rgba(0,0,0,0.5),0 0 25px rgba(101,216,255,0.07);}
-    .pkg-card.feat{border-color:rgba(101,216,255,0.4);background:rgba(101,216,255,0.04);box-shadow:0 0 30px rgba(101,216,255,0.06);}
-    .pkg-lbl{font-size:0.63rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--y);margin-bottom:0.6rem;}
-    .pkg-name{font-family:var(--ff);font-size:1.7rem;color:var(--text);letter-spacing:0.03em;margin-bottom:0.4rem;}
-    .pkg-price{font-family:var(--ff);font-size:3.5rem;color:var(--y);line-height:1;margin-bottom:0.2rem;text-shadow:0 0 20px rgba(101,216,255,0.3);}
-    .pkg-rate{font-size:0.73rem;color:var(--muted);margin-bottom:0.8rem;}
-    .pkg-desc{font-size:0.82rem;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:1.2rem;}
-    .pkg-btn{display:block;width:100%;padding:0.72rem;text-align:center;font-family:'Barlow',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;text-decoration:none;cursor:none;border:none;transition:transform 0.15s,box-shadow 0.2s;}
-    .pkg-btn:hover{transform:translateY(-2px);}
-    .pb-y{background:var(--y);color:#000;box-shadow:0 0 18px rgba(101,216,255,0.3);}
-    .pb-y:hover{box-shadow:0 0 35px rgba(101,216,255,0.6);}
-    .pb-g{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12);}
-    .pb-g:hover{border-color:var(--y);color:var(--y);}
-    .see-all{text-align:center;margin-top:2rem;}
-    .see-all a{display:inline-flex;align-items:center;gap:0.6rem;color:var(--y);font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;transition:gap 0.2s;}
-    .see-all a:hover{gap:1rem;}
+.gate.opening{
+  animation:gateFadeIn 2.4s ease both;
+}
+.gate.opening .gate-card{
+  animation:cloudCardIn 4.8s cubic-bezier(.16,.68,.18,1) both;
+}
+.gate.closing .gate-card{
+  animation:cloudCardOut 2.2s ease both;
+}
 
-    /* SPECIALTIES */
-    #specs{background:var(--d2);}
-    .spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.5rem;}
-    .spec-card{background:var(--d3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:1.7rem;position:relative;overflow:hidden;transition:transform 0.3s,border-color 0.3s;}
-    .spec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--y),transparent);opacity:0;transition:opacity 0.3s;}
-    .spec-card:hover{transform:translateY(-4px);border-color:rgba(101,216,255,0.2);}
-    .spec-card:hover::before{opacity:1;}
-    .spec-icon{font-size:1.8rem;margin-bottom:0.7rem;}
-    .spec-name{font-family:var(--ff);font-size:1.4rem;color:var(--text);letter-spacing:0.03em;margin-bottom:0.5rem;}
-    .spec-desc{font-size:0.82rem;font-weight:300;color:var(--muted);line-height:1.7;}
+@keyframes gateFadeIn{
+  0%{opacity:0}
+  30%{opacity:.22}
+  65%{opacity:.72}
+  100%{opacity:1}
+}
+@keyframes cloudCardIn{
+  0%{
+    opacity:0;
+    transform:scale(.88) translateY(24px);
+    filter:blur(26px) brightness(.82);
+  }
+  28%{
+    opacity:.18;
+    transform:scale(.91) translateY(18px);
+    filter:blur(20px) brightness(.9);
+  }
+  55%{
+    opacity:.42;
+    transform:scale(.95) translateY(10px);
+    filter:blur(13px) brightness(.97);
+  }
+  78%{
+    opacity:.76;
+    transform:scale(.985) translateY(4px);
+    filter:blur(6px) brightness(1.02);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1) translateY(0);
+    filter:blur(0) brightness(1);
+  }
+}
+@keyframes cloudCardOut{
+  0%{opacity:1;transform:scale(1);filter:blur(0)}
+  50%{opacity:.58;transform:scale(.97);filter:blur(8px)}
+  100%{opacity:0;transform:scale(.91) translateY(16px);filter:blur(22px)}
+}
 
-    /* NUTRITION */
-    #nutrition{background:var(--d3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:3rem 4rem;}
-    .nut-inner{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;}
-    .nut-text h3{font-family:var(--ff);font-size:clamp(1.8rem,3.5vw,3.2rem);color:var(--text);line-height:0.93;margin-bottom:0.8rem;}
-    .nut-text h3 span{color:var(--y);text-shadow:0 0 16px rgba(101,216,255,0.4);}
-    .nut-text p{font-size:0.9rem;font-weight:300;color:var(--muted);line-height:1.78;max-width:540px;}
-    .nut-text p strong{color:var(--text);font-weight:600;}
-    .nut-price{text-align:center;flex-shrink:0;}
-    .nut-big{font-family:var(--ff);font-size:5rem;color:var(--y);line-height:1;text-shadow:0 0 28px rgba(101,216,255,0.5);}
-    .nut-lbl{font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
+/* SLOW SEE-THROUGH CLOUD TORNADO */
+.tornado-wrap{
+  position:absolute;
+  inset:-34%;
+  pointer-events:none;
+  opacity:0;
+  display:grid;
+  place-items:center;
+  filter:blur(10px);
+  transform-origin:center;
+}
 
-    /* TESTIMONIALS */
-    #testi{background:var(--dark);}
-    .t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.5rem;}
-    .t-card{background:var(--d3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:1.8rem;transition:transform 0.3s,border-color 0.3s;}
-    .t-card:hover{transform:translateY(-4px);border-color:rgba(101,216,255,0.18);}
-    .t-stars{color:var(--y);font-size:0.7rem;letter-spacing:2px;margin-bottom:0.7rem;text-shadow:0 0 8px rgba(101,216,255,0.4);}
-    .t-quote{font-size:0.88rem;font-weight:300;color:var(--text);line-height:1.75;margin-bottom:1.2rem;}
-    .t-author{display:flex;align-items:center;gap:0.7rem;}
-    .t-av{width:38px;height:38px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:1rem;color:#000;flex-shrink:0;box-shadow:0 0 12px rgba(101,216,255,0.35);}
-    .t-name{font-size:0.86rem;font-weight:600;color:var(--text);}
-    .t-res{font-size:0.7rem;color:var(--y);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:0.1rem;}
+.tornado-wrap:before,
+.tornado-wrap:after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  mix-blend-mode:screen;
+  filter:blur(70px);
+  opacity:0;
+}
 
-    /* CTA */
-    #cta{position:relative;overflow:hidden;padding:5rem 4rem;text-align:center;}
-    #cta::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(101,216,255,0.07) 0%,transparent 50%,rgba(101,216,255,0.04) 100%);}
-    #cta::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(101,216,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(101,216,255,0.025) 1px,transparent 1px);background-size:55px 55px;}
-    .cta-in{position:relative;z-index:1;}
-    #cta h2{font-family:var(--ff);font-size:clamp(3rem,6.5vw,7rem);color:var(--text);line-height:0.9;margin-bottom:1rem;}
-    #cta h2 span{color:var(--y);text-shadow:0 0 40px rgba(101,216,255,0.5);}
-    #cta p{font-size:1rem;font-weight:300;color:var(--muted);margin-bottom:2.5rem;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.75;}
+.tornado-wrap:before{
+  width:118vmax;
+  height:82vmax;
+  background:
+    radial-gradient(ellipse at 30% 44%,rgba(77,145,255,.18),transparent 38%),
+    radial-gradient(ellipse at 70% 54%,rgba(159,92,255,.16),transparent 42%),
+    radial-gradient(ellipse at 50% 64%,rgba(88,226,255,.10),transparent 48%);
+}
 
-    /* CONTACT */
-    #contact{background:var(--d2);}
-    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:2.5rem;}
-    .c-info{display:flex;flex-direction:column;gap:1.5rem;}
-    .c-item .c-lbl{font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--y);margin-bottom:0.25rem;}
-    .c-item .c-val{font-size:0.96rem;color:var(--text);}
-    .c-item .c-val a{color:var(--text);text-decoration:none;transition:color 0.2s;}.c-item .c-val a:hover{color:var(--y);}
-    .c-form{display:flex;flex-direction:column;gap:0.85rem;}
-    .fg{display:flex;flex-direction:column;gap:0.3rem;}
-    .fg label{font-size:0.66rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
-    .fg input,.fg select,.fg textarea{background:var(--d3);border:1px solid rgba(255,255,255,0.07);border-radius:2px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.92rem;padding:0.7rem 1rem;transition:border-color 0.2s,box-shadow 0.2s;outline:none;cursor:none;}
-    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--y);box-shadow:0 0 0 1px rgba(101,216,255,0.12),0 0 12px rgba(101,216,255,0.06);}
-    .fg select option{background:var(--d3);}
-    .fg textarea{resize:vertical;min-height:90px;}
-    .f-row{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;}
-    .f-note{font-size:0.7rem;color:var(--muted);line-height:1.6;}
-    .btn-submit{background:var(--y);color:#000;padding:0.95rem;font-family:'Barlow',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:none;border-radius:2px;cursor:none;width:100%;box-shadow:0 0 18px rgba(101,216,255,0.3);transition:box-shadow 0.2s,transform 0.15s;}
-    .btn-submit:hover{box-shadow:0 0 38px rgba(101,216,255,0.6);transform:translateY(-2px);}
+.tornado-wrap:after{
+  width:90vmax;
+  height:68vmax;
+  background:
+    radial-gradient(ellipse at 50% 48%,rgba(151,96,255,.14),transparent 43%),
+    radial-gradient(ellipse at 42% 60%,rgba(74,182,255,.12),transparent 50%);
+}
 
-    /* FOOTER */
-    footer{background:var(--dark);border-top:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;}
-    .f-logo{font-family:var(--ff);font-size:1.9rem;color:var(--text);}.f-logo span{color:var(--y);}
-    .f-copy{font-size:0.76rem;color:var(--muted);}
-    .f-links{display:flex;gap:1.8rem;}
-    .f-links a{font-size:0.76rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}.f-links a:hover{color:var(--y);}
+.gate.opening .tornado-wrap{
+  animation:slowCloudVortex 6.8s ease-in-out both;
+}
+.gate.opening .tornado-wrap:before{
+  animation:slowCloudDriftA 7.1s ease-in-out both;
+}
+.gate.opening .tornado-wrap:after{
+  animation:slowCloudDriftB 7.1s ease-in-out both;
+}
 
-    /* CHAT */
-    .chat-toggle{position:fixed;bottom:1.8rem;right:1.8rem;width:56px;height:56px;background:var(--y);border:none;border-radius:50%;cursor:none;z-index:200;display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px rgba(101,216,255,0.5),0 0 50px rgba(101,216,255,0.2);transition:transform 0.2s,box-shadow 0.2s;}
-    .chat-toggle:hover{transform:scale(1.1);box-shadow:0 0 40px rgba(101,216,255,0.7);}
-    .chat-toggle svg{width:23px;height:23px;}
-    .chat-toggle .ci-close{display:none;}
-    .chat-toggle.open .ci-chat{display:none;}.chat-toggle.open .ci-close{display:block;}
-    .chatbox{position:fixed;bottom:6.2rem;right:1.8rem;width:370px;max-height:540px;background:var(--d3);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;z-index:199;overflow:hidden;transform:scale(0.85) translateY(18px);transform-origin:bottom right;opacity:0;pointer-events:none;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s;}
-    .chatbox.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
-    .ch-head{background:var(--d4);border-bottom:1px solid var(--border);padding:0.9rem 1.1rem;display:flex;align-items:center;gap:0.7rem;}
-    .ch-av{width:34px;height:34px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:1rem;color:#000;flex-shrink:0;box-shadow:0 0 10px rgba(101,216,255,0.4);}
-    .ch-title{font-size:0.88rem;font-weight:600;color:var(--text);}
-    .ch-status{font-size:0.68rem;color:#4caf50;display:flex;align-items:center;gap:0.3rem;}
-    .ch-status::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:#4caf50;}
-    .ch-key{padding:0.7rem 1rem;background:rgba(101,216,255,0.04);border-bottom:1px solid var(--border);display:flex;gap:0.5rem;}
-    .ch-key input{flex:1;background:var(--dark);border:1px solid rgba(255,255,255,0.08);border-radius:3px;color:var(--text);font-size:0.72rem;padding:0.38rem 0.65rem;font-family:'Barlow',sans-serif;outline:none;cursor:none;}
-    .ch-key input:focus{border-color:var(--y);}
-    .ch-key button{background:var(--y);color:#000;border:none;border-radius:3px;font-size:0.68rem;font-weight:700;padding:0.38rem 0.75rem;cursor:none;letter-spacing:0.06em;text-transform:uppercase;}
-    .ch-msgs{flex:1;overflow-y:auto;padding:0.9rem;display:flex;flex-direction:column;gap:0.65rem;scroll-behavior:smooth;}
-    .ch-msgs::-webkit-scrollbar{width:2px;}.ch-msgs::-webkit-scrollbar-thumb{background:var(--border);}
-    .msg{max-width:86%;padding:0.6rem 0.85rem;border-radius:5px;font-size:0.83rem;line-height:1.55;animation:msgIn 0.22s ease;}
-    .msg.bot{background:var(--d4);border:1px solid rgba(255,255,255,0.04);color:var(--text);align-self:flex-start;}
-    .msg.user{background:var(--y);color:#000;align-self:flex-end;font-weight:500;}
-    .msg.typing{background:var(--d4);border:1px solid rgba(255,255,255,0.04);align-self:flex-start;display:flex;gap:4px;align-items:center;padding:0.7rem 0.9rem;}
-    .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:bounce 1.2s infinite;}
-    .dot:nth-child(2){animation-delay:0.2s;}.dot:nth-child(3){animation-delay:0.4s;}
-    .ch-chips{display:flex;gap:0.35rem;flex-wrap:wrap;padding:0 0.9rem 0.5rem;}
-    .chip{background:transparent;border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:0.68rem;font-family:'Barlow',sans-serif;padding:0.26rem 0.62rem;cursor:none;transition:border-color 0.15s,color 0.15s;}
-    .chip:hover{border-color:var(--y);color:var(--y);}
-    .ch-input-row{border-top:1px solid var(--border);padding:0.7rem 0.9rem;display:flex;gap:0.55rem;background:var(--d4);}
-    .ch-input{flex:1;background:var(--dark);border:1px solid rgba(255,255,255,0.07);border-radius:4px;color:var(--text);font-size:0.83rem;font-family:'Barlow',sans-serif;padding:0.55rem 0.75rem;outline:none;resize:none;cursor:none;transition:border-color 0.2s;}
-    .ch-input:focus{border-color:var(--y);}
-    .ch-send{background:var(--y);border:none;border-radius:4px;width:34px;height:34px;cursor:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:box-shadow 0.15s;}
-    .ch-send:hover{box-shadow:0 0 14px rgba(101,216,255,0.5);}
-    .ch-send svg{width:14px;height:14px;}
+/* rings are now extremely faint, just enough to imply rotation */
+.tornado-ring{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(117,183,255,.045);
+  background:conic-gradient(
+    from 0deg,
+    transparent 0 12%,
+    rgba(76,144,255,.035) 18%,
+    transparent 30% 43%,
+    rgba(166,94,255,.04) 50%,
+    transparent 64% 76%,
+    rgba(89,226,255,.03) 84%,
+    transparent 94%
+  );
+  box-shadow:
+    0 0 85px rgba(82,232,255,.025),
+    inset 0 0 85px rgba(139,92,255,.025);
+  mix-blend-mode:screen;
+  filter:blur(7px);
+}
+.r1{width:148vmax;height:148vmax;animation:cloudSpin 18s linear infinite}
+.r2{width:112vmax;height:112vmax;animation:cloudSpinReverse 15s linear infinite}
+.r3{width:79vmax;height:79vmax;animation:cloudSpin 12.5s linear infinite}
+.r4{width:48vmax;height:48vmax;animation:cloudSpinReverse 10s linear infinite}
 
-    @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
-    @keyframes msgIn{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
-    @keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+@keyframes cloudSpin{
+  to{transform:rotate(360deg) scale(.97)}
+}
+@keyframes cloudSpinReverse{
+  to{transform:rotate(-360deg) scale(1.025)}
+}
+@keyframes slowCloudVortex{
+  0%{
+    opacity:0;
+    transform:scale(1.4) rotate(-10deg);
+  }
+  18%{
+    opacity:.16;
+  }
+  38%{
+    opacity:.40;
+    transform:scale(1.18) rotate(-3deg);
+  }
+  62%{
+    opacity:.58;
+    transform:scale(.98) rotate(6deg);
+  }
+  82%{
+    opacity:.30;
+    transform:scale(.82) rotate(12deg);
+  }
+  100%{
+    opacity:.05;
+    transform:scale(.72) rotate(18deg);
+  }
+}
+@keyframes slowCloudDriftA{
+  0%{
+    opacity:0;
+    transform:translate(-13%,12%) scale(1.35) rotate(-14deg);
+  }
+  22%{opacity:.20}
+  48%{
+    opacity:.48;
+    transform:translate(-2%,3%) scale(1.18) rotate(-4deg);
+  }
+  72%{
+    opacity:.58;
+    transform:translate(6%,-4%) scale(1.00) rotate(7deg);
+  }
+  100%{
+    opacity:.06;
+    transform:translate(12%,-10%) scale(.82) rotate(16deg);
+  }
+}
+@keyframes slowCloudDriftB{
+  0%{
+    opacity:0;
+    transform:translate(14%,-10%) scale(1.30) rotate(12deg);
+  }
+  24%{opacity:.18}
+  50%{
+    opacity:.42;
+    transform:translate(3%,-2%) scale(1.15) rotate(3deg);
+  }
+  74%{
+    opacity:.52;
+    transform:translate(-5%,5%) scale(.98) rotate(-7deg);
+  }
+  100%{
+    opacity:.05;
+    transform:translate(-12%,11%) scale(.80) rotate(-15deg);
+  }
+}
 
-    @media(max-width:900px){
-      nav{padding:1rem 1.5rem;}.nav-links{display:none;}
-      section{padding:3rem 1.5rem;}
-      #hero .hero-content{padding:0 1.5rem;}
-      #stats{padding:1.8rem 1.5rem;}
-      .why-grid,.contact-grid{grid-template-columns:1fr;gap:2.5rem;}
-      .pkg-grid,.spec-grid,.t-grid{grid-template-columns:1fr;}
-      .nut-inner{grid-template-columns:1fr;}
-      .f-row{grid-template-columns:1fr;}
-      footer{flex-direction:column;gap:1.2rem;text-align:center;}
-      .chatbox{width:calc(100vw - 2rem);right:1rem;}
-      #cta{padding:4rem 1.5rem;}
-      #nutrition{padding:3rem 1.5rem;}
-    }
-  </style>
-  <link rel="stylesheet" href="theme.css"/>
-  <script src="site.js" defer></script>
+/* cinematic transition after questionnaire completion */
+.gate.completing{
+  animation:completionGate 7.0s cubic-bezier(.18,.62,.2,1) both;
+}
+.gate.completing .gate-card{
+  animation:completionCard 6.2s cubic-bezier(.16,.7,.2,1) both;
+}
+.gate.completing .tornado-wrap{
+  animation:completionCloudVortex 7.0s ease-in-out both;
+}
+.gate.completing .tornado-wrap:before{
+  animation:completionCloudA 7.0s ease-in-out both;
+}
+.gate.completing .tornado-wrap:after{
+  animation:completionCloudB 7.0s ease-in-out both;
+}
+
+@keyframes completionCard{
+  0%{opacity:1;transform:scale(1);filter:blur(0)}
+  22%{opacity:.95;transform:scale(.995);filter:blur(1px)}
+  48%{opacity:.72;transform:scale(.97);filter:blur(5px)}
+  72%{opacity:.38;transform:scale(.91);filter:blur(13px)}
+  100%{opacity:0;transform:scale(.76) translateY(24px);filter:blur(28px)}
+}
+@keyframes completionGate{
+  0%,38%{background-color:rgba(1,2,9,.83);backdrop-filter:blur(16px);opacity:1}
+  60%{background-color:rgba(5,5,25,.62);backdrop-filter:blur(13px);opacity:.94}
+  78%{background-color:rgba(5,5,25,.28);backdrop-filter:blur(7px);opacity:.62}
+  100%{background-color:rgba(2,3,11,0);backdrop-filter:blur(0);opacity:0}
+}
+@keyframes completionCloudVortex{
+  0%{opacity:.08;transform:scale(.74) rotate(0deg)}
+  20%{opacity:.30}
+  48%{opacity:.60;transform:scale(.98) rotate(12deg)}
+  72%{opacity:.42;transform:scale(1.28) rotate(24deg)}
+  100%{opacity:0;transform:scale(1.75) rotate(40deg)}
+}
+@keyframes completionCloudA{
+  0%{opacity:.05;transform:translate(0,0) scale(.85) rotate(0)}
+  30%{opacity:.38}
+  62%{opacity:.48;transform:translate(4%,-3%) scale(1.15) rotate(8deg)}
+  100%{opacity:0;transform:translate(12%,-9%) scale(1.65) rotate(20deg)}
+}
+@keyframes completionCloudB{
+  0%{opacity:.04;transform:translate(0,0) scale(.82) rotate(0)}
+  32%{opacity:.32}
+  64%{opacity:.44;transform:translate(-4%,4%) scale(1.12) rotate(-8deg)}
+  100%{opacity:0;transform:translate(-11%,10%) scale(1.58) rotate(-18deg)}
+}
+
+/* website itself fades slowly out of the mist */
+body.site-reveal nav{
+  animation:siteNavReveal 6.5s ease both;
+}
+body.site-reveal .hero{
+  animation:siteHeroReveal 6.8s cubic-bezier(.16,.68,.18,1) both;
+}
+body.site-reveal main,
+body.site-reveal footer{
+  animation:siteContentReveal 7.0s ease both;
+}
+@keyframes siteNavReveal{
+  0%{opacity:.12;filter:blur(16px)}
+  42%{opacity:.40;filter:blur(10px)}
+  72%{opacity:.72;filter:blur(4px)}
+  100%{opacity:1;filter:blur(0)}
+}
+@keyframes siteHeroReveal{
+  0%{opacity:.10;transform:scale(.95);filter:blur(24px) saturate(.6) brightness(.72)}
+  34%{opacity:.32;transform:scale(.96);filter:blur(16px) saturate(.78) brightness(.83)}
+  64%{opacity:.62;transform:scale(.98);filter:blur(8px) saturate(.95) brightness(.96)}
+  84%{opacity:.84;transform:scale(.992);filter:blur(3px) saturate(1.03) brightness(1.02)}
+  100%{opacity:1;transform:scale(1);filter:blur(0) saturate(1) brightness(1)}
+}
+@keyframes siteContentReveal{
+  0%{opacity:.12;filter:blur(18px)}
+  44%{opacity:.36;filter:blur(11px)}
+  74%{opacity:.72;filter:blur(5px)}
+  100%{opacity:1;filter:blur(0)}
+}
+
+.skip-btn{
+  position:absolute;
+  top:1.25rem;
+  right:1.35rem;
+  z-index:8;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(4,6,20,.58);
+  color:#c7c3d8;
+  border-radius:999px;
+  font-size:.60rem;
+  font-weight:800;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  padding:.62rem .95rem;
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 30px rgba(0,0,0,.20);
+  transition:.25s;
+}
+.skip-btn:hover{
+  color:#fff;
+  border-color:rgba(85,234,255,.36);
+  background:rgba(41,75,130,.18);
+  box-shadow:0 0 28px rgba(92,105,255,.16);
+  transform:translateY(-1px);
+}
+.gate-card{
+  width:min(880px,100%);max-height:92vh;overflow:auto;border-radius:28px;
+  position:relative;
+  border:1px solid rgba(117,137,255,.20);
+  background:
+    radial-gradient(circle at 90% 0%,rgba(80,133,255,.12),transparent 22rem),
+    radial-gradient(circle at 0% 100%,rgba(170,88,255,.12),transparent 22rem),
+    linear-gradient(145deg,rgba(13,15,47,.96),rgba(5,7,24,.97));
+  box-shadow:0 35px 120px rgba(0,0,0,.58),inset 0 1px rgba(255,255,255,.035)
+}
+.gate-top{padding:1.65rem 1.7rem 1rem;border-bottom:1px solid rgba(117,137,255,.10)}
+.gate-brand{font-family:var(--display);font-size:1.85rem;letter-spacing:.08em}
+.gate-brand span{color:var(--cyan)}
+.gate-top p{color:#89869e;font-size:.76rem;margin-top:.35rem}
+.progress{height:3px;background:rgba(255,255,255,.05);margin-top:1rem;border-radius:20px;overflow:hidden}
+.progress-bar{height:100%;width:25%;background:linear-gradient(90deg,var(--blue),var(--violet),var(--pink));box-shadow:0 0 12px rgba(112,84,255,.65);transition:.35s}
+.form-step{display:none;padding:2rem 1.7rem 1.7rem}
+.form-step.active{display:block;animation:stepIn .35s ease}
+@keyframes stepIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.step-kicker{color:#9086df;font-size:.58rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.45rem}
+.form-step h2{font-family:var(--display);font-size:clamp(2.7rem,6vw,4.3rem);font-weight:400;line-height:.9}
+.form-step>p{color:#9693a8;line-height:1.7;margin:.75rem 0 1.5rem;max-width:650px;font-size:.86rem}
+.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.choice label{
+  display:flex;align-items:center;min-height:88px;padding:1rem 1.05rem;border-radius:15px;
+  border:1px solid rgba(117,137,255,.12);background:rgba(255,255,255,.018);
+  color:#aaa7bb;cursor:pointer;transition:.22s
+}
+.choice label strong{display:block;color:#e6e3f1;font-size:.79rem;margin-bottom:.3rem}
+.choice label span{display:block;color:#77748b;font-size:.68rem;line-height:1.45}
+.choice input:checked+label{
+  border-color:rgba(85,234,255,.45);
+  background:linear-gradient(135deg,rgba(40,126,255,.10),rgba(132,76,255,.11));
+  box-shadow:0 0 0 3px rgba(85,234,255,.035),inset 0 0 26px rgba(74,127,255,.05)
+}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.field{display:flex;flex-direction:column;gap:.42rem}
+.field.full{grid-column:1/-1}
+.field label{font-size:.56rem;color:#858196;text-transform:uppercase;letter-spacing:.13em;font-weight:800}
+.field input,.field select,.field textarea{
+  width:100%;border-radius:12px;border:1px solid rgba(117,137,255,.13);
+  background:rgba(1,3,14,.58);color:#f8f7ff;padding:.87rem .95rem;outline:none
+}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:rgba(85,234,255,.47);box-shadow:0 0 0 3px rgba(85,234,255,.04)
+}
+.field option{background:#0a0b1d}
+.step-actions{display:flex;justify-content:space-between;gap:.8rem;margin-top:1.55rem}
+.back,.next{
+  border-radius:999px;padding:.85rem 1.3rem;font-size:.65rem;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase
+}
+.back{border:1px solid rgba(255,255,255,.10);background:transparent;color:#aaa8bb}
+.next{border:0;color:#fff;background:linear-gradient(135deg,#7040ff,#247dff);margin-left:auto;box-shadow:0 10px 28px rgba(62,58,222,.23)}
+.next:disabled{opacity:.35;cursor:not-allowed}
+.gate-note{font-size:.61rem;color:#6d6a80;line-height:1.55;margin-top:1rem}
+.gate-error{display:none;margin-top:1rem;padding:.8rem .9rem;border:1px solid rgba(255,100,160,.18);background:rgba(255,57,137,.05);border-radius:10px;color:#ffadc9;font-size:.69rem}
+
+/* SECTIONS */
+.section{padding:6.5rem 4vw;position:relative}
+.inner{width:min(1180px,100%);margin:0 auto}
+.section-head{margin-bottom:2.7rem}
+.tag{
+  display:flex;align-items:center;gap:.62rem;color:#ac9aff;font-size:.61rem;
+  font-weight:800;text-transform:uppercase;letter-spacing:.19em;margin-bottom:.8rem
+}
+.tag:before{content:"";width:29px;height:1px;background:linear-gradient(90deg,var(--blue),var(--violet));box-shadow:0 0 10px var(--violet)}
+.title{font-family:var(--display);font-size:clamp(3.1rem,6vw,5.3rem);line-height:.9;font-weight:400}
+.gradient{background:linear-gradient(90deg,#79eaff,#9584ff,#df79ff);-webkit-background-clip:text;color:transparent}
+.sub{color:#9694a9;max-width:650px;line-height:1.8;margin-top:.9rem}
+.glass{
+  background:linear-gradient(145deg,rgba(18,16,54,.66),rgba(8,10,31,.70));
+  border:1px solid rgba(112,137,255,.14);
+  box-shadow:0 20px 60px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.025);
+  backdrop-filter:blur(16px)
+}
+.reveal{opacity:0;transform:translateY(22px);transition:.65s ease}
+.reveal.show{opacity:1;transform:none}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:1rem}
+.card{border-radius:22px;padding:2rem}
+.card h3{font-family:var(--display);font-size:2.1rem;font-weight:400;margin:.3rem 0 .7rem}
+.card p{color:#9f9daf;line-height:1.8;font-size:.84rem}
+.mission{margin-top:1.35rem;border-left:2px solid var(--violet);padding:1rem 1.1rem;background:linear-gradient(90deg,rgba(106,65,230,.11),transparent)}
+.mission small{display:block;color:#877dcd;text-transform:uppercase;letter-spacing:.16em;font-size:.56rem;font-weight:800;margin-bottom:.25rem}
+.mission strong{font-family:var(--display);font-size:1.95rem;font-weight:400}
+.services{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin-top:1rem}
+.service{border:1px solid rgba(112,137,255,.09);background:rgba(255,255,255,.015);border-radius:12px;padding:.8rem .9rem;color:#b7b4c7;font-size:.73rem;display:flex;gap:.55rem;align-items:center}
+.service:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+
+/* LOCKED PRICING */
+.pricing-shell{position:relative}
+.locked-panel{
+  min-height:400px;border-radius:24px;display:grid;place-items:center;text-align:center;padding:2rem;
+  background:
+    radial-gradient(circle at 50% 30%,rgba(97,66,255,.12),transparent 18rem),
+    linear-gradient(145deg,rgba(18,16,54,.66),rgba(8,10,31,.74));
+  border:1px solid rgba(112,137,255,.14)
+}
+.lock-icon{
+  width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 1rem;
+  border:1px solid rgba(85,234,255,.24);background:rgba(85,234,255,.04);
+  box-shadow:0 0 40px rgba(63,131,255,.10);font-size:1.6rem
+}
+.locked-panel h3{font-family:var(--display);font-size:2.6rem;font-weight:400}
+.locked-panel p{color:#9694aa;line-height:1.75;max-width:520px;margin:.7rem auto 1.1rem}
+.unlock-btn{
+  border:0;border-radius:999px;padding:.9rem 1.4rem;color:#fff;
+  background:linear-gradient(135deg,#7040ff,#247dff);
+  font-size:.66rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase
+}
+
+/* UNLOCKED PRICING */
+.pricing-content{display:none}
+.pricing-content.visible{display:block;animation:unlock .55s ease}
+@keyframes unlock{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.recommend{
+  margin-bottom:1rem;border-radius:18px;padding:1.1rem 1.2rem;
+  border:1px solid rgba(85,234,255,.18);
+  background:linear-gradient(90deg,rgba(32,125,255,.07),rgba(122,70,255,.09))
+}
+.recommend small{display:block;color:#7f7c91;text-transform:uppercase;letter-spacing:.14em;font-size:.53rem;font-weight:800}
+.recommend strong{display:block;margin-top:.25rem;color:#dffcff;font-size:.84rem}
+.package-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.package{
+  border-radius:20px;padding:1.45rem;min-height:335px;display:flex;flex-direction:column;position:relative;transition:.25s
+}
+.package:hover{transform:translateY(-6px);border-color:rgba(130,123,255,.32)}
+.package.recommended{border-color:rgba(85,234,255,.35);box-shadow:0 20px 60px rgba(42,101,255,.11)}
+.badge{position:absolute;right:.85rem;top:.85rem;border-radius:999px;padding:.25rem .55rem;background:rgba(85,234,255,.07);border:1px solid rgba(85,234,255,.22);color:#bffaff;font-size:.49rem;letter-spacing:.11em;text-transform:uppercase;font-weight:800}
+.pkg-label{color:#777488;font-size:.56rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.package h3{font-family:var(--display);font-size:1.9rem;font-weight:400;margin:.7rem 0 .25rem}
+.price{font-family:var(--display);font-size:3.45rem;line-height:1;background:linear-gradient(135deg,#fff,#86eaff,#9d7aff);-webkit-background-clip:text;color:transparent}
+.rate{font-size:.61rem;color:#747184;margin:.3rem 0 .9rem}
+.package p{color:#9895aa;font-size:.75rem;line-height:1.68;flex:1}
+.package a{margin-top:1rem;text-decoration:none;color:#bdaeff;font-size:.61rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+
+/* SPECIALTIES */
+.specialties{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.specialty{border-radius:18px;padding:1.45rem;min-height:180px}
+.num{font-family:var(--display);font-size:2.4rem;color:rgba(133,102,255,.18)}
+.specialty h3{font-family:var(--display);font-size:1.55rem;font-weight:400;margin:.5rem 0}
+.specialty p{color:#8f8ca0;font-size:.74rem;line-height:1.68}
+
+/* CONTACT */
+.contact{display:grid;grid-template-columns:.74fr 1.26fr;gap:1rem}
+.contact-info,.contact-form{border-radius:22px;padding:1.8rem}
+.info{padding:.9rem 0;border-bottom:1px solid rgba(112,137,255,.07)}
+.info:last-child{border-bottom:0}
+.info small{display:block;color:#6d6a80;font-size:.53rem;text-transform:uppercase;letter-spacing:.14em;font-weight:800;margin-bottom:.25rem}
+.info strong,.info a{color:#cbc8da;text-decoration:none;font-size:.84rem}
+.contact-form{display:grid;gap:.9rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.contact-form label{display:block;color:#868297;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;margin-bottom:.38rem}
+.contact-form input,.contact-form select,.contact-form textarea{
+  width:100%;border:1px solid rgba(112,137,255,.13);border-radius:12px;background:rgba(2,4,17,.60);
+  color:#f8f7ff;padding:.83rem .92rem;outline:none
+}
+.contact-form textarea{min-height:115px;resize:vertical}
+.contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{border-color:rgba(85,234,255,.45)}
+.contact-form option{background:#0a0b1d}
+.submit{
+  border:0;border-radius:999px;padding:.9rem 1.2rem;color:#fff;background:linear-gradient(135deg,#7040ff,#247dff);
+  font-size:.64rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase
+}
+.status{display:none;color:#a7ecff;font-size:.69rem;line-height:1.6;padding:.75rem .9rem;border:1px solid rgba(85,234,255,.13);background:rgba(47,126,255,.05);border-radius:10px}
+
+/* CTA */
+.cta{
+  padding:6rem 4vw;text-align:center;position:relative;overflow:hidden;
+  border-top:1px solid rgba(112,137,255,.08);border-bottom:1px solid rgba(112,137,255,.08);
+  background:
+    radial-gradient(circle at 50% 50%,rgba(98,57,255,.17),transparent 27rem),
+    linear-gradient(90deg,#050611,#0b0821,#040511)
+}
+.cta h2{font-family:var(--display);font-size:clamp(4rem,8vw,6.7rem);line-height:.84;font-weight:400}
+.cta h2 span{background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;color:transparent}
+.cta p{color:#9693a8;max-width:550px;line-height:1.8;margin:1rem auto 1.5rem}
+
+footer{
+  padding:2rem 4vw;display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  border-top:1px solid rgba(112,137,255,.08);color:#666377;font-size:.61rem
+}
+.foot-brand{font-family:var(--display);font-size:1.65rem;color:#d9d5e9}
+.foot-brand span{color:var(--cyan)}
+.foot-links{display:flex;gap:1rem}
+.foot-links a{text-decoration:none;color:#777487}
+
+@media(max-width:1050px){
+  .hero-copy{width:min(670px,66vw)}
+  .package-grid{grid-template-columns:1fr 1fr}
+  .specialties{grid-template-columns:1fr 1fr}
+}
+@media(max-width:780px){
+  nav{height:68px;padding:0 1rem}
+  .nav-links{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;padding:1rem;background:rgba(3,4,15,.98)}
+  .nav-links.open{display:flex}.nav-links li{width:100%}.nav-links a{display:block;padding:.75rem}
+  .nav-lock{display:none}.nav-cta{display:none}.menu{display:block}
+  .hero{padding:92px 1.2rem 52px}
+  .hero-copy{width:100%;padding-top:6vh}
+  h1{font-size:clamp(4.35rem,22vw,7rem)}
+  h1 .outline{margin-left:0}
+  .hero-art:after{background:linear-gradient(90deg,rgba(2,3,11,.93),rgba(2,3,11,.54))}
+  .section{padding:5rem 1.2rem}
+  .why-grid,.contact{grid-template-columns:1fr}
+  .package-grid,.specialties{grid-template-columns:1fr}
+  .services{grid-template-columns:1fr}
+  .choice-grid,.fields,.form-row{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .form-step{padding:1.55rem 1.1rem}
+  .gate-top{padding:1.3rem 1.1rem .9rem}
+  .cta{padding:5rem 1.2rem}
+  footer{padding:1.7rem 1.2rem;flex-direction:column;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+}
+</style>
 </head>
-<body>
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+<body class="locked">
 
-  <nav>
-    <a href="index.html" class="nav-logo">BAM<span>FIT</span></a>
-    <ul class="nav-links">
-      <li><a href="about.html">About</a></li>
-      <li><a href="pricing.html">Pricing</a></li>
-      <li><a href="results.html">Results</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <a href="#contact" class="nav-cta">Get Started</a>
-  </nav>
+<canvas id="starfield"></canvas>
 
-  <!-- 3D HERO -->
-  <section id="hero">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="hero-eyebrow"><span class="live-dot"></span>Personal Training &bull; Phoenix, AZ</div>
-      <h1 class="hero-title">
-        <span class="t1">BAM FIT</span>
-        <span class="t2">BY ANY MEANS</span>
-        <span class="t3">FITNESS</span>
-      </h1>
-      <div class="hero-tagline">&#8212;&nbsp;&nbsp;THE GOAL IS LONGEVITY&nbsp;&nbsp;&#8212;</div>
-      <p class="hero-desc">Everyone deserves to feel good. You only get one body — so why not make it the best version it can be?</p>
-      <div class="hero-btns">
-        <a href="pricing.html" class="btn-glow">View Packages</a>
-        <a href="about.html" class="btn-ghost">Meet Anthony</a>
-      </div>
-    </div>
-    <div class="hero-scroll"><span class="scroll-label">Scroll</span><div class="scroll-line"></div></div>
-  </section>
+<nav>
+  <a class="brand" href="#top">
+    <span class="logo"></span>
+    <span class="brand-name">BAM<span>FIT</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#specialties">Training</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-lock" id="navLock">Pricing Locked</div>
+  <button class="nav-cta" id="navQuestionnaire">Questionnaire</button>
+  <button class="menu" id="menuBtn" aria-label="Open navigation">☰</button>
+</nav>
 
-  <!-- STATS -->
-  <div id="stats">
-    <div class="stat-item"><div class="stat-num">6</div><div class="stat-lbl">Specialties</div></div>
-    <div class="stat-div"></div>
-    <div class="stat-item"><div class="stat-num">1:1</div><div class="stat-lbl">Personal Training</div></div>
-    <div class="stat-div"></div>
-    <div class="stat-item"><div class="stat-num">$38</div><div class="stat-lbl">Best Session Rate</div></div>
-    <div class="stat-div"></div>
-    <div class="stat-item"><div class="stat-num">100%</div><div class="stat-lbl">Customized</div></div>
+<!-- QUESTIONNAIRE GATE -->
+<div class="gate" id="questionnaire">
+  <div class="tornado-wrap" aria-hidden="true">
+    <div class="tornado-ring r1"></div>
+    <div class="tornado-ring r2"></div>
+    <div class="tornado-ring r3"></div>
+    <div class="tornado-ring r4"></div>
   </div>
+  <div class="gate-card">
+    <button class="skip-btn" id="skipQuestionnaire" type="button">Skip For Now →</button>
+    <div class="gate-top">
+      <div class="gate-brand">BAM<span>FIT</span></div>
+      <p>Tell us where you are now and where you want to go. Your training options unlock when you finish.</p>
+      <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    </div>
 
-  <!-- WHY -->
-  <section id="why">
-    <div class="stag">Why BAM FIT</div>
-    <h2 class="stitle">ONE BODY.<br><span>MAKE IT COUNT.</span></h2>
-    <div class="why-grid">
-      <div class="why-photo reveal">
-        <div class="why-photo-icon">&#128248;</div>
-        <p>Add Your Photo Here</p>
-        <div class="photo-badge">Anthony B. Iacono &bull; Trainer</div>
-      </div>
-      <div>
-        <div class="why-text reveal">
-          <p><strong>Besides looking good and feeling better mentally</strong>, exercise protects you from heart disease, stroke, obesity, diabetes, and high blood pressure.</p>
-          <p>It makes you <em>look younger</em>, increases bone density, improves quality of life, and may keep you from getting sick. The benefits go far beyond the mirror.</p>
-          <div class="mission-block">
-            <div class="mission-lbl">The BAM FIT Mission</div>
-            <div class="mission-txt">"Everyone deserves to feel good. You only get one body — so why not make it a great one?"</div>
+    <form id="fitnessForm">
+      <section class="form-step active" data-step="1">
+        <div class="step-kicker">Step 1 of 4 · Your Goal</div>
+        <h2>WHAT ARE YOU<br>CHASING?</h2>
+        <p>Choose the goal that matters most right now.</p>
+
+        <div class="choice-grid">
+          <div class="choice">
+            <input type="radio" name="goal" id="goalStrength" value="Build strength / muscle">
+            <label for="goalStrength"><div><strong>Build Strength / Muscle</strong><span>Get stronger, add muscle, improve performance.</span></div></label>
+          </div>
+          <div class="choice">
+            <input type="radio" name="goal" id="goalLoseWeight" value="Lose weight / body fat">
+            <label for="goalLoseWeight"><div><strong>Lose Weight / Body Fat</strong><span>Build sustainable training and nutrition habits.</span></div></label>
+          </div>
+          <div class="choice">
+            <input type="radio" name="goal" id="goalMove" value="Move better / mobility">
+            <label for="goalMove"><div><strong>Move Better / Mobility</strong><span>Improve flexibility, mobility and movement quality.</span></div></label>
+          </div>
+          <div class="choice">
+            <input type="radio" name="goal" id="goalLife" value="Overall fitness / longevity">
+            <label for="goalLife"><div><strong>Overall Fitness / Longevity</strong><span>Feel better, move better and build a stronger lifestyle.</span></div></label>
           </div>
         </div>
-        <div class="svc-list reveal">
-          <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Strength Training</div></div>
-          <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Functional Fitness</div></div>
-          <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Weight Loss</div></div>
-          <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Mobility Training</div></div>
-          <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Assisted PNF Stretching</div></div>
-          <div class="svc-item"><div class="svc-dot"></div><div class="svc-name">Everyday Lifestyle Coaching</div></div>
+
+        <div class="step-actions">
+          <button class="next" type="button" data-next="2">Continue →</button>
         </div>
-      </div>
-    </div>
-  </section>
+        <div class="gate-error"></div>
+      </section>
 
-  <!-- PRICING -->
-  <section id="pricing">
-    <div class="stag">Training Packages</div>
-    <h2 class="stitle">SIMPLE.<br><span>TRANSPARENT.</span> REAL.</h2>
-    <p class="ssub">No contracts, no hidden fees. Minimum 1 day/week. Credits expire 90 days after purchase.</p>
-    <div class="pkg-grid reveal">
-      <div class="pkg-card">
-        <div class="pkg-lbl">Session Package</div>
-        <div class="pkg-name">6 SESSIONS</div>
-        <div class="pkg-price">$265</div>
-        <div class="pkg-rate">~$44/session</div>
-        <div class="pkg-desc">Build your foundation. Six focused sessions to establish form, set your program, and start building real momentum.</div>
-        <a href="pricing.html" class="pkg-btn pb-g">See All Packages &rarr;</a>
-      </div>
-      <div class="pkg-card feat">
-        <div class="pkg-lbl">Best Value</div>
-        <div class="pkg-name">25 SESSIONS</div>
-        <div class="pkg-price">$952</div>
-        <div class="pkg-rate">$38/session &bull; Lowest rate</div>
-        <div class="pkg-desc">Twenty-five sessions locks in the lowest per-session rate Anthony offers. For people serious about real change.</div>
-        <a href="pricing.html" class="pkg-btn pb-y">Get Started</a>
-      </div>
-      <div class="pkg-card">
-        <div class="pkg-lbl">Custom Routine</div>
-        <div class="pkg-name">3-DAY PLAN</div>
-        <div class="pkg-price">$80</div>
-        <div class="pkg-rate">Train on your schedule</div>
-        <div class="pkg-desc">A fully custom 3-day strength routine built for your goals and equipment. Yours to keep forever.</div>
-        <a href="pricing.html" class="pkg-btn pb-g">See Routines &rarr;</a>
-      </div>
-      <div class="pkg-card">
-        <div class="pkg-lbl">Drop-In</div>
-        <div class="pkg-name">PAY BY DAY</div>
-        <div class="pkg-price">$25<span style="font-size:1.3rem;color:var(--muted);font-family:'Barlow',sans-serif;font-weight:300"> / 30 min</span></div>
-        <div class="pkg-rate">$45 / 55-minute session</div>
-        <div class="pkg-desc">No commitment. Show up when you can — perfect for trying BAM FIT before buying a package.</div>
-        <a href="#contact" class="pkg-btn pb-g">Book a Session</a>
-      </div>
-    </div>
-    <div class="see-all"><a href="pricing.html">View All Pricing &amp; Packages &rarr;</a></div>
-  </section>
+      <section class="form-step" data-step="2">
+        <div class="step-kicker">Step 2 of 4 · Your Target</div>
+        <h2>WHERE DO YOU<br>WANT TO GO?</h2>
+        <p>This helps Anthony understand what you are working toward and how often you can realistically train.</p>
 
-  <!-- SPECIALTIES -->
-  <section id="specs">
-    <div class="stag">Specialties</div>
-    <h2 class="stitle">BUILT FOR<br><span>YOUR GOALS</span></h2>
-    <div class="spec-grid">
-      <div class="spec-card reveal"><div class="spec-icon">&#127947;</div><div class="spec-name">STRENGTH TRAINING</div><div class="spec-desc">Progressive programming that builds real muscle, increases bone density, and makes daily life easier.</div></div>
-      <div class="spec-card reveal"><div class="spec-icon">&#9889;</div><div class="spec-name">FUNCTIONAL FITNESS</div><div class="spec-desc">Movement that transfers to real life — carry things without pain, stay active without injury.</div></div>
-      <div class="spec-card reveal"><div class="spec-icon">&#128293;</div><div class="spec-name">WEIGHT LOSS</div><div class="spec-desc">Sustainable fat loss through smart programming and nutrition — no crash diets, just real results.</div></div>
-      <div class="spec-card reveal"><div class="spec-icon">&#129368;</div><div class="spec-name">MOBILITY TRAINING</div><div class="spec-desc">Restore range of motion, eliminate chronic tightness, and move the way your body was designed to.</div></div>
-      <div class="spec-card reveal"><div class="spec-icon">&#129299;</div><div class="spec-name">ASSISTED PNF STRETCHING</div><div class="spec-desc">Targets the golgi tendon to unlock flexibility gains you simply cannot achieve on your own.</div></div>
-      <div class="spec-card reveal"><div class="spec-icon">&#127758;</div><div class="spec-name">LIFESTYLE COACHING</div><div class="spec-desc">Sleep, stress, nutrition, and daily habits all factor into your results — Anthony coaches all of it.</div></div>
-    </div>
-  </section>
+        <div class="fields">
+          <div class="field">
+            <label for="currentWeight">Current Weight (Optional)</label>
+            <input id="currentWeight" name="currentWeight" type="number" min="35" max="700" step="0.1" placeholder="Example: 205">
+          </div>
+          <div class="field">
+            <label for="goalWeight">Goal Weight (Optional Target)</label>
+            <input id="goalWeight" name="goalWeight" type="number" min="35" max="700" step="0.1" placeholder="Example: 185">
+          </div>
+          <div class="field">
+            <label for="units">Weight Unit</label>
+            <select id="units" name="units">
+              <option value="lbs">Pounds (lbs)</option>
+              <option value="kg">Kilograms (kg)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="days">Days You Can Train</label>
+            <select id="days" name="days" required>
+              <option value="">Choose...</option>
+              <option value="1-2">1–2 days per week</option>
+              <option value="3">3 days per week</option>
+              <option value="4">4 days per week</option>
+              <option value="5+">5+ days per week</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="preferredTime">Preferred Training Time</label>
+            <select id="preferredTime" name="preferredTime" required>
+              <option value="">Choose...</option>
+              <option value="Early morning">Early morning</option>
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Evening">Evening</option>
+              <option value="Flexible">Flexible</option>
+            </select>
+          </div>
+        </div>
 
-  <!-- NUTRITION -->
-  <div id="nutrition">
-    <div class="nut-inner reveal">
-      <div class="nut-text">
-        <h3>NUTRITION &amp;<br><span>SUPPLEMENTATION</span></h3>
-        <p>Only 68% of Americans take supplements. The #1 supplement is the <strong>multivitamin</strong> — and most people skip it. Monthly meal plans customized to your body's needs, with ongoing adjustments. <strong>Credits expire after 90 days of purchase.</strong></p>
+        <div class="step-actions">
+          <button class="back" type="button" data-back="1">← Back</button>
+          <button class="next" type="button" data-next="3">Continue →</button>
+        </div>
+        <div class="gate-error"></div>
+      </section>
+
+      <section class="form-step" data-step="3">
+        <div class="step-kicker">Step 3 of 4 · Your Journey</div>
+        <h2>TELL US ABOUT<br>THE JOURNEY.</h2>
+        <p>No judgment. This is just to understand what has and has not worked for you before.</p>
+
+        <div class="fields">
+          <div class="field">
+            <label for="experience">Training Experience</label>
+            <select id="experience" name="experience" required>
+              <option value="">Choose...</option>
+              <option value="Beginner">Beginner — I am just starting</option>
+              <option value="Returning">Returning — I have trained before</option>
+              <option value="Intermediate">Intermediate — I train somewhat consistently</option>
+              <option value="Advanced">Advanced — I have years of experience</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="timeline">Goal Timeline</label>
+            <select id="timeline" name="timeline" required>
+              <option value="">Choose...</option>
+              <option value="No rush">No rush — I want something sustainable</option>
+              <option value="3 months">Around 3 months</option>
+              <option value="6 months">Around 6 months</option>
+              <option value="12+ months">12+ months / long term</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="limitations">Injuries, Pain, or Movement Limitations</label>
+            <textarea id="limitations" name="limitations" placeholder="List anything Anthony should account for. Write none if there are no known limitations." required></textarea>
+          </div>
+          <div class="field full">
+            <label for="medicalGuidance">Medical Exercise Guidance</label>
+            <select id="medicalGuidance" name="medicalGuidance" required>
+              <option value="">Choose...</option>
+              <option value="No known restrictions">No medical professional has advised me to limit or avoid exercise</option>
+              <option value="Has restrictions or needs clearance">I have exercise restrictions or need medical clearance before training</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="journey">What brought you to BAM FIT?</label>
+            <textarea id="journey" name="journey" placeholder="Tell Anthony what you have tried, what has made consistency difficult, and what success would look like for you." required></textarea>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="back" type="button" data-back="2">← Back</button>
+          <button class="next" type="button" data-next="4">Continue →</button>
+        </div>
+        <div class="gate-error"></div>
+      </section>
+
+      <section class="form-step" data-step="4">
+        <div class="step-kicker">Step 4 of 4 · Contact</div>
+        <h2>UNLOCK YOUR<br>TRAINING OPTIONS.</h2>
+        <p>Enter your contact information so BAM FIT can save your questionnaire and show you the training options.</p>
+
+        <div class="fields">
+          <div class="field">
+            <label for="leadName">Name</label>
+            <input id="leadName" name="leadName" required placeholder="Your name">
+          </div>
+          <div class="field">
+            <label for="leadEmail">Email</label>
+            <input id="leadEmail" name="leadEmail" type="email" required placeholder="you@email.com">
+          </div>
+          <div class="field">
+            <label for="leadPhone">Phone</label>
+            <input id="leadPhone" name="leadPhone" placeholder="Optional">
+          </div>
+          <div class="field">
+            <label for="contactMethod">Preferred Contact</label>
+            <select id="contactMethod" name="contactMethod" required>
+              <option value="">Choose...</option>
+              <option value="Email">Email</option>
+              <option value="Phone call">Phone call</option>
+              <option value="Text message">Text message</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="back" type="button" data-back="3">← Back</button>
+          <button class="next" id="finishQuestionnaire" type="submit">Unlock My Options →</button>
+        </div>
+        <div class="gate-error" id="finalError"></div>
+        <div class="gate-note">Your answers are used to help BAM FIT understand your goals and recommend a starting point. This is not medical advice or a medical assessment.</div>
+      </section>
+    </form>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="hero-art" id="heroArt"></div>
+  <div class="holo-scan"></div>
+  <div class="hero-glitch"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="dot"></span>Personal Training · Phoenix, Arizona</div>
+      <h1><span>BAM FIT</span><span class="outline">BY ANY MEANS</span></h1>
+      <div class="kicker">THE GOAL IS LONGEVITY</div>
+      <p>
+        Build strength, move better and create a body that stays capable for life.
+        Your training options are personalized after a quick fitness questionnaire.
+      </p>
+      <div class="hero-actions">
+        <button class="primary" id="startQuestionnaire">Take The Questionnaire ↗</button>
+        <a class="secondary" href="#about">Explore BAM FIT →</a>
       </div>
-      <div class="nut-price">
-        <div class="nut-big">$100</div>
-        <div class="nut-lbl">Monthly Add-On</div>
+      <div class="hero-tags">
+        <span>Strength</span><span>Mobility</span><span>PNF</span><span>Nutrition</span>
       </div>
     </div>
   </div>
+</header>
 
-  <!-- TESTIMONIALS -->
-  <section id="testi">
-    <div class="stag">Client Words</div>
-    <h2 class="stitle">RESULTS THAT<br><span>SPEAK</span></h2>
-    <div class="t-grid">
-      <div class="t-card reveal">
-        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="t-quote">Anthony doesn't just count reps — he teaches you why each movement matters. My back pain of two years is completely gone after 8 sessions. This is how training should feel.</p>
-        <div class="t-author"><div class="t-av">JM</div><div><div class="t-name">James M.</div><div class="t-res">Pain-free after 8 sessions</div></div></div>
+<main>
+<section class="section" id="about">
+  <div class="inner">
+    <div class="section-head reveal">
+      <div class="tag">The BAM FIT Philosophy</div>
+      <h2 class="title">ONE BODY. <span class="gradient">MAKE IT COUNT.</span></h2>
+      <p class="sub">BAM FIT is built around strength, movement, consistency and a long-term approach to feeling better in your body.</p>
+    </div>
+
+    <div class="why-grid">
+      <article class="card glass reveal">
+        <div class="tag">Anthony B. Iacono</div>
+        <h3>COACHING BUILT AROUND YOU.</h3>
+        <p>Every client starts in a different place. Your program should reflect your goals, experience, schedule, movement quality and the obstacles that have made consistency difficult before.</p>
+      </article>
+
+      <article class="card glass reveal">
+        <div class="tag">Mission</div>
+        <h3>THE GOAL IS LONGEVITY.</h3>
+        <p>Fitness should help you keep doing the things you want to do for years, not just chase a temporary result.</p>
+        <div class="mission">
+          <small>BAM FIT</small>
+          <strong>BY ANY MEANS FITNESS</strong>
+        </div>
+        <div class="services">
+          <div class="service">Strength Training</div>
+          <div class="service">Functional Fitness</div>
+          <div class="service">Weight Loss</div>
+          <div class="service">Mobility Training</div>
+          <div class="service">Assisted PNF</div>
+          <div class="service">Lifestyle Coaching</div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="training-options">
+  <div class="inner">
+    <div class="section-head reveal">
+      <div class="tag">Training Options</div>
+      <h2 class="title">YOUR PLAN STARTS <span class="gradient">WITH YOU.</span></h2>
+      <p class="sub">BAM FIT does not show package pricing until the fitness questionnaire is complete.</p>
+    </div>
+
+    <div class="pricing-shell reveal">
+      <div class="locked-panel" id="lockedPricing">
+        <div>
+          <div class="lock-icon">⌁</div>
+          <h3>TRAINING OPTIONS LOCKED</h3>
+          <p>Complete the BAM FIT questionnaire first. Once Anthony knows your goals, starting weight and fitness journey, the package options will unlock.</p>
+          <button class="unlock-btn" id="unlockFromPricing">Take Questionnaire</button>
+        </div>
       </div>
-      <div class="t-card reveal">
-        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="t-quote">The PNF stretching sessions changed my life. I could barely touch my knees before. After 4 sessions I'm touching the floor. My golf game improved overnight — not kidding.</p>
-        <div class="t-author"><div class="t-av">RC</div><div><div class="t-name">Rick C.</div><div class="t-res">PNF Stretching Client</div></div></div>
-      </div>
-      <div class="t-card reveal">
-        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="t-quote">Down 31 lbs and moving better at 47 than I did at 30. Anthony keeps it real — no shortcuts, real work, real results. Best investment I've made in myself.</p>
-        <div class="t-author"><div class="t-av">DW</div><div><div class="t-name">Diane W.</div><div class="t-res">&minus;31 lbs &bull; 25 sessions</div></div></div>
+
+      <div class="pricing-content" id="pricingContent">
+        <div class="recommend">
+          <small>Your Questionnaire-Based Starting Point</small>
+          <strong id="recommendationText">Complete your questionnaire to see a recommendation.</strong>
+        </div>
+
+        <div class="package-grid" id="packageGrid">
+          <!-- prices injected only after questionnaire unlock -->
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section id="cta">
-    <div class="cta-in">
-      <h2>EVERY BODY<br><span>DESERVES THIS.</span></h2>
-      <p>You only get one. Let's make it the best version it can be. Reach out today — no pressure, just a real conversation.</p>
-      <a href="#contact" class="btn-glow">Get In Touch</a>
+<section class="section" id="specialties">
+  <div class="inner">
+    <div class="section-head reveal">
+      <div class="tag">Specialties</div>
+      <h2 class="title">TRAIN FOR <span class="gradient">REAL LIFE.</span></h2>
     </div>
-  </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="stag">Get Started</div>
-    <h2 class="stitle">LET'S TALK<br><span>GOALS</span></h2>
-    <p class="ssub">Ready to start? Anthony responds personally to every message.</p>
-    <div class="contact-grid">
-      <div class="c-info reveal">
-        <div class="c-item"><div class="c-lbl">Name</div><div class="c-val">Anthony B. Iacono</div></div>
-        <div class="c-item"><div class="c-lbl">Business</div><div class="c-val">BAM FIT — By Any Means Fitness</div></div>
-        <div class="c-item"><div class="c-lbl">Email</div><div class="c-val"><a href="mailto:abiacono@gmail.com">abiacono@gmail.com</a></div></div>
-        <div class="c-item"><div class="c-lbl">Location</div><div class="c-val">Phoenix, AZ Area</div></div>
-        <div class="c-item"><div class="c-lbl" style="color:var(--muted)">Credits expire 90 days after purchase. Minimum 1 day per week for weekly training packages.</div></div>
+    <div class="specialties">
+      <article class="specialty glass reveal"><div class="num">01</div><h3>STRENGTH TRAINING</h3><p>Progressive resistance training focused on proper mechanics, muscle development and practical strength.</p></article>
+      <article class="specialty glass reveal"><div class="num">02</div><h3>FUNCTIONAL FITNESS</h3><p>Training that carries over into everyday movement, work, recreation and long-term physical confidence.</p></article>
+      <article class="specialty glass reveal"><div class="num">03</div><h3>WEIGHT LOSS</h3><p>A sustainable training approach built around consistency, sensible nutrition and progressive activity.</p></article>
+      <article class="specialty glass reveal"><div class="num">04</div><h3>MOBILITY TRAINING</h3><p>Improve usable range of motion, control and movement quality.</p></article>
+      <article class="specialty glass reveal"><div class="num">05</div><h3>ASSISTED PNF</h3><p>Focused assisted stretching sessions designed around mobility, flexibility and better movement quality.</p></article>
+      <article class="specialty glass reveal"><div class="num">06</div><h3>LIFESTYLE COACHING</h3><p>Recovery, habits, sleep, stress and nutrition all support the work you do in training.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="results">
+  <div class="inner">
+    <div class="section-head reveal">
+      <div class="tag">Progress + Results</div>
+      <h2 class="title">BUILD THE <span class="gradient">JOURNEY.</span></h2>
+      <p class="sub">This area can be used for verified BAM FIT client transformations, strength milestones and progress stories as they are added.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="inner reveal">
+    <div class="tag" style="justify-content:center">Ready When You Are</div>
+    <h2>BUILD A BODY<br><span>THAT LASTS.</span></h2>
+    <p>Your first step is not choosing a price. It is telling BAM FIT where you are, what you want, and what your journey has looked like so far.</p>
+    <button class="primary" id="ctaQuestionnaire">Start Questionnaire ↗</button>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="inner">
+    <div class="section-head reveal">
+      <div class="tag">Contact BAM FIT</div>
+      <h2 class="title">LET'S TALK <span class="gradient">GOALS.</span></h2>
+    </div>
+
+    <div class="contact">
+      <div class="contact-info glass reveal">
+        <div class="info"><small>Trainer</small><strong>Anthony B. Iacono</strong></div>
+        <div class="info"><small>Email</small><a href="mailto:abiacono@gmail.com">abiacono@gmail.com</a></div>
+        <div class="info"><small>Location</small><strong>Phoenix, Arizona</strong></div>
+        <div class="info"><small>Specialties</small><strong>Strength · Mobility · PNF · Lifestyle</strong></div>
+        <div class="info"><small>Mission</small><strong>The Goal Is Longevity</strong></div>
       </div>
-      <form class="c-form reveal" onsubmit="handleForm(event)">
-        <div class="f-row">
-          <div class="fg"><label>First Name</label><input type="text" placeholder="Your name" required/></div>
-          <div class="fg"><label>Last Name</label><input type="text" placeholder="Last name" required/></div>
+
+      <form class="contact-form glass reveal" id="contactForm">
+        <div class="form-row">
+          <div><label for="contactName">Name</label><input id="contactName" required placeholder="Your name"></div>
+          <div><label for="contactEmail">Email</label><input id="contactEmail" type="email" required placeholder="you@email.com"></div>
         </div>
-        <div class="fg"><label>Email</label><input type="email" placeholder="you@email.com" required/></div>
-        <div class="fg"><label>Phone (optional)</label><input type="tel" placeholder="(555) 000-0000"/></div>
-        <div class="fg">
-          <label>I'm interested in</label>
-          <select>
-            <option>Training Package (Sessions)</option>
-            <option>Custom Workout Routine</option>
-            <option>PNF Stretching</option>
-            <option>Nutrition &amp; Meal Planning</option>
-            <option>Pay-By-Day Sessions</option>
-            <option>Not sure yet</option>
-          </select>
+        <div class="form-row">
+          <div><label for="contactPhone">Phone</label><input id="contactPhone" placeholder="Optional"></div>
+          <div>
+            <label for="contactInterest">Interested In</label>
+            <select id="contactInterest">
+              <option>Personal Training</option>
+              <option>Strength Training</option>
+              <option>Weight Loss</option>
+              <option>Mobility / PNF</option>
+              <option>Nutrition</option>
+              <option>Custom Routine</option>
+            </select>
+          </div>
         </div>
-        <div class="fg"><label>Your Goals</label><textarea placeholder="What are you working towards?"></textarea></div>
-        <p class="f-note">&#9432; Credits expire 90 days after purchase. 1 session minimum per week for weekly packages.</p>
-        <button type="submit" class="btn-submit">Send Message &rarr;</button>
+        <div><label for="contactMessage">Message</label><textarea id="contactMessage" placeholder="Tell Anthony what you want to work on..."></textarea></div>
+        <button class="submit" type="submit">Send To BAM FIT</button>
+        <div class="status" id="contactStatus"></div>
       </form>
     </div>
-  </section>
-
-  <footer>
-    <div class="f-logo">BAM<span>FIT</span></div>
-    <div class="f-copy">&copy; 2025 BAM FIT — By Any Means Fitness. Anthony B. Iacono.</div>
-    <div class="f-links"><a href="about.html">About</a><a href="pricing.html">Pricing</a><a href="results.html">Results</a><a href="mailto:abiacono@gmail.com">Email</a></div>
-  </footer>
-
-  <!-- CHAT -->
-  <button class="chat-toggle" id="chatToggle" onclick="toggleChat()">
-    <svg class="ci-chat" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-    <svg class="ci-close" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-  </button>
-  <div class="chatbox" id="chatbox">
-    <div class="ch-head"><div class="ch-av">B</div><div><div class="ch-title">BAM FIT Assistant</div><div class="ch-status">Online</div></div></div>
-
-    <div class="ch-msgs" id="chatMsgs"><div class="msg bot">Welcome to BAM FIT! Ask me about packages, PNF stretching, nutrition, or how to get started.</div></div>
-    <div class="ch-chips" id="chips">
-      <button class="chip" onclick="sendSug('What does a session package cost?')">Pricing?</button>
-      <button class="chip" onclick="sendSug('What is PNF stretching?')">What is PNF?</button>
-      <button class="chip" onclick="sendSug('Do you offer nutrition plans?')">Nutrition?</button>
-    </div>
-    <div class="ch-input-row">
-      <textarea class="ch-input" id="chatInput" placeholder="Ask anything..." rows="1" onkeydown="handleKey(event)"></textarea>
-      <button class="ch-send" onclick="sendMsg()"><svg fill="none" stroke="#000" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg></button>
-    </div>
   </div>
+</section>
+</main>
 
-  <script>
-  // CURSOR
-  var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-  var mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-  (function a(){rx+=(mx-rx)*0.16;ry+=(my-ry)*0.16;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
-  document.querySelectorAll('a,button,input,select,textarea').forEach(function(el){
-    el.addEventListener('mouseenter',function(){cur.style.width='16px';cur.style.height='16px';ring.style.width='48px';ring.style.height='48px';});
-    el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';ring.style.width='34px';ring.style.height='34px';});
-  });
+<footer>
+  <div class="foot-brand">BAM<span>FIT</span></div>
+  <div>© 2026 BAM FIT — By Any Means Fitness. Anthony B. Iacono.</div>
+  <div class="foot-links"><a href="#about">About</a><a href="#specialties">Training</a><a href="#contact">Contact</a></div>
+</footer>
 
-  // SCROLL REVEAL
-  var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target);}});},{threshold:0.08});
-  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+<script>
+/* -----------------------------
+   SETTINGS
+------------------------------ */
+const STORAGE_KEY='bamfit_questionnaire_complete';
+const STORAGE_DATA='bamfit_questionnaire_data';
 
-  // FORM
-  function handleForm(e){ window.submitContact(e); }
+/* Current BAM FIT package pricing.
+   Injected only after questionnaire completion. */
+const PACKAGES=[
+  {type:'10_sessions',name:'10 SESSIONS',price:'$420',rate:'$42 / session',desc:'More time to build consistency, progress your training and reinforce better movement.'},
+  {type:'15_sessions',name:'15 SESSIONS',price:'$600',rate:'$40 / session',desc:'A strong middle ground for clients who want more structured progress and coaching time.'},
+  {type:'25_sessions',name:'25 SESSIONS',price:'$952',rate:'~$38 / session',desc:'Longer-term coaching and the lowest session rate for clients serious about sustained change.'}
+];
 
-  // 3D GYM EQUIPMENT HERO
-  (function(){
-    var c=document.getElementById('hero-canvas');
-    if(!c || !window.THREE || window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-    var W=window.innerWidth,H=window.innerHeight;
-    var renderer;try{renderer=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});}catch(error){c.classList.add("hologram-fallback");return;}
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-    renderer.setSize(W,H);
-    renderer.setClearColor(0x000000,0);
-    var scene=new THREE.Scene();
-    var camera=new THREE.PerspectiveCamera(65,W/H,0.1,500);
-    camera.position.set(0,2,22);
+/* -----------------------------
+   MOBILE NAV
+------------------------------ */
+const menuBtn=document.getElementById('menuBtn');
+const navLinks=document.getElementById('navLinks');
+menuBtn.addEventListener('click',()=>navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
 
-    var Y=0x65d8ff,YD=0xa78bfa,YDD=0x7654ce;
+/* -----------------------------
+   QUESTIONNAIRE
+------------------------------ */
+const gate=document.getElementById('questionnaire');
+const form=document.getElementById('fitnessForm');
+const progressBar=document.getElementById('progressBar');
+const navLock=document.getElementById('navLock');
+const lockedPricing=document.getElementById('lockedPricing');
+const pricingContent=document.getElementById('pricingContent');
+const packageGrid=document.getElementById('packageGrid');
+const recommendationText=document.getElementById('recommendationText');
 
-    // ── BARBELL 1 (center-right, floating)
-    function makeBarbell(x,y,z,rotY){
-      var g=new THREE.Group();
-      // bar
-      var bar=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,14,12),new THREE.MeshBasicMaterial({color:0x9475dd,transparent:true,opacity:0.7,wireframe:false}));
-      bar.rotation.z=Math.PI/2; g.add(bar);
-      // plates
-      var plateSizes=[{r:1.5,t:0.28,x:5.5},{r:1.5,t:0.28,x:-5.5},{r:1.2,t:0.22,x:4.8},{r:1.2,t:0.22,x:-4.8},{r:0.9,t:0.18,x:4.2},{r:0.9,t:0.18,x:-4.2}];
-      plateSizes.forEach(function(p){
-        // wireframe ring plate
-        var geo=new THREE.CylinderGeometry(p.r,p.r,p.t,24);
-        var wf=new THREE.WireframeGeometry(geo);
-        var plate=new THREE.LineSegments(wf,new THREE.LineBasicMaterial({color:Y,transparent:true,opacity:0.7,blending:THREE.AdditiveBlending}));
-        plate.rotation.z=Math.PI/2; plate.position.x=p.x; g.add(plate);
-        // solid inner dim
-        var solid=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.04}));
-        solid.rotation.z=Math.PI/2; solid.position.x=p.x; g.add(solid);
-      });
-      // collars
-      [-6.2,6.2].forEach(function(cx){
-        var col=new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.22,0.5,10),new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.5}));
-        col.rotation.z=Math.PI/2; col.position.x=cx; g.add(col);
-      });
-      g.position.set(x,y,z); g.rotation.y=rotY||0;
-      scene.add(g); return g;
-    }
+function openGate(){
+  gate.classList.remove('hidden','closing','completing');
+  document.body.classList.remove('site-reveal');
+  gate.classList.remove('opening');
+  void gate.offsetWidth;
+  gate.classList.add('opening');
+  document.body.classList.add('locked');
 
-    var bb1=makeBarbell(4,1,-4,0.3);
-    var bb2=makeBarbell(-8,-2,-8,-0.2);
+  setTimeout(()=>gate.classList.remove('opening'),7100);
+}
 
-    // ── DUMBBELL function
-    function makeDumbbell(x,y,z,rx,ry){
-      var g=new THREE.Group();
-      var bar=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,3.5,10),new THREE.MeshBasicMaterial({color:0x9475dd,transparent:true,opacity:0.6}));
-      bar.rotation.z=Math.PI/2; g.add(bar);
-      [-1.4,1.4].forEach(function(dx){
-        var geo=new THREE.SphereGeometry(0.55,12,12);
-        var wf=new THREE.WireframeGeometry(geo);
-        var head=new THREE.LineSegments(wf,new THREE.LineBasicMaterial({color:Y,transparent:true,opacity:0.6,blending:THREE.AdditiveBlending}));
-        head.position.x=dx; g.add(head);
-        var s=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.04}));
-        s.position.x=dx; g.add(s);
-      });
-      g.position.set(x,y,z); g.rotation.x=rx||0; g.rotation.y=ry||0;
-      scene.add(g); return g;
-    }
+function closeGate(mode='skip'){
+  gate.classList.remove('opening','closing','completing');
 
-    var db1=makeDumbbell(10,3,-2,0.3,0.4);
-    var db2=makeDumbbell(-12,4,-5,-0.2,-0.3);
-    var db3=makeDumbbell(14,-3,-6,0.5,0.2);
-    var db4=makeDumbbell(-5,-5,-7,0.1,-0.5);
+  if(mode==='complete'){
+    document.body.classList.add('site-reveal');
+    gate.classList.add('completing');
 
-    // ── WEIGHT PLATE (standalone)
-    function makePlate(x,y,z,r,ry){
-      var g=new THREE.Group();
-      var geo=new THREE.CylinderGeometry(r,r,0.35,32);
-      var wf=new THREE.WireframeGeometry(geo);
-      var p=new THREE.LineSegments(wf,new THREE.LineBasicMaterial({color:Y,transparent:true,opacity:0.45,blending:THREE.AdditiveBlending}));
-      g.add(p);
-      var s=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.03}));
-      g.add(s);
-      // center hole hint
-      var hole=new THREE.Mesh(new THREE.TorusGeometry(0.3,0.08,8,20),new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.4}));
-      g.add(hole);
-      g.position.set(x,y,z); g.rotation.y=ry||0; g.rotation.x=0.1;
-      scene.add(g); return g;
-    }
+    setTimeout(()=>{
+      gate.classList.add('hidden');
+      gate.classList.remove('completing');
+      document.body.classList.remove('locked');
 
-    var pl1=makePlate(16,1,-5,2.2,0.5);
-    var pl2=makePlate(-16,2,-6,1.8,-0.4);
-    var pl3=makePlate(8,-5,-8,1.4,0.2);
+      setTimeout(()=>document.body.classList.remove('site-reveal'),500);
+    },7000);
+  }else{
+    gate.classList.add('closing');
 
-    // ── KETTLEBELL
-    function makeKettlebell(x,y,z){
-      var g=new THREE.Group();
-      // body
-      var geo=new THREE.SphereGeometry(1.2,16,12);
-      var wf=new THREE.WireframeGeometry(geo);
-      var body=new THREE.LineSegments(wf,new THREE.LineBasicMaterial({color:Y,transparent:true,opacity:0.45,blending:THREE.AdditiveBlending}));
-      g.add(body);
-      var bs=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.03}));
-      g.add(bs);
-      // handle
-      var handle=new THREE.Mesh(new THREE.TorusGeometry(0.65,0.1,8,20,Math.PI),new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.55}));
-      handle.position.y=1.4; g.add(handle);
-      g.position.set(x,y,z);
-      scene.add(g); return g;
-    }
-
-    var kb1=makeKettlebell(-3,2,-3);
-    var kb2=makeKettlebell(18,-1,-7);
-
-    // ── GLOWING PARTICLES — gym dust/sweat atmosphere
-    var COUNT=3000;
-    var pGeo=new THREE.BufferGeometry();
-    var pPos=new Float32Array(COUNT*3);
-    var pSizes=new Float32Array(COUNT);
-    for(var i=0;i<COUNT;i++){
-      pPos[i*3]=(Math.random()-0.5)*80;
-      pPos[i*3+1]=(Math.random()-0.5)*50;
-      pPos[i*3+2]=(Math.random()-0.5)*40-5;
-      pSizes[i]=Math.random()*2+0.3;
-    }
-    pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
-    var pMat=new THREE.PointsMaterial({color:Y,size:0.1,transparent:true,opacity:0.4,sizeAttenuation:true,blending:THREE.AdditiveBlending,depthWrite:false});
-    scene.add(new THREE.Points(pGeo,pMat));
-
-    // ── GLOW HALOS around center
-    for(var i=0;i<3;i++){
-      var rg=new THREE.TorusGeometry(3+i*2.5,0.02,6,80);
-      var rm=new THREE.MeshBasicMaterial({color:Y,transparent:true,opacity:0.06-i*0.015,blending:THREE.AdditiveBlending});
-      var halo=new THREE.Mesh(rg,rm);
-      halo.rotation.x=Math.PI/2;
-      halo.position.set(4,0,-3);
-      scene.add(halo);
-    }
-
-    // mouse
-    var pmx=0,pmy=0,t=0;
-    document.addEventListener('mousemove',function(e){pmx=(e.clientX/W-0.5);pmy=(e.clientY/H-0.5);});
-
-    (function anim(){
-      requestAnimationFrame(anim); t+=0.006;
-      // Barbells float and rotate
-      bb1.rotation.y+=0.003; bb1.position.y=1+Math.sin(t*0.7)*0.3;
-      bb2.rotation.y-=0.002; bb2.position.y=-2+Math.sin(t*0.5+1)*0.25;
-      // Dumbbells spin
-      db1.rotation.y+=0.006; db1.rotation.x+=0.003; db1.position.y=3+Math.sin(t*0.9)*0.2;
-      db2.rotation.y-=0.005; db2.position.y=4+Math.sin(t*0.6+2)*0.3;
-      db3.rotation.z+=0.004; db3.position.y=-3+Math.sin(t*0.8+0.5)*0.2;
-      db4.rotation.y+=0.007; db4.position.y=-5+Math.sin(t*1.1+1.5)*0.15;
-      // Plates drift
-      pl1.rotation.y+=0.004; pl1.position.y=1+Math.sin(t*0.4)*0.2;
-      pl2.rotation.y-=0.003; pl2.position.y=2+Math.sin(t*0.5+1)*0.25;
-      pl3.rotation.y+=0.005; pl3.position.y=-5+Math.sin(t*0.7+2)*0.2;
-      // Kettlebells bob
-      kb1.rotation.y+=0.004; kb1.position.y=2+Math.sin(t*0.6)*0.25;
-      kb2.rotation.y-=0.003; kb2.position.y=-1+Math.sin(t*0.8+1)*0.2;
-      // Particles drift
-      pMat.opacity=0.35+Math.sin(t*0.4)*0.1;
-      // Camera parallax
-      camera.position.x+=(pmx*3-camera.position.x)*0.04;
-      camera.position.y+=(-pmy*2-camera.position.y)*0.04;
-      camera.lookAt(0,0,0);
-      renderer.render(scene,camera);
-    })();
-
-    window.addEventListener('resize',function(){
-      W=window.innerWidth; H=window.innerHeight;
-      renderer.setSize(W,H); camera.aspect=W/H; camera.updateProjectionMatrix();
-    });
-  })();
-
-  // CHAT
-  var isOpen=false;
-  function toggleChat(){isOpen=!isOpen;document.getElementById('chatbox').classList.toggle('open',isOpen);document.getElementById('chatToggle').classList.toggle('open',isOpen);}
-  function addBot(t){var d=document.createElement('div');d.className='msg bot';d.textContent=t;document.getElementById('chatMsgs').appendChild(d);scr();}
-  function addUser(t){var d=document.createElement('div');d.className='msg user';d.textContent=t;document.getElementById('chatMsgs').appendChild(d);scr();}
-  function addTyping(){var d=document.createElement('div');d.className='msg typing';d.id='typing';d.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>';document.getElementById('chatMsgs').appendChild(d);scr();return d;}
-  function scr(){var el=document.getElementById('chatMsgs');el.scrollTop=el.scrollHeight;}
-  function hideChips(){var c=document.getElementById('chips');if(c)c.style.display='none';}
-  function sendMsg(){
-    var inp=document.getElementById('chatInput');var txt=inp.value.trim();if(!txt)return;
-    inp.value='';hideChips();addUser(txt);
-    var answer=/price|cost|package|session/i.test(txt)?'Training packages: 6 sessions $265, 10 $420, 15 $600, or 25 $952. View Pricing for all services.':/stretch|pnf/i.test(txt)?'PNF stretching starts at $20 for your introductory visit. Contact Anthony to arrange a time.':'Anthony can help with training, mobility, and nutrition. Use the contact form below or email abiacono@gmail.com for a personal answer.';
-    addBot(answer);
+    setTimeout(()=>{
+      gate.classList.add('hidden');
+      gate.classList.remove('closing');
+      document.body.classList.remove('locked');
+    },2200);
   }
-  function sendSug(t){document.getElementById('chatInput').value=t;sendMsg();}
-  function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
-  </script>
+}
+function setStep(step){
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.toggle('active',Number(s.dataset.step)===step));
+  progressBar.style.width=(step*25)+'%';
+}
+function showStepError(step,message){
+  const section=document.querySelector(`.form-step[data-step="${step}"]`);
+  const box=section.querySelector('.gate-error');
+  box.textContent=message;
+  box.style.display='block';
+}
+function clearErrors(){
+  document.querySelectorAll('.gate-error').forEach(x=>{x.style.display='none';x.textContent='';});
+}
+function validateStep(step){
+  clearErrors();
+  if(step===1){
+    if(!form.goal.value){showStepError(1,'Choose your main goal to continue.');return false;}
+  }
+  if(step===2){
+    if(!form.days.value || !form.preferredTime.value){
+      showStepError(2,'Choose your weekly availability and preferred training time.');return false;
+    }
+  }
+  if(step===3){
+    if(!form.experience.value || !form.timeline.value || !form.limitations.value.trim() || !form.medicalGuidance.value || !form.journey.value.trim()){
+      showStepError(3,'Complete your experience, timeline, limitations, medical guidance and journey before continuing.');return false;
+    }
+  }
+  return true;
+}
+document.querySelectorAll('[data-next]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const current=Number(btn.closest('.form-step').dataset.step);
+    if(validateStep(current)) setStep(Number(btn.dataset.next));
+  });
+});
+document.querySelectorAll('[data-back]').forEach(btn=>btn.addEventListener('click',()=>setStep(Number(btn.dataset.back))));
+
+['startQuestionnaire','navQuestionnaire','unlockFromPricing','ctaQuestionnaire'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('click',openGate);
+});
+
+document.getElementById('skipQuestionnaire').addEventListener('click',(e)=>{
+  e.preventDefault();
+  e.stopPropagation();
+  sessionStorage.setItem('bamfit_questionnaire_skipped','1');
+  closeGate('skip');
+});
+
+function questionnaireData(){
+  return {
+    goal:form.goal.value,
+    currentWeight:form.currentWeight.value,
+    goalWeight:form.goalWeight.value,
+    units:form.units.value,
+    days:form.days.value,
+    preferredTime:form.preferredTime.value,
+    experience:form.experience.value,
+    timeline:form.timeline.value,
+    limitations:form.limitations.value.trim(),
+    medicalGuidance:form.medicalGuidance.value,
+    journey:form.journey.value.trim(),
+    name:form.leadName.value.trim(),
+    email:form.leadEmail.value.trim(),
+    phone:form.leadPhone.value.trim(),
+    contactMethod:form.contactMethod.value
+  };
+}
+
+function recommendationFor(data){
+  let recommended='10_sessions';
+
+  if(data.days==='1-2') recommended='10_sessions';
+  if(data.days==='3') recommended='10_sessions';
+  if(data.days==='4') recommended='15_sessions';
+  if(data.days==='5+') recommended='25_sessions';
+
+  if(data.experience==='Beginner' && data.days!=='5+') recommended='10_sessions';
+  if(data.experience==='Advanced' && (data.days==='4' || data.days==='5+')) recommended='25_sessions';
+  if(data.goal==='Move better / mobility' && data.days==='1-2') recommended='10_sessions';
+
+  return recommended;
+}
+
+function injectPricing(data){
+  const recommended=recommendationFor(data);
+  const recommendedPkg=PACKAGES.find(p=>p.type===recommended);
+
+  recommendationText.textContent=
+    `${data.name ? data.name.split(' ')[0]+', ' : ''}based on your ${data.goal.toLowerCase()} goal, ${data.days} training availability, and ${data.experience.toLowerCase()} experience, ${recommendedPkg.name.toLowerCase()} is a reasonable place to discuss with Anthony.`;
+
+  packageGrid.innerHTML=PACKAGES.map(p=>`
+    <article class="package glass ${p.type===recommended?'recommended':''}">
+      ${p.type===recommended?'<div class="badge">Suggested Start</div>':''}
+      <div class="pkg-label">Personal Training</div>
+      <h3>${p.name}</h3>
+      <div class="price">${p.price}</div>
+      <div class="rate">${p.rate}</div>
+      <p>${p.desc}</p>
+      <a href="#contact">Talk To Anthony →</a>
+    </article>
+  `).join('');
+
+  lockedPricing.style.display='none';
+  pricingContent.classList.add('visible');
+  navLock.textContent='Pricing Unlocked';
+}
+
+async function saveLead(data){
+  const message=
+`BAM FIT FITNESS QUESTIONNAIRE
+
+Goal: ${data.goal}
+Current weight: ${data.currentWeight ? data.currentWeight+' '+data.units : 'Not provided'}
+Goal weight: ${data.goalWeight ? data.goalWeight+' '+data.units : 'Not provided'}
+Training availability: ${data.days} days/week
+Preferred training time: ${data.preferredTime}
+Experience: ${data.experience}
+Timeline: ${data.timeline}
+Medical exercise guidance: ${data.medicalGuidance}
+
+Injuries, pain, or movement limitations:
+${data.limitations}
+
+Journey:
+${data.journey}
+
+Preferred contact method: ${data.contactMethod}`;
+
+  const payload={
+    full_name:data.name,
+    email:data.email,
+    phone:data.phone,
+    interest:data.goal,
+    message
+  };
+
+  const res=await fetch('/api/contact',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  });
+  if(!res.ok) throw new Error('Unable to save questionnaire');
+}
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  clearErrors();
+
+  if(!form.leadName.value.trim() || !form.leadEmail.value.trim() || !form.contactMethod.value){
+    showStepError(4,'Enter your name, email, and preferred contact method to unlock your training options.');
+    return;
+  }
+
+  const data=questionnaireData();
+  const button=document.getElementById('finishQuestionnaire');
+  button.disabled=true;
+  button.textContent='Unlocking...';
+
+  try{
+    /* Try to save to existing BAM FIT backend.
+       Local static preview may not have /api/contact connected yet. */
+    try{ await saveLead(data); }catch(err){ console.warn('Questionnaire saved locally only:',err.message); }
+
+    localStorage.setItem(STORAGE_KEY,'1');
+    localStorage.setItem(STORAGE_DATA,JSON.stringify(data));
+    injectPricing(data);
+    closeGate('complete');
+
+    setTimeout(()=>{
+      document.getElementById('training-options').scrollIntoView({behavior:'smooth'});
+    },7200);
+  }finally{
+    button.disabled=false;
+    button.textContent='Unlock My Options →';
+  }
+});
+
+/* Existing unlock */
+(function(){
+  if(localStorage.getItem(STORAGE_KEY)==='1'){
+    try{
+      const data=JSON.parse(localStorage.getItem(STORAGE_DATA)||'{}');
+      if(data.goal) injectPricing(data);
+      gate.classList.add('hidden');
+      document.body.classList.remove('locked');
+    }catch(e){ openGate(); }
+  }else if(sessionStorage.getItem('bamfit_questionnaire_skipped')==='1'){
+    gate.classList.add('hidden');
+    document.body.classList.remove('locked');
+  }else{
+    openGate();
+  }
+})();
+
+/* -----------------------------
+   CONTACT FORM
+------------------------------ */
+document.getElementById('contactForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const status=document.getElementById('contactStatus');
+  const button=this.querySelector('.submit');
+  const payload={
+    full_name:document.getElementById('contactName').value.trim(),
+    email:document.getElementById('contactEmail').value.trim(),
+    phone:document.getElementById('contactPhone').value.trim(),
+    interest:document.getElementById('contactInterest').value,
+    message:document.getElementById('contactMessage').value.trim()
+  };
+
+  button.disabled=true;
+  button.textContent='Sending...';
+
+  try{
+    const res=await fetch('/api/contact',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error();
+    status.style.display='block';
+    status.textContent='Message sent. Anthony will receive your BAM FIT inquiry.';
+    this.reset();
+  }catch(e){
+    status.style.display='block';
+    status.innerHTML='The local preview is not connected to the backend yet. You can still email Anthony directly at <a href="mailto:abiacono@gmail.com" style="color:#fff">abiacono@gmail.com</a>.';
+  }finally{
+    button.disabled=false;
+    button.textContent='Send To BAM FIT';
+  }
+});
+
+/* -----------------------------
+   3D-LIKE PARALLAX + STARFIELD
+------------------------------ */
+const heroArt=document.getElementById('heroArt');
+window.addEventListener('pointermove',e=>{
+  const x=e.clientX/window.innerWidth-.5;
+  const y=e.clientY/window.innerHeight-.5;
+  heroArt.style.transform=`scale(1.085) translate3d(${x*1.15}%,${y*.75}%,0)`;
+});
+
+const canvas=document.getElementById('starfield');
+const ctx=canvas.getContext('2d');
+let stars=[];
+function resize(){
+  canvas.width=innerWidth*devicePixelRatio;
+  canvas.height=innerHeight*devicePixelRatio;
+  canvas.style.width=innerWidth+'px';
+  canvas.style.height=innerHeight+'px';
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+
+  stars=Array.from({length:Math.min(220,Math.floor(innerWidth/6))},()=>({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    z:.15+Math.random()*.85,
+    r:.25+Math.random()*1.15,
+    hue:Math.random()<.5?195:(Math.random()<.7?255:290)
+  }));
+}
+function draw(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(const s of stars){
+    s.y+=.035+s.z*.08;
+    s.x+=Math.sin((s.y+s.z)*.004)*.012;
+    if(s.y>innerHeight+4){s.y=-4;s.x=Math.random()*innerWidth;}
+    ctx.beginPath();
+    ctx.fillStyle=`hsla(${s.hue},100%,78%,${.12+s.z*.34})`;
+    ctx.shadowColor=`hsla(${s.hue},100%,70%,.55)`;
+    ctx.shadowBlur=5*s.z;
+    ctx.arc(s.x,s.y,s.r*s.z,0,Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+resize();draw();
+addEventListener('resize',resize);
+
+/* reveal */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('show');io.unobserve(entry.target);}
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>

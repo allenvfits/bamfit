@@ -41,7 +41,7 @@
     .info-bar::before{content:'i';font-size:1rem;color:var(--blue);flex-shrink:0;font-style:italic;font-weight:700;}
     /* SESSIONS */
     #sessions{background:var(--dark);}
-    .sessions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:1.5rem;}
+    .sessions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:1.5rem;}
     .sess-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:1.8rem 1.4rem;display:flex;flex-direction:column;position:relative;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;}
     .sess-card:hover{transform:translateY(-5px);border-color:rgba(101,216,255,0.25);box-shadow:0 15px 40px rgba(0,0,0,0.4);}
     .sess-card.best{border-color:var(--blue);background:var(--dark4);}
@@ -57,14 +57,6 @@
     .btn-s:hover{transform:translateY(-2px);}
     .btn-yellow{background:var(--blue);color:#000;}.btn-yellow:hover{background:#a68cff;}
     .btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12);}.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
-    /* PAY BY DAY */
-    #payday{background:var(--dark2);}
-    .payday-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
-    .payday-card{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:2rem;display:flex;align-items:center;gap:1.5rem;transition:transform 0.25s,border-color 0.25s;}
-    .payday-card:hover{transform:translateY(-3px);border-color:rgba(101,216,255,0.2);}
-    .pd-price{font-family:var(--ff-display);font-size:4.5rem;color:var(--blue);line-height:1;flex-shrink:0;}
-    .pd-info h4{font-family:var(--ff-display);font-size:1.6rem;color:var(--text);margin-bottom:0.35rem;}
-    .pd-info p{font-size:0.82rem;font-weight:300;color:var(--muted);line-height:1.65;}
     /* ROUTINES */
     #routines{background:var(--dark);}
     .routines-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.5rem;}
@@ -135,7 +127,7 @@
     .footer-links{display:flex;gap:2rem;}
     .footer-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}.footer-links a:hover{color:var(--blue);}
     @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
-    @media(max-width:1000px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}section,#pcta{padding-left:1.5rem;padding-right:1.5rem;}#hero-banner{padding:7rem 1.5rem 3rem;}.sessions-grid{grid-template-columns:1fr 1fr;}.payday-grid,.routines-grid,.pnf-layout,.nut-layout{grid-template-columns:1fr;}#pcta{flex-direction:column;}footer{flex-direction:column;gap:1.5rem;text-align:center;}}
+    @media(max-width:1000px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}section,#pcta{padding-left:1.5rem;padding-right:1.5rem;}#hero-banner{padding:7rem 1.5rem 3rem;}.sessions-grid{grid-template-columns:1fr 1fr;}.routines-grid,.pnf-layout,.nut-layout{grid-template-columns:1fr;}#pcta{flex-direction:column;}footer{flex-direction:column;gap:1.5rem;text-align:center;}}
     @media(max-width:600px){.sessions-grid{grid-template-columns:1fr;}}
   </style>
   <link rel="stylesheet" href="theme.css"/>
@@ -170,13 +162,6 @@
     <div class="info-bar">Minimum 1 day per week for weekly training packages. All credits expire 90 days after purchase.</div>
     <div class="sessions-grid reveal">
       <div class="sess-card">
-        <div class="sess-big">6</div><div class="sess-unit">Sessions</div>
-        <div class="sess-price">$265</div><div class="sess-rate">~$44/session</div>
-        <div class="sess-tag">Starter</div>
-        <div class="sess-desc">Build your foundation. Six focused sessions with Anthony to establish form and build momentum.</div>
-        <a href="checkout.html?package=6_sessions" class="btn-s btn-ghost">Book Now</a>
-      </div>
-      <div class="sess-card">
         <div class="sess-big">10</div><div class="sess-unit">Sessions</div>
         <div class="sess-price">$420</div><div class="sess-rate">$42/session</div>
         <div class="sess-tag">Popular</div>
@@ -197,21 +182,6 @@
         <div class="sess-tag">All In</div>
         <div class="sess-desc">Twenty-five sessions locks in the lowest per-session rate Anthony offers. For people serious about change.</div>
         <a href="checkout.html?package=25_sessions" class="btn-s btn-yellow">Get Started</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="payday">
-    <div class="section-tag">No Commitment</div>
-    <h2 class="section-title">PAY BY<br><span>THE DAY</span></h2>
-    <div class="payday-grid reveal">
-      <div class="payday-card">
-        <div class="pd-price">$25</div>
-        <div class="pd-info"><h4>30-MIN SESSION</h4><p>A focused half-hour. Perfect for targeted work or trying BAM FIT before committing to a package.</p></div>
-      </div>
-      <div class="payday-card">
-        <div class="pd-price">$45</div>
-        <div class="pd-info"><h4>55-MIN SESSION</h4><p>A full training session — warm-up, main work, cooldown. The preferred drop-in option.</p></div>
       </div>
     </div>
   </section>
@@ -316,13 +286,9 @@
         <thead><tr><th style="width:50%">Service</th><th>Price</th><th>Details</th></tr></thead>
         <tbody>
           <tr class="crow"><td colspan="3"><span class="clabel">Session Packages (min 1 day/week)</span></td></tr>
-          <tr><td><div class="f-name">6 Sessions</div></td><td><span class="tv b">$265</span></td><td><span class="tv">~$44/session</span></td></tr>
           <tr><td><div class="f-name">10 Sessions</div></td><td><span class="tv b">$420</span></td><td><span class="tv">$42/session</span></td></tr>
           <tr><td><div class="f-name">15 Sessions</div></td><td><span class="tv b">$600</span></td><td><span class="tv">$40/session</span></td></tr>
           <tr><td><div class="f-name">25 Sessions <span style="color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">Best Value</span></div></td><td><span class="tv b">$952</span></td><td><span class="tv">$38/session</span></td></tr>
-          <tr class="crow"><td colspan="3"><span class="clabel">Pay By Day</span></td></tr>
-          <tr><td><div class="f-name">30-Minute Session</div></td><td><span class="tv b">$25</span></td><td><span class="tv">Drop-in</span></td></tr>
-          <tr><td><div class="f-name">55-Minute Session</div></td><td><span class="tv b">$45</span></td><td><span class="tv">Drop-in</span></td></tr>
           <tr class="crow"><td colspan="3"><span class="clabel">Custom Routines</span></td></tr>
           <tr><td><div class="f-name">3-Day Strength Routine</div></td><td><span class="tv b">$80</span></td><td><span class="tv">One-time, keep forever</span></td></tr>
           <tr><td><div class="f-name">5-Day Strength Routine</div></td><td><span class="tv b">$150</span></td><td><span class="tv">One-time, keep forever</span></td></tr>

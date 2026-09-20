@@ -5,14 +5,11 @@ const adminAuth = require('./auth');
 
 // Package config — matches Supabase check constraint
 const PACKAGE_CONFIG = {
-  '6_sessions':  { total_sessions: 6,  amount_paid: 26500  }, // $265
   '10_sessions': { total_sessions: 10, amount_paid: 42000  }, // $420
   '15_sessions': { total_sessions: 15, amount_paid: 60000  }, // $600
   '25_sessions': { total_sessions: 25, amount_paid: 95200  }, // $952
   'custom_3day': { total_sessions: 1,  amount_paid: 8000   }, // $80
   'custom_5day': { total_sessions: 1,  amount_paid: 15000  }, // $150
-  'payday_30':   { total_sessions: 1,  amount_paid: 2500   }, // $25
-  'payday_55':   { total_sessions: 1,  amount_paid: 4500   }, // $45
 };
 
 // POST /api/packages

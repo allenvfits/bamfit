@@ -25,7 +25,7 @@ app.disable('x-powered-by');
 // ── Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 const path = require('node:path');
-const publicFiles = ['index.html','about.html','pricing.html','results.html','owner.html','checkout.html','success.html','theme.css','site.js','owner-ui.js','checkout-ui.js'];
+const publicFiles = ['index.html','about.html','pricing.html','results.html','owner.html','checkout.html','success.html','theme.css','site.js','owner-ui.js','checkout-ui.js','bamfit-atlas-hero.webp'];
 app.get('/', (req,res) => res.sendFile(path.join(__dirname,'index.html')));
 for (const file of publicFiles) app.get('/'+file,(req,res)=>res.sendFile(path.join(__dirname,file)));
 app.use('/api/connect', require('./connect'));
