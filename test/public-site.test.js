@@ -69,13 +69,24 @@ test('questionnaire gates pricing and checkout',()=>{
 
 test('only the three approved training packages are public and purchasable',()=>{
   const prices=require('../prices');
-  assert.deepEqual(Object.keys(prices).sort(),['10_sessions','15_sessions','25_sessions'].sort());
+  assert.deepEqual(Object.keys(prices).sort(),['6_sessions','10_sessions','15_sessions'].sort());
 
   const pricing=read('pricing.html');
-  for(const approved of ['$420','$600','$952'])assert.match(pricing,new RegExp(approved.replace('$','\\$')));
-  for(const retired of ['$80','$150','$20','$25','$40','$100']){
-    assert.ok(!pricing.includes(`>${retired}<`),`pricing.html still displays retired price ${retired}`);
+  for(const approved of ['$265','$420','$600'])assert.match(pricing,new RegExp(approved.replace('$','\\$')));
+  assert.ok(!pricing.includes('>$952<'),'pricing.html still displays the retired 25-session price');
+});
+
+test('stretching, nutrition, and custom-routine links lead to a working contact path',()=>{
+  const home=read('index.html');
+  const pricing=read('pricing.html');
+  assert.match(home,/href="pricing\.html#pnf"/);
+  assert.match(pricing,/id="pnf"/);
+  assert.ok(pricing.indexOf('<section id="pnf">')>pricing.indexOf('</main>'),'PNF options must stay visible without the training questionnaire');
+  for(const choice of ['intro_25','session_25','session_50','nutrition','custom']){
+    assert.match(pricing,new RegExp(`index\\.html\\?interest=${choice}#contact`));
+    assert.match(home,new RegExp(`value="${choice}"`));
   }
+  for(const price of ['$25','$35','$60','$100'])assert.ok(pricing.includes(`>${price}<`)||pricing.includes(`${price} monthly`));
 });
 
 test('signup calls to action on secondary pages start the questionnaire',()=>{
@@ -90,4 +101,10 @@ test('every results filter has at least one matching result card',()=>{
   const cardCategories=[...results.matchAll(/class="[^"]*story-card[^"]*"[^>]*data-cat="([^"]+)"/g)]
     .flatMap(match=>match[1].split(/\s+/));
   for(const filter of filters)assert.ok(cardCategories.includes(filter),`results filter ${filter} has no matching card`);
+});
+
+test('results page does not show inactive video controls',()=>{
+  const results=read('results.html');
+  assert.doesNotMatch(results,/class="play-btn"/);
+  assert.match(results,/video stories are coming soon/i);
 });

@@ -1,4 +1,5 @@
 -- The production schema is versioned in:
 -- supabase/migrations/20260921012855_secure_bamfit_schema.sql
+-- supabase/migrations/20260921020001_align_anthony_package_prices.sql
 -- Apply migrations with the Supabase CLI or migration API.
 -- Never expose the service-role/secret key in browser code.

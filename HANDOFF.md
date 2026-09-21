@@ -5,7 +5,7 @@ Anthony owns the business and must authorize his own Stripe account, bank detail
 ## Hosting and repository
 Allen confirmed that GitHub and Render hosting stay under his accounts, and he will bill Anthony for the service. Keep allenvfits/bamfit and the existing BAM FIT Render service; no external ownership transfer is planned. Anthony remains the business owner and must authorize his own Stripe account for customer payments.
 
-The existing Render service is a static site. It can publish the design, but the Express payment/contact API requires a separate Node web service and API routing, or migration to Node hosting. Do not label payments as live until that runtime, database, and Stripe configuration are complete.
+The public design runs on the BAM FIT Render static site. The Express contact/payment API runs separately on `bamfit-contact-api`. Do not label payments as live until Stripe configuration and Anthony's connected account are complete.
 
 ## Database and email
 Use the dedicated BAM FIT Supabase project managed under the agreed hosting arrangement. The complete schema is versioned in `supabase/migrations/`. Every public table has RLS. Customer profiles can select and edit only their own safe profile fields; operational client notes, leads, payment connections, and orders are server-only. Do not use another client's database. Configure Anthony's email sender and a strong unique ADMIN_SECRET that is delivered securely to Anthony. Do not put credentials into GitHub or browser code.
@@ -21,9 +21,11 @@ Use the dedicated BAM FIT Supabase project managed under the agreed hosting arra
 Checkout creates direct charges on Anthony's connected account and takes no application fee. Anthony manages payouts, refunds, disputes, and account requirements in his full Stripe Dashboard. For an embedded owner dashboard expansion, add Stripe's notification_banner and account_management components.
 
 ## Service delivery
-Paid orders are recorded once per Checkout Session in the owner inbox with fulfillment pending. Anthony must coordinate appointments and fulfill purchases. No placeholder appointment or automatic credits are generated. Nutrition remains contact-only because advertised monthly coaching needs separately configured recurring billing.
+The approved training packages are 6 sessions for $265, 10 sessions for $420, and 15 sessions for $600. Credits expire 90 days after purchase. PNF requests use the working contact path: $25 for the 25-minute first-timer intro, $35 for a standard 25-minute stretch, and $60 for a 50-minute stretch. Nutrition is a $100 monthly add-on and remains contact-only because it needs separately configured recurring billing.
+
+Paid training orders are recorded once per Checkout Session in the owner inbox with fulfillment pending. Anthony must coordinate appointments and fulfill purchases. No placeholder appointment or automatic credits are generated.
 
 ## Verification completed in code
 Use npm ci, npm test, npm start. Check /health and all seven HTML pages. Review desktop/mobile styling. Complete real database, email, OAuth, webhook and Stripe test-mode acceptance checks before telling the client checkout is live or issuing a final completion invoice.
 
-Local validation: all five automated tests pass. The browser environment blocked localhost, so desktop/mobile visual acceptance is still required on the deployment preview.
+Local validation includes automated public-link, pricing, contact, authentication, payment, and webhook coverage. Desktop/mobile visual acceptance is still required on the deployment preview after material design changes.
