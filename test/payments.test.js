@@ -1,8 +1,8 @@
 const {test,before,after}=require('node:test');
 const assert=require('node:assert/strict');
-process.env.ADMIN_SECRET='test-owner-secret';process.env.FRONTEND_URL='http://localhost:4000';process.env.STRIPE_CONNECT_CLIENT_ID='ca_test';
+process.env.ADMIN_SECRET='test-owner-secret-long-enough';process.env.FRONTEND_URL='http://localhost:4000';process.env.API_ORIGIN='http://localhost:4000';process.env.STRIPE_CONNECT_CLIENT_ID='ca_test';
 let account=null,active=false,event,created,orders=new Map();
-const db={from(table){return {select(){return this;},eq(){return this;},async maybeSingle(){return {data:account};},async upsert(value){if(!orders.has(value.stripe_session_id))orders.set(value.stripe_session_id,value);return {};}};}};
+const db={from(table){return {select(){return this;},eq(){return this;},async maybeSingle(){return {data:account};}};},async rpc(name,value){if(name==='record_bamfit_order'&&!orders.has(value.p_stripe_session_id))orders.set(value.p_stripe_session_id,value);return {};}};
 require.cache[require.resolve('../supabase')]={exports:db};
 require.cache[require.resolve('../stripe-client')]={exports:()=>({v2:{core:{accounts:{retrieve:async()=>({configuration:{merchant:{capabilities:{card_payments:{status:active?'active':'inactive'}}}}})}}},checkout:{sessions:{create:async(params,options)=>{created={params,options};return {url:'https://checkout.stripe.com/test'};}}},webhooks:{constructEvent:()=>{if(!event)throw Error('bad signature');return event;}}})};
 const app=require('../server');let server,base;

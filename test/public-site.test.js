@@ -42,6 +42,12 @@ test('public browser scripts have valid JavaScript syntax',()=>{
   }
 });
 
+test('checkout and owner tools use the protected Render API',()=>{
+  for(const file of ['checkout-ui.js','owner-ui.js']){
+    assert.match(read(file),/https:\/\/bamfit-contact-api\.onrender\.com/,`${file} does not target the API service`);
+  }
+});
+
 test('homepage stays visible until a visitor explicitly starts signup',()=>{
   const home=read('index.html');
   assert.match(home,/<body>/);

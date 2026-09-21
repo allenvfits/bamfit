@@ -1,9 +1,14 @@
-// Simple secret-key auth for Anthony's admin routes
-// Pass header:  x-admin-secret: your-secret-from-env
+const crypto = require('node:crypto');
 
 function adminAuth(req, res, next) {
-  const secret = req.headers['x-admin-secret'];
-  if (!secret || secret !== process.env.ADMIN_SECRET) {
+  const supplied = req.headers['x-admin-secret'];
+  const configured = process.env.ADMIN_SECRET;
+  if (typeof supplied !== 'string' || typeof configured !== 'string' || configured.length < 24) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  const suppliedBuffer = Buffer.from(supplied);
+  const configuredBuffer = Buffer.from(configured);
+  if (suppliedBuffer.length !== configuredBuffer.length || !crypto.timingSafeEqual(suppliedBuffer, configuredBuffer)) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   next();

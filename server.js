@@ -13,14 +13,37 @@ const adminRoutes     = require('./admin');
 
 const app  = express();
 const PORT = process.env.PORT || 4000;
+const allowedOrigins = new Set(
+  (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || 'https://bamfit1.com,https://www.bamfit1.com,https://bamfit.onrender.com')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean),
+);
 
 // ── Stripe webhook needs raw body — register BEFORE json middleware
 app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
 
 // ── Global middleware
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+app.use(cors({
+  credentials: true,
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+    return callback(new Error('Origin not allowed'));
+  },
+}));
 app.use(express.json({limit:'32kb'}));
 app.disable('x-powered-by');
+
+const contactAttempts = new Map();
+app.use('/api/contact', (req, res, next) => {
+  const now = Date.now();
+  const key = req.ip || req.socket.remoteAddress || 'unknown';
+  const recent = (contactAttempts.get(key) || []).filter(time => now - time < 15 * 60 * 1000);
+  if (recent.length >= 5) return res.status(429).json({ error: 'Please wait before sending another message.' });
+  recent.push(now);
+  contactAttempts.set(key, recent);
+  next();
+});
 
 // ── Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
