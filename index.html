@@ -1064,7 +1064,7 @@ footer{
     <div class="contact">
       <div class="contact-info glass reveal">
         <div class="info"><small>Trainer</small><strong>Anthony B. Iacono</strong></div>
-        <div class="info"><small>Email</small><a href="mailto:abiacono@gmail.com">abiacono@gmail.com</a></div>
+        <div class="info"><small>Email</small><a href="mailto:contact@bamfit1.com">contact@bamfit1.com</a></div>
         <div class="info"><small>Location</small><strong>Phoenix, Arizona</strong></div>
         <div class="info"><small>Specialties</small><strong>Strength · Mobility · PNF · Lifestyle</strong></div>
         <div class="info"><small>Mission</small><strong>The Goal Is Longevity</strong></div>
@@ -1322,7 +1322,7 @@ function injectPricing(data,delivery=''){
   if(delivery==='sent'){
     questionnaireSaveStatus.textContent='Questionnaire sent to BAM FIT.';
   }else if(delivery==='local'){
-    questionnaireSaveStatus.innerHTML='Your answers are saved on this device, but online delivery is unavailable. <a href="mailto:abiacono@gmail.com">Email Anthony</a> to follow up.';
+    questionnaireSaveStatus.innerHTML='Your answers are saved on this device, but online delivery is unavailable. <a href="mailto:contact@bamfit1.com">Email Anthony</a> to follow up.';
   }else{
     questionnaireSaveStatus.textContent='';
   }
@@ -1357,7 +1357,7 @@ Preferred contact method: ${data.contactMethod}`;
     message
   };
 
-  const res=await fetch('/api/contact',{
+  const res=await fetch('https://bamfit-contact-api.onrender.com/api/contact',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)
@@ -1389,8 +1389,7 @@ form.addEventListener('submit',async e=>{
   button.textContent='Unlocking...';
 
   try{
-    /* Try to save to existing BAM FIT backend.
-       Local static preview may not have /api/contact connected yet. */
+    /* Send through the BAM FIT contact API. */
     let delivery='sent';
     try{ await saveLead(data); }catch(err){
       delivery='local';
@@ -1460,7 +1459,7 @@ document.getElementById('contactForm').addEventListener('submit',async function(
   button.textContent='Sending...';
 
   try{
-    const res=await fetch('/api/contact',{
+    const res=await fetch('https://bamfit-contact-api.onrender.com/api/contact',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(payload)
@@ -1471,7 +1470,7 @@ document.getElementById('contactForm').addEventListener('submit',async function(
     this.reset();
   }catch(e){
     status.style.display='block';
-    status.innerHTML='The local preview is not connected to the backend yet. You can still email Anthony directly at <a href="mailto:abiacono@gmail.com" style="color:#fff">abiacono@gmail.com</a>.';
+    status.innerHTML='Your message could not be sent. You can still email Anthony directly at <a href="mailto:contact@bamfit1.com" style="color:#fff">contact@bamfit1.com</a>.';
   }finally{
     button.disabled=false;
     button.textContent='Send To BAM FIT';
