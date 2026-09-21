@@ -12,11 +12,11 @@ router.post('/', adminAuth, async (req, res) => {
     return res.status(400).json({ error: 'client_id, session_length, and session_date are required' });
   }
 
-  const PRICES = { intro_20: 2000, session_25: 2500, session_50: 4000 };
+  const PRICES = { intro_25: 2500, session_25: 3500, session_50: 6000 };
   const amount_paid = PRICES[session_length];
 
   if (!amount_paid) {
-    return res.status(400).json({ error: 'Invalid session_length. Use: intro_20, session_25, session_50' });
+    return res.status(400).json({ error: 'Invalid session_length. Use: intro_25, session_25, session_50' });
   }
 
   const { data, error } = await supabase

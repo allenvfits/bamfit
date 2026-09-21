@@ -77,7 +77,7 @@
     .pnf-benefit{display:flex;align-items:center;gap:0.7rem;font-size:0.85rem;color:var(--text);}
     .pnf-benefit::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;}
     .pnf-cards{display:flex;flex-direction:column;gap:0.9rem;}
-    .pnf-row{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transition:transform 0.2s,border-color 0.2s;}
+    .pnf-row{background:var(--dark3);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transition:transform 0.2s,border-color 0.2s;text-decoration:none;color:inherit;}
     .pnf-row:hover{transform:translateX(4px);border-color:rgba(101,216,255,0.2);}
     .pnf-row.intro{border-color:var(--blue);background:var(--dark4);}
     .pnf-row-left h4{font-family:var(--ff-display);font-size:1.4rem;color:var(--text);margin-bottom:0.2rem;}
@@ -157,7 +157,7 @@
     <div class="banner-content">
       <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; <span>Pricing</span></div>
       <h1 class="banner-title">REAL PRICING.<br><span>ZERO BS.</span></h1>
-      <p class="banner-sub">Complete the BAM FIT questionnaire to unlock the three available training packages. No contracts and no hidden fees.</p>
+      <p class="banner-sub">Clear pricing for personal training, PNF assisted stretching, custom routines, and nutrition support. Training packages unlock after the BAM FIT questionnaire.</p>
     </div>
   </section>
 
@@ -175,8 +175,15 @@
   <section id="sessions">
     <div class="section-tag">Training Packages</div>
     <h2 class="section-title">SESSION<br><span>PACKAGES</span></h2>
-    <div class="info-bar">Minimum 1 day per week for weekly training packages. All credits expire 90 days after purchase.</div>
+    <div class="info-bar">Minimum 2 days per week for weekly training packages. All credits expire 90 days after purchase.</div>
     <div class="sessions-grid reveal">
+      <div class="sess-card">
+        <div class="sess-big">6</div><div class="sess-unit">Sessions</div>
+        <div class="sess-price">$265</div><div class="sess-rate">About $44/session</div>
+        <div class="sess-tag">Starter</div>
+        <div class="sess-desc">Six focused sessions to establish proper form, build momentum, and begin progressing with Anthony.</div>
+        <a href="index.html?signup=1&amp;package=6_sessions" data-package="6_sessions" class="btn-s btn-ghost">Choose Package</a>
+      </div>
       <div class="sess-card">
         <div class="sess-big">10</div><div class="sess-unit">Sessions</div>
         <div class="sess-price">$420</div><div class="sess-rate">$42/session</div>
@@ -184,20 +191,13 @@
         <div class="sess-desc">Ten sessions gives you enough time to see real changes in strength and body composition.</div>
         <a href="index.html?signup=1&amp;package=10_sessions" data-package="10_sessions" class="btn-s btn-ghost">Choose Package</a>
       </div>
-      <div class="sess-card">
+      <div class="sess-card best">
+        <div class="best-badge">Best Value</div>
         <div class="sess-big">15</div><div class="sess-unit">Sessions</div>
         <div class="sess-price">$600</div><div class="sess-rate">$40/session</div>
         <div class="sess-tag">Serious Results</div>
         <div class="sess-desc">Where transformations happen. Habits lock in and your body visibly changes.</div>
-        <a href="index.html?signup=1&amp;package=15_sessions" data-package="15_sessions" class="btn-s btn-ghost">Choose Package</a>
-      </div>
-      <div class="sess-card best">
-        <div class="best-badge">Best Value</div>
-        <div class="sess-big">25</div><div class="sess-unit">Sessions</div>
-        <div class="sess-price">$952</div><div class="sess-rate">$38/session &bull; Lowest rate</div>
-        <div class="sess-tag">All In</div>
-        <div class="sess-desc">Twenty-five sessions locks in the lowest per-session rate Anthony offers. For people serious about change.</div>
-        <a href="index.html?signup=1&amp;package=25_sessions" data-package="25_sessions" class="btn-s btn-yellow">Choose Package</a>
+        <a href="index.html?signup=1&amp;package=15_sessions" data-package="15_sessions" class="btn-s btn-yellow">Choose Package</a>
       </div>
     </div>
   </section>
@@ -210,6 +210,80 @@
     <a href="index.html#contact" class="btn-dark">Contact Anthony</a>
   </section>
   </main>
+
+  <section id="routines">
+    <div class="section-tag">Train on Your Own</div>
+    <h2 class="section-title">CUSTOM<br><span>ROUTINES</span></h2>
+    <div class="routines-grid reveal">
+      <div class="routine-card" style="grid-column:1/-1;">
+        <div class="r-label">Designed Around You</div>
+        <div class="r-name">CUSTOM WORKOUT ROUTINE</div>
+        <div class="r-price">Custom Quote</div>
+        <ul class="r-list">
+          <li>Built around your equipment, schedule, and goals</li>
+          <li>Sets, reps, rest periods, and coaching notes</li>
+          <li>Strength, weight-loss, mobility, or general-fitness focus</li>
+        </ul>
+        <a href="index.html?interest=custom#contact" class="btn-s btn-ghost" style="display:inline-block;margin-top:1.25rem;">Request a Routine</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="pnf">
+    <div class="section-tag">Flexibility &amp; Recovery</div>
+    <h2 class="section-title">ASSISTED PNF<br><span>STRETCHING</span></h2>
+    <div class="pnf-layout reveal">
+      <div class="pnf-info">
+        <h3>Improve How Your Body Moves</h3>
+        <p><strong style="color:var(--text)">Proprioceptive Neuromuscular Facilitation</strong> is an assisted stretching method designed to improve flexibility, range of motion, posture, alignment, and neuromuscular coordination.</p>
+        <div class="pnf-benefits">
+          <div class="pnf-benefit">Increased range of motion</div>
+          <div class="pnf-benefit">Improved flexibility</div>
+          <div class="pnf-benefit">Enhanced athletic performance</div>
+          <div class="pnf-benefit">Better posture and alignment</div>
+          <div class="pnf-benefit">Improved neuromuscular coordination</div>
+        </div>
+        <div class="info-bar" style="margin-top:1.5rem;">Cancellation policy: half of the amount due may be owed when cancelling outside the six-hour notice window.</div>
+      </div>
+      <div class="pnf-cards">
+        <a class="pnf-row intro" href="index.html?interest=intro_25#contact" aria-label="Request the 25-minute first-timer PNF intro stretch for $25">
+          <div class="pnf-row-left"><h4>25-MIN INTRO STRETCH</h4><p>First-timers only · Select to request a session</p><span class="intro-tag">1st Visit Special</span></div>
+          <div class="pnf-big-price">$25</div>
+        </a>
+        <a class="pnf-row" href="index.html?interest=session_25#contact" aria-label="Request a 25-minute PNF stretch for $35">
+          <div class="pnf-row-left"><h4>25-MINUTE SESSION</h4><p>Targeted assisted stretch · Select to request a session</p></div>
+          <div class="pnf-big-price">$35</div>
+        </a>
+        <a class="pnf-row" href="index.html?interest=session_50#contact" aria-label="Request a 50-minute PNF stretch for $60">
+          <div class="pnf-row-left"><h4>50-MINUTE SESSION</h4><p>Full-body assisted stretch · Select to request a session</p></div>
+          <div class="pnf-big-price">$60</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="nutrition">
+    <div class="section-tag">Nutrition Add-On</div>
+    <h2 class="section-title">NUTRITION &amp;<br><span>SUPPLEMENTATION</span></h2>
+    <div class="nut-layout reveal">
+      <div class="nut-card">
+        <div class="nut-icon">&#127869;</div>
+        <div class="nut-price">$100</div>
+        <div class="nut-label">Monthly Add-On</div>
+        <ul class="nut-list">
+          <li>Monthly meal plan customized to your body</li>
+          <li>Adjustments based on how your body responds</li>
+          <li>Nutrition and supplementation guidance</li>
+        </ul>
+        <a href="index.html?interest=nutrition#contact" class="btn-s btn-yellow" style="display:inline-block;margin-top:1.25rem;">Ask About Nutrition</a>
+      </div>
+      <div class="nut-text">
+        <h3>FUEL THE<br><span>RESULTS</span></h3>
+        <p>Anthony creates monthly meal plans around your body's needs and goals, then adjusts the plan according to your progress.</p>
+        <p>Nutrition support is available as a $100 monthly add-on and can include supplement guidance.</p>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div class="footer-logo">BAM<span>FIT</span></div>

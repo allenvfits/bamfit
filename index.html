@@ -637,6 +637,7 @@ body.site-reveal footer{
 .num{font-family:var(--display);font-size:2.4rem;color:rgba(133,102,255,.18)}
 .specialty h3{font-family:var(--display);font-size:1.55rem;font-weight:400;margin:.5rem 0}
 .specialty p{color:#8f8ca0;font-size:.74rem;line-height:1.68}
+.specialty-link{display:inline-block;margin-top:1rem;color:#bdaeff;text-decoration:none;font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
 
 /* CONTACT */
 .contact{display:grid;grid-template-columns:.74fr 1.26fr;gap:1rem}
@@ -1029,7 +1030,7 @@ footer{
       <article class="specialty glass reveal"><div class="num">02</div><h3>FUNCTIONAL FITNESS</h3><p>Training that carries over into everyday movement, work, recreation and long-term physical confidence.</p></article>
       <article class="specialty glass reveal"><div class="num">03</div><h3>WEIGHT LOSS</h3><p>A sustainable training approach built around consistency, sensible nutrition and progressive activity.</p></article>
       <article class="specialty glass reveal"><div class="num">04</div><h3>MOBILITY TRAINING</h3><p>Improve usable range of motion, control and movement quality.</p></article>
-      <article class="specialty glass reveal"><div class="num">05</div><h3>ASSISTED PNF</h3><p>Focused assisted stretching sessions designed around mobility, flexibility and better movement quality.</p></article>
+      <article class="specialty glass reveal"><div class="num">05</div><h3>ASSISTED PNF</h3><p>Focused assisted stretching sessions designed around mobility, flexibility and better movement quality.</p><a class="specialty-link" href="pricing.html#pnf">View Stretching Options →</a></article>
       <article class="specialty glass reveal"><div class="num">06</div><h3>LIFESTYLE COACHING</h3><p>Recovery, habits, sleep, stress and nutrition all support the work you do in training.</p></article>
     </div>
   </div>
@@ -1080,12 +1081,15 @@ footer{
           <div>
             <label for="contactInterest">Interested In</label>
             <select id="contactInterest">
-              <option>Personal Training</option>
-              <option>Strength Training</option>
-              <option>Weight Loss</option>
-              <option>Mobility / PNF</option>
-              <option>Nutrition</option>
-              <option>Custom Routine</option>
+              <option value="personal">Personal Training</option>
+              <option value="strength">Strength Training</option>
+              <option value="weight_loss">Weight Loss</option>
+              <option value="mobility_pnf">Mobility / PNF</option>
+              <option value="intro_25">PNF Intro Stretch — 25 minutes ($25)</option>
+              <option value="session_25">PNF Stretch — 25 minutes ($35)</option>
+              <option value="session_50">PNF Stretch — 50 minutes ($60)</option>
+              <option value="nutrition">Nutrition ($100 monthly add-on)</option>
+              <option value="custom">Custom Workout Routine</option>
             </select>
           </div>
         </div>
@@ -1115,9 +1119,9 @@ const STORAGE_DELIVERY='bamfit_questionnaire_delivery';
 /* Current BAM FIT package pricing.
    Injected only after questionnaire completion. */
 const PACKAGES=[
+  {type:'6_sessions',name:'6 SESSIONS',price:'$265',rate:'~$44 / session',desc:'A focused starting package to build proper form, momentum and consistency.'},
   {type:'10_sessions',name:'10 SESSIONS',price:'$420',rate:'$42 / session',desc:'More time to build consistency, progress your training and reinforce better movement.'},
-  {type:'15_sessions',name:'15 SESSIONS',price:'$600',rate:'$40 / session',desc:'A strong middle ground for clients who want more structured progress and coaching time.'},
-  {type:'25_sessions',name:'25 SESSIONS',price:'$952',rate:'~$38 / session',desc:'Longer-term coaching and the lowest session rate for clients serious about sustained change.'}
+  {type:'15_sessions',name:'15 SESSIONS',price:'$600',rate:'$40 / session',desc:'Longer-term coaching for clients who want structured progress and lasting change.'}
 ];
 
 /* -----------------------------
@@ -1283,16 +1287,16 @@ function questionnaireData(){
 }
 
 function recommendationFor(data){
-  let recommended='10_sessions';
+  let recommended='6_sessions';
 
-  if(data.days==='1-2') recommended='10_sessions';
+  if(data.days==='1-2') recommended='6_sessions';
   if(data.days==='3') recommended='10_sessions';
   if(data.days==='4') recommended='15_sessions';
-  if(data.days==='5+') recommended='25_sessions';
+  if(data.days==='5+') recommended='15_sessions';
 
-  if(data.experience==='Beginner' && data.days!=='5+') recommended='10_sessions';
-  if(data.experience==='Advanced' && (data.days==='4' || data.days==='5+')) recommended='25_sessions';
-  if(data.goal==='Move better / mobility' && data.days==='1-2') recommended='10_sessions';
+  if(data.experience==='Beginner' && data.days!=='5+') recommended='6_sessions';
+  if(data.experience==='Advanced' && (data.days==='4' || data.days==='5+')) recommended='15_sessions';
+  if(data.goal==='Move better / mobility' && data.days==='1-2') recommended='6_sessions';
 
   return recommended;
 }
@@ -1451,7 +1455,7 @@ document.getElementById('contactForm').addEventListener('submit',async function(
     full_name:document.getElementById('contactName').value.trim(),
     email:document.getElementById('contactEmail').value.trim(),
     phone:document.getElementById('contactPhone').value.trim(),
-    interest:document.getElementById('contactInterest').value,
+    interest:document.getElementById('contactInterest').selectedOptions[0].textContent,
     message:document.getElementById('contactMessage').value.trim()
   };
 
@@ -1476,6 +1480,24 @@ document.getElementById('contactForm').addEventListener('submit',async function(
     button.textContent='Send To BAM FIT';
   }
 });
+
+(function prefillContactInterest(){
+  const requested=new URLSearchParams(window.location.search).get('interest');
+  if(!requested) return;
+  const interest=document.getElementById('contactInterest');
+  const message=document.getElementById('contactMessage');
+  const option=[...interest.options].find(item=>item.value===requested);
+  if(!option) return;
+  interest.value=requested;
+  const prompts={
+    intro_25:'I would like to request the 25-minute first-timer PNF intro stretch for $25.',
+    session_25:'I would like to request a 25-minute PNF assisted stretching session for $35.',
+    session_50:'I would like to request a 50-minute PNF assisted stretching session for $60.',
+    nutrition:'I would like to learn more about the $100 monthly nutrition and supplementation add-on.',
+    custom:'I would like a quote for a custom workout routine.'
+  };
+  if(!message.value && prompts[requested]) message.value=prompts[requested];
+})();
 
 /* -----------------------------
    3D-LIKE PARALLAX + STARFIELD
