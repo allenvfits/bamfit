@@ -8,8 +8,6 @@ const PACKAGE_CONFIG = {
   '10_sessions': { total_sessions: 10, amount_paid: 42000  }, // $420
   '15_sessions': { total_sessions: 15, amount_paid: 60000  }, // $600
   '25_sessions': { total_sessions: 25, amount_paid: 95200  }, // $952
-  'custom_3day': { total_sessions: 1,  amount_paid: 8000   }, // $80
-  'custom_5day': { total_sessions: 1,  amount_paid: 15000  }, // $150
 };
 
 // POST /api/packages

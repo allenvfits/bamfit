@@ -26,7 +26,7 @@ router.get('/dashboard', async (req, res) => {
     supabase.from('packages').select('*', { count: 'exact', head: true })
       .gt('credits_remaining', 0)
       .gte('expires_at', new Date().toISOString()),
-    supabase.from('payments').select('amount, description, paid_at')
+    supabase.from('bamfit_orders').select('amount, package_type, paid_at')
       .eq('status', 'paid')
       .order('paid_at', { ascending: false })
       .limit(5),
@@ -35,7 +35,7 @@ router.get('/dashboard', async (req, res) => {
 
   // Total revenue
   const { data: revenueData } = await supabase
-    .from('payments')
+    .from('bamfit_orders')
     .select('amount')
     .eq('status', 'paid');
 
@@ -84,16 +84,16 @@ router.patch('/leads/:id/read', async (req, res) => {
 // GET /api/admin/revenue — revenue breakdown by package type
 router.get('/revenue', async (req, res) => {
   const { data, error } = await supabase
-    .from('payments')
-    .select('amount, description, paid_at')
+    .from('bamfit_orders')
+    .select('amount, package_type, paid_at')
     .eq('status', 'paid')
     .order('paid_at', { ascending: false });
 
   if (error) return res.status(500).json({ error: error.message });
 
-  // Group by description (package type)
+  // Group by package type
   const breakdown = data.reduce((acc, p) => {
-    const key = p.description || 'other';
+    const key = p.package_type || 'other';
     if (!acc[key]) acc[key] = { count: 0, total: 0 };
     acc[key].count++;
     acc[key].total += p.amount;

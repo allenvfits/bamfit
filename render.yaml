@@ -3,7 +3,7 @@ services:
     name: bamfit-api
     env: node
     buildCommand: npm ci
-    startCommand: node server.js
+    startCommand: node contact-server.js
     healthCheckPath: /health
     envVars:
       - key: SUPABASE_URL
@@ -23,6 +23,10 @@ services:
       - key: STRIPE_CONNECT_CLIENT_ID
         sync: false
       - key: OWNER_EMAIL
-        sync: false
+        value: contact@bamfit1.com
       - key: FRONTEND_URL
-        sync: false
+        value: https://bamfit1.com
+      - key: FRONTEND_URLS
+        value: https://bamfit1.com,https://www.bamfit1.com,https://bamfit.onrender.com
+      - key: API_ORIGIN
+        value: https://bamfit-contact-api.onrender.com

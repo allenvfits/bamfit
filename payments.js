@@ -2,7 +2,7 @@ const router=require('express').Router();
 const stripe=require('./stripe-client');
 const db=require('./supabase');
 const PRICES=require('./prices');
-const {connection,ready,origin}=require('./connect');
+const {connection,ready,frontendOrigin}=require('./connect');
 router.get('/catalog',(req,res)=>res.json(Object.entries(PRICES).filter(([id])=>id!=='nutrition').map(([id,value])=>({id,...value}))));
 router.post('/create-checkout',async(req,res)=>{
   const {package_type,client_email,client_name}=req.body;
@@ -15,7 +15,7 @@ router.post('/create-checkout',async(req,res)=>{
     mode:'payment',integration_identifier:'bamfit_checkout_hkqmvzrt',customer_email:client_email,
     line_items:[{price_data:{currency:'usd',product_data:{name:price.label},unit_amount:price.amount},quantity:1}],
     metadata:{site:'bamfit',package_type,client_name:client_name.trim(),client_email},
-    success_url:origin()+'/success.html',cancel_url:origin()+'/checkout.html',
+    success_url:frontendOrigin()+'/success.html',cancel_url:frontendOrigin()+'/checkout.html',
   },{stripeAccount:account.account_id});
   res.json({url:session.url});
 });
@@ -29,7 +29,16 @@ router.post('/webhook',async(req,res)=>{
     if(meta.site!=='bamfit')return res.json({received:true});
     if(session.payment_status!=='paid')return res.json({received:true});
     if(!price||session.currency!=='usd'||session.amount_total!==price.amount)return res.status(400).send('Unexpected payment amount');
-    const {error}=await db.from('bamfit_orders').upsert({stripe_session_id:session.id,account_id:event.account,package_type:meta.package_type,client_name:meta.client_name,client_email:session.customer_details?.email||meta.client_email,amount:session.amount_total,stripe_payment_id:session.payment_intent,status:'paid',fulfillment_status:'pending',paid_at:new Date(event.created*1000).toISOString()},{onConflict:'stripe_session_id',ignoreDuplicates:true});
+    const {error}=await db.rpc('record_bamfit_order',{
+      p_stripe_session_id:session.id,
+      p_account_id:event.account,
+      p_package_type:meta.package_type,
+      p_client_name:meta.client_name,
+      p_client_email:session.customer_details?.email||meta.client_email,
+      p_amount:session.amount_total,
+      p_stripe_payment_id:session.payment_intent,
+      p_paid_at:new Date(event.created*1000).toISOString(),
+    });
     if(error)throw error;
   }
   res.json({received:true});
