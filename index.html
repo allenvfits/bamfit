@@ -615,6 +615,8 @@ body.site-reveal footer{
 }
 .recommend small{display:block;color:#7f7c91;text-transform:uppercase;letter-spacing:.14em;font-size:.53rem;font-weight:800}
 .recommend strong{display:block;margin-top:.25rem;color:#dffcff;font-size:.84rem}
+.questionnaire-save-status{display:block;margin-top:.65rem;color:#a9b8dc;font-size:.69rem;line-height:1.5}
+.questionnaire-save-status a{color:var(--cyan);text-decoration:underline;text-underline-offset:3px}
 .package-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
 .package{
   border-radius:20px;padding:1.45rem;min-height:335px;display:flex;flex-direction:column;position:relative;transition:.25s
@@ -711,7 +713,7 @@ footer{
 }
 </style>
 </head>
-<body class="locked">
+<body>
 
 <canvas id="starfield"></canvas>
 
@@ -721,18 +723,18 @@ footer{
     <span class="brand-name">BAM<span>FIT</span></span>
   </a>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#about">About</a></li>
-    <li><a href="#specialties">Training</a></li>
-    <li><a href="#results">Results</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="results.html">Results</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-lock" id="navLock">Pricing Locked</div>
-  <button class="nav-cta" id="navQuestionnaire">Questionnaire</button>
-  <button class="menu" id="menuBtn" aria-label="Open navigation">☰</button>
+  <button class="nav-cta" id="navQuestionnaire" type="button">Get Started</button>
+  <button class="menu" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="navLinks" aria-expanded="false">☰</button>
 </nav>
 
 <!-- QUESTIONNAIRE GATE -->
-<div class="gate" id="questionnaire">
+<div class="gate hidden" id="questionnaire" role="dialog" aria-modal="true" aria-labelledby="questionnaireTitle" aria-hidden="true">
   <div class="tornado-wrap" aria-hidden="true">
     <div class="tornado-ring r1"></div>
     <div class="tornado-ring r2"></div>
@@ -740,14 +742,14 @@ footer{
     <div class="tornado-ring r4"></div>
   </div>
   <div class="gate-card">
-    <button class="skip-btn" id="skipQuestionnaire" type="button">Skip For Now →</button>
+    <button class="skip-btn" id="closeQuestionnaire" type="button" aria-label="Close questionnaire">Close ×</button>
     <div class="gate-top">
       <div class="gate-brand">BAM<span>FIT</span></div>
-      <p>Tell us where you are now and where you want to go. Your training options unlock when you finish.</p>
+      <p id="questionnaireTitle">Tell us where you are now and where you want to go. Your training options unlock when you finish.</p>
       <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
     </div>
 
-    <form id="fitnessForm">
+    <form id="fitnessForm" novalidate>
       <section class="form-step active" data-step="1">
         <div class="step-kicker">Step 1 of 4 · Your Goal</div>
         <h2>WHAT ARE YOU<br>CHASING?</h2>
@@ -911,7 +913,7 @@ footer{
 
         <div class="step-actions">
           <button class="back" type="button" data-back="3">← Back</button>
-          <button class="next" id="finishQuestionnaire" type="submit">Unlock My Options →</button>
+          <button class="next" id="finishQuestionnaire" type="submit">Finish &amp; See My Options →</button>
         </div>
         <div class="gate-error" id="finalError"></div>
         <div class="gate-note">Your answers are used to help BAM FIT understand your goals and recommend a starting point. This is not medical advice or a medical assessment.</div>
@@ -1004,6 +1006,7 @@ footer{
         <div class="recommend">
           <small>Your Questionnaire-Based Starting Point</small>
           <strong id="recommendationText">Complete your questionnaire to see a recommendation.</strong>
+          <span id="questionnaireSaveStatus" class="questionnaire-save-status" role="status"></span>
         </div>
 
         <div class="package-grid" id="packageGrid">
@@ -1098,7 +1101,7 @@ footer{
 <footer>
   <div class="foot-brand">BAM<span>FIT</span></div>
   <div>© 2026 BAM FIT — By Any Means Fitness. Anthony B. Iacono.</div>
-  <div class="foot-links"><a href="#about">About</a><a href="#specialties">Training</a><a href="#contact">Contact</a></div>
+  <div class="foot-links"><a href="about.html">About</a><a href="pricing.html">Pricing</a><a href="results.html">Results</a><a href="#contact">Contact</a></div>
 </footer>
 
 <script>
@@ -1107,6 +1110,7 @@ footer{
 ------------------------------ */
 const STORAGE_KEY='bamfit_questionnaire_complete';
 const STORAGE_DATA='bamfit_questionnaire_data';
+const STORAGE_DELIVERY='bamfit_questionnaire_delivery';
 
 /* Current BAM FIT package pricing.
    Injected only after questionnaire completion. */
@@ -1121,8 +1125,14 @@ const PACKAGES=[
 ------------------------------ */
 const menuBtn=document.getElementById('menuBtn');
 const navLinks=document.getElementById('navLinks');
-menuBtn.addEventListener('click',()=>navLinks.classList.toggle('open'));
-navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+menuBtn.addEventListener('click',()=>{
+  const open=navLinks.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded',String(open));
+});
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  navLinks.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded','false');
+}));
 
 /* -----------------------------
    QUESTIONNAIRE
@@ -1135,14 +1145,20 @@ const lockedPricing=document.getElementById('lockedPricing');
 const pricingContent=document.getElementById('pricingContent');
 const packageGrid=document.getElementById('packageGrid');
 const recommendationText=document.getElementById('recommendationText');
+const questionnaireSaveStatus=document.getElementById('questionnaireSaveStatus');
+let questionnaireTrigger=null;
 
 function openGate(){
+  questionnaireTrigger=document.activeElement;
   gate.classList.remove('hidden','closing','completing');
+  gate.setAttribute('aria-hidden','false');
   document.body.classList.remove('site-reveal');
   gate.classList.remove('opening');
   void gate.offsetWidth;
   gate.classList.add('opening');
   document.body.classList.add('locked');
+  setStep(1);
+  setTimeout(()=>document.querySelector('[name="goal"]')?.focus(),100);
 
   setTimeout(()=>gate.classList.remove('opening'),7100);
 }
@@ -1156,19 +1172,28 @@ function closeGate(mode='skip'){
 
     setTimeout(()=>{
       gate.classList.add('hidden');
+      gate.setAttribute('aria-hidden','true');
       gate.classList.remove('completing');
       document.body.classList.remove('locked');
 
       setTimeout(()=>document.body.classList.remove('site-reveal'),500);
-    },7000);
+    },window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:7000);
   }else{
     gate.classList.add('closing');
 
     setTimeout(()=>{
       gate.classList.add('hidden');
+      gate.setAttribute('aria-hidden','true');
       gate.classList.remove('closing');
       document.body.classList.remove('locked');
-    },2200);
+      questionnaireTrigger?.focus();
+    },window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:2200);
+  }
+
+  const url=new URL(window.location.href);
+  if(url.searchParams.has('signup')){
+    url.searchParams.delete('signup');
+    history.replaceState({},'',url.pathname+(url.searchParams.toString()?'?'+url.searchParams.toString():'')+url.hash);
   }
 }
 function setStep(step){
@@ -1186,6 +1211,13 @@ function clearErrors(){
 }
 function validateStep(step){
   clearErrors();
+  const section=document.querySelector(`.form-step[data-step="${step}"]`);
+  const invalid=[...section.querySelectorAll('input,select,textarea')].find(control=>!control.checkValidity());
+  if(invalid){
+    showStepError(step,invalid.validationMessage);
+    invalid.focus();
+    return false;
+  }
   if(step===1){
     if(!form.goal.value){showStepError(1,'Choose your main goal to continue.');return false;}
   }
@@ -1214,11 +1246,20 @@ document.querySelectorAll('[data-back]').forEach(btn=>btn.addEventListener('clic
   if(el) el.addEventListener('click',openGate);
 });
 
-document.getElementById('skipQuestionnaire').addEventListener('click',(e)=>{
+document.getElementById('closeQuestionnaire').addEventListener('click',(e)=>{
   e.preventDefault();
   e.stopPropagation();
-  sessionStorage.setItem('bamfit_questionnaire_skipped','1');
-  closeGate('skip');
+  closeGate('close');
+});
+document.addEventListener('keydown',e=>{
+  if(gate.classList.contains('hidden')) return;
+  if(e.key==='Escape') closeGate('close');
+  if(e.key==='Tab'){
+    const controls=[...gate.querySelectorAll('button,input,select,textarea,a[href]')].filter(el=>!el.disabled && el.getClientRects().length);
+    const first=controls[0],last=controls[controls.length-1];
+    if(e.shiftKey && (document.activeElement===first || !gate.contains(document.activeElement))){e.preventDefault();last?.focus();}
+    else if(!e.shiftKey && (document.activeElement===last || !gate.contains(document.activeElement))){e.preventDefault();first?.focus();}
+  }
 });
 
 function questionnaireData(){
@@ -1256,7 +1297,7 @@ function recommendationFor(data){
   return recommended;
 }
 
-function injectPricing(data){
+function injectPricing(data,delivery=''){
   const recommended=recommendationFor(data);
   const recommendedPkg=PACKAGES.find(p=>p.type===recommended);
 
@@ -1271,13 +1312,20 @@ function injectPricing(data){
       <div class="price">${p.price}</div>
       <div class="rate">${p.rate}</div>
       <p>${p.desc}</p>
-      <a href="#contact">Talk To Anthony →</a>
+      <a href="checkout.html?package=${encodeURIComponent(p.type)}">Choose This Package →</a>
     </article>
   `).join('');
 
   lockedPricing.style.display='none';
   pricingContent.classList.add('visible');
   navLock.textContent='Pricing Unlocked';
+  if(delivery==='sent'){
+    questionnaireSaveStatus.textContent='Questionnaire sent to BAM FIT.';
+  }else if(delivery==='local'){
+    questionnaireSaveStatus.innerHTML='Your answers are saved on this device, but online delivery is unavailable. <a href="mailto:abiacono@gmail.com">Email Anthony</a> to follow up.';
+  }else{
+    questionnaireSaveStatus.textContent='';
+  }
 }
 
 async function saveLead(data){
@@ -1320,6 +1368,15 @@ Preferred contact method: ${data.contactMethod}`;
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   clearErrors();
+  const activeStep=Number(document.querySelector('.form-step.active').dataset.step);
+  if(activeStep<4){
+    if(validateStep(activeStep)) setStep(activeStep+1);
+    return;
+  }
+  for(let step=1;step<=4;step++){
+    setStep(step);
+    if(!validateStep(step)) return;
+  }
 
   if(!form.leadName.value.trim() || !form.leadEmail.value.trim() || !form.contactMethod.value){
     showStepError(4,'Enter your name, email, and preferred contact method to unlock your training options.');
@@ -1334,37 +1391,54 @@ form.addEventListener('submit',async e=>{
   try{
     /* Try to save to existing BAM FIT backend.
        Local static preview may not have /api/contact connected yet. */
-    try{ await saveLead(data); }catch(err){ console.warn('Questionnaire saved locally only:',err.message); }
+    let delivery='sent';
+    try{ await saveLead(data); }catch(err){
+      delivery='local';
+      console.warn('Questionnaire saved locally only:',err.message);
+    }
 
     localStorage.setItem(STORAGE_KEY,'1');
     localStorage.setItem(STORAGE_DATA,JSON.stringify(data));
-    injectPricing(data);
+    localStorage.setItem(STORAGE_DELIVERY,delivery);
+    injectPricing(data,delivery);
     closeGate('complete');
 
     setTimeout(()=>{
       document.getElementById('training-options').scrollIntoView({behavior:'smooth'});
-    },7200);
+    },window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:7200);
+  }catch(error){
+    showStepError(4,'Your answers could not be saved on this device. Please contact Anthony or try again.');
   }finally{
     button.disabled=false;
-    button.textContent='Unlock My Options →';
+    button.textContent='Finish & See My Options →';
+    if(gate.classList.contains('completing')){
+      button.disabled=true;
+      setTimeout(()=>{button.disabled=false;},window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:7100);
+    }
   }
 });
 
 /* Existing unlock */
 (function(){
+  const signupRequested=new URLSearchParams(window.location.search).get('signup')==='1';
   if(localStorage.getItem(STORAGE_KEY)==='1'){
     try{
       const data=JSON.parse(localStorage.getItem(STORAGE_DATA)||'{}');
-      if(data.goal) injectPricing(data);
+      if(data.goal) injectPricing(data,localStorage.getItem(STORAGE_DELIVERY)||'');
       gate.classList.add('hidden');
+      gate.setAttribute('aria-hidden','true');
       document.body.classList.remove('locked');
-    }catch(e){ openGate(); }
-  }else if(sessionStorage.getItem('bamfit_questionnaire_skipped')==='1'){
-    gate.classList.add('hidden');
-    document.body.classList.remove('locked');
+    }catch(e){
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_DATA);
+      localStorage.removeItem(STORAGE_DELIVERY);
+    }
   }else{
-    openGate();
+    gate.classList.add('hidden');
+    gate.setAttribute('aria-hidden','true');
+    document.body.classList.remove('locked');
   }
+  if(signupRequested) openGate();
 })();
 
 /* -----------------------------

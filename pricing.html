@@ -126,6 +126,11 @@
     .footer-copy{font-size:0.78rem;color:var(--muted);}
     .footer-links{display:flex;gap:2rem;}
     .footer-links a{font-size:0.78rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}.footer-links a:hover{color:var(--blue);}
+    .pricing-access{padding:5rem 4rem;text-align:center;background:var(--dark2);border-bottom:1px solid var(--border);}
+    .pricing-access .access-card{max-width:720px;margin:0 auto;padding:3rem;border:1px solid var(--border);border-radius:12px;background:linear-gradient(145deg,rgba(101,216,255,.08),rgba(167,139,250,.08));}
+    .pricing-access h2{font-family:var(--ff-display);font-size:clamp(2.5rem,6vw,5rem);line-height:.95;}
+    .pricing-access p{max-width:560px;margin:1rem auto 1.5rem;color:var(--muted);line-height:1.7;}
+    .pricing-access a{display:inline-block;background:linear-gradient(110deg,#65d8ff,#a78bfa);color:#070917;padding:1rem 2rem;text-decoration:none;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
     @media(max-width:1000px){nav{padding:1rem 1.5rem;}.nav-links{display:none;}section,#pcta{padding-left:1.5rem;padding-right:1.5rem;}#hero-banner{padding:7rem 1.5rem 3rem;}.sessions-grid{grid-template-columns:1fr 1fr;}.routines-grid,.pnf-layout,.nut-layout{grid-template-columns:1fr;}#pcta{flex-direction:column;}footer{flex-direction:column;gap:1.5rem;text-align:center;}}
     @media(max-width:600px){.sessions-grid{grid-template-columns:1fr;}}
@@ -143,7 +148,7 @@
       <li><a href="results.html">Results</a></li>
       <li><a href="index.html#contact">Contact</a></li>
     </ul>
-    <a href="checkout.html" class="nav-cta">Book Now</a>
+    <a href="index.html?signup=1" class="nav-cta">Get Started</a>
   </nav>
 
   <section id="hero-banner">
@@ -152,9 +157,20 @@
     <div class="banner-content">
       <div class="breadcrumb"><a href="index.html">Home</a> &rsaquo; <span>Pricing</span></div>
       <h1 class="banner-title">REAL PRICING.<br><span>ZERO BS.</span></h1>
-      <p class="banner-sub">Every package listed clearly. No contracts, no hidden fees. Credits expire 90 days after purchase.</p>
+      <p class="banner-sub">Complete the BAM FIT questionnaire to unlock the three available training packages. No contracts and no hidden fees.</p>
     </div>
   </section>
+
+  <section class="pricing-access" data-pricing-gate>
+    <div class="access-card">
+      <div class="section-tag">Start With Your Goals</div>
+      <h2>TRAINING OPTIONS<br>ARE LOCKED.</h2>
+      <p>Answer the four-step fitness questionnaire first so Anthony can understand your goals, availability, experience, and exercise-safety needs.</p>
+      <a href="index.html?signup=1">Take the Questionnaire</a>
+    </div>
+  </section>
+
+  <main data-pricing-details hidden>
 
   <section id="sessions">
     <div class="section-tag">Training Packages</div>
@@ -166,14 +182,14 @@
         <div class="sess-price">$420</div><div class="sess-rate">$42/session</div>
         <div class="sess-tag">Popular</div>
         <div class="sess-desc">Ten sessions gives you enough time to see real changes in strength and body composition.</div>
-        <a href="checkout.html?package=10_sessions" class="btn-s btn-ghost">Book Now</a>
+        <a href="index.html?signup=1&amp;package=10_sessions" data-package="10_sessions" class="btn-s btn-ghost">Choose Package</a>
       </div>
       <div class="sess-card">
         <div class="sess-big">15</div><div class="sess-unit">Sessions</div>
         <div class="sess-price">$600</div><div class="sess-rate">$40/session</div>
         <div class="sess-tag">Serious Results</div>
         <div class="sess-desc">Where transformations happen. Habits lock in and your body visibly changes.</div>
-        <a href="checkout.html?package=15_sessions" class="btn-s btn-ghost">Book Now</a>
+        <a href="index.html?signup=1&amp;package=15_sessions" data-package="15_sessions" class="btn-s btn-ghost">Choose Package</a>
       </div>
       <div class="sess-card best">
         <div class="best-badge">Best Value</div>
@@ -181,125 +197,8 @@
         <div class="sess-price">$952</div><div class="sess-rate">$38/session &bull; Lowest rate</div>
         <div class="sess-tag">All In</div>
         <div class="sess-desc">Twenty-five sessions locks in the lowest per-session rate Anthony offers. For people serious about change.</div>
-        <a href="checkout.html?package=25_sessions" class="btn-s btn-yellow">Get Started</a>
+        <a href="index.html?signup=1&amp;package=25_sessions" data-package="25_sessions" class="btn-s btn-yellow">Choose Package</a>
       </div>
-    </div>
-  </section>
-
-  <section id="routines">
-    <div class="section-tag">Train on Your Own</div>
-    <h2 class="section-title">CUSTOM<br><span>ROUTINES</span></h2>
-    <div class="routines-grid reveal">
-      <div class="routine-card">
-        <div class="r-label">Custom Strength Routine</div>
-        <div class="r-name">3-DAY PROGRAM</div>
-        <div class="r-price">$80</div>
-        <ul class="r-list">
-          <li>Fully personalized 3-day split</li>
-          <li>Built for your equipment and goals</li>
-          <li>Sets, reps, rest periods included</li>
-          <li>Written coaching notes for every movement</li>
-          <li>Yours to keep</li>
-        </ul>
-      </div>
-      <div class="routine-card">
-        <div class="r-label">Custom Strength Routine</div>
-        <div class="r-name">5-DAY PROGRAM</div>
-        <div class="r-price">$150</div>
-        <ul class="r-list">
-          <li>Full 5-day customized split</li>
-          <li>Built for your equipment and goals</li>
-          <li>Advanced periodized programming</li>
-          <li>Sets, reps, rest periods included</li>
-          <li>Maximum volume for maximum results</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section id="pnf">
-    <div class="section-tag">Flexibility &amp; Recovery</div>
-    <h2 class="section-title">ASSISTED PNF<br><span>STRETCHING</span></h2>
-    <div class="pnf-layout reveal">
-      <div class="pnf-info">
-        <h3>What Is PNF?</h3>
-        <p><strong style="color:var(--text)">Proprioceptive Neuromuscular Facilitation</strong> — the stretching of the golgi tendon. Anthony assists every stretch manually so you reach ranges impossible on your own.</p>
-        <div class="pnf-benefits">
-          <div class="pnf-benefit">Increased range of motion</div>
-          <div class="pnf-benefit">Improved flexibility</div>
-          <div class="pnf-benefit">Enhanced athletic performance</div>
-          <div class="pnf-benefit">Better posture and alignment</div>
-          <div class="pnf-benefit">Improved neuromuscular coordination</div>
-        </div>
-      </div>
-      <div class="pnf-cards">
-        <div class="pnf-row intro">
-          <div class="pnf-row-left"><h4>INTRO STRETCH</h4><p>First-timers only</p><span class="intro-tag">1st Visit Special</span></div>
-          <div class="pnf-big-price">$20</div>
-        </div>
-        <div class="pnf-row">
-          <div class="pnf-row-left"><h4>25-MINUTE SESSION</h4><p>Targeted assisted stretch</p></div>
-          <div class="pnf-big-price">$25</div>
-        </div>
-        <div class="pnf-row">
-          <div class="pnf-row-left"><h4>50-MINUTE SESSION</h4><p>Full-body assisted stretch</p></div>
-          <div class="pnf-big-price">$40</div>
-        </div>
-        <a href="index.html#contact" class="btn-s btn-yellow" style="margin-top:0.5rem;">Book a Stretch Session</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="nutrition">
-    <div class="section-tag">Nutrition Add-On</div>
-    <h2 class="section-title">NUTRITION &amp;<br><span>SUPPLEMENTATION</span></h2>
-    <div class="nut-layout reveal">
-      <div class="nut-card">
-        <div class="nut-icon">&#127869;</div>
-        <div class="nut-price">$100</div>
-        <div class="nut-label">Monthly Add-On</div>
-        <ul class="nut-list">
-          <li>Monthly meal plan customized to your body</li>
-          <li>Adjustments as your body responds</li>
-          <li>Supplementation guidance included</li>
-          <li>Multivitamin and supplement recommendations</li>
-        </ul>
-        <div class="nut-note">Credits expire 90 days after purchase.</div>
-      </div>
-      <div class="nut-text">
-        <h3>FUEL THE<br><span>RESULTS</span></h3>
-        <p>Only <strong>68% of Americans take supplements</strong>. The #1 supplement to take is the multivitamin — and most people skip it entirely. They provide all-around optimal health that sometimes plays a more crucial role in some people's lives than others.</p>
-        <p>Nutrition is the other half of every result. Anthony configures monthly meal plans around your body's actual needs — not a template, not a generic macro split.</p>
-        <div class="stat-box">
-          <div class="stat-box-num">68%</div>
-          <div class="stat-box-label">of Americans take supplements &mdash; are you one of them?</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="compare">
-    <div class="section-tag">Quick Reference</div>
-    <h2 class="section-title">ALL PRICING<br><span>AT A GLANCE</span></h2>
-    <div class="reveal" style="overflow-x:auto;">
-      <table class="ctable">
-        <thead><tr><th style="width:50%">Service</th><th>Price</th><th>Details</th></tr></thead>
-        <tbody>
-          <tr class="crow"><td colspan="3"><span class="clabel">Session Packages (min 1 day/week)</span></td></tr>
-          <tr><td><div class="f-name">10 Sessions</div></td><td><span class="tv b">$420</span></td><td><span class="tv">$42/session</span></td></tr>
-          <tr><td><div class="f-name">15 Sessions</div></td><td><span class="tv b">$600</span></td><td><span class="tv">$40/session</span></td></tr>
-          <tr><td><div class="f-name">25 Sessions <span style="color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">Best Value</span></div></td><td><span class="tv b">$952</span></td><td><span class="tv">$38/session</span></td></tr>
-          <tr class="crow"><td colspan="3"><span class="clabel">Custom Routines</span></td></tr>
-          <tr><td><div class="f-name">3-Day Strength Routine</div></td><td><span class="tv b">$80</span></td><td><span class="tv">One-time, keep forever</span></td></tr>
-          <tr><td><div class="f-name">5-Day Strength Routine</div></td><td><span class="tv b">$150</span></td><td><span class="tv">One-time, keep forever</span></td></tr>
-          <tr class="crow"><td colspan="3"><span class="clabel">PNF Stretching</span></td></tr>
-          <tr><td><div class="f-name">Intro Stretch <span style="color:var(--blue);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">1st Timers</span></div></td><td><span class="tv b">$20</span></td><td><span class="tv">First visit only</span></td></tr>
-          <tr><td><div class="f-name">25-Min PNF Session</div></td><td><span class="tv b">$25</span></td><td><span class="tv">Targeted stretch</span></td></tr>
-          <tr><td><div class="f-name">50-Min PNF Session</div></td><td><span class="tv b">$40</span></td><td><span class="tv">Full-body stretch</span></td></tr>
-          <tr class="crow"><td colspan="3"><span class="clabel">Nutrition</span></td></tr>
-          <tr><td><div class="f-name">Nutrition &amp; Supplementation Add-On</div><div class="f-sub">Monthly meal plan + supplement guidance. 90-day credit expiry.</div></td><td><span class="tv b">$100</span></td><td><span class="tv">Add to any package</span></td></tr>
-        </tbody>
-      </table>
     </div>
   </section>
 
@@ -310,10 +209,11 @@
     </div>
     <a href="index.html#contact" class="btn-dark">Contact Anthony</a>
   </section>
+  </main>
 
   <footer>
     <div class="footer-logo">BAM<span>FIT</span></div>
-    <div class="footer-copy">&copy; 2025 BAM FIT &mdash; By Any Means Fitness. Anthony B. Iacono.</div>
+    <div class="footer-copy">&copy; 2026 BAM FIT &mdash; By Any Means Fitness. Anthony B. Iacono.</div>
     <div class="footer-links"><a href="about.html">About</a><a href="results.html">Results</a><a href="mailto:abiacono@gmail.com">Email</a></div>
   </footer>
 

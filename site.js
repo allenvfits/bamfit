@@ -6,4 +6,21 @@ window.submitContact=async function(event){
     button.textContent='Sent! Anthony will be in touch.';form.reset();
   }catch(error){button.textContent=error.message;}finally{button.disabled=false;}
 };
+
+const questionnaireComplete=localStorage.getItem('bamfit_questionnaire_complete')==='1';
+const pricingGate=document.querySelector('[data-pricing-gate]');
+const pricingDetails=document.querySelector('[data-pricing-details]');
+
+if(pricingGate && pricingDetails){
+  pricingGate.hidden=questionnaireComplete;
+  pricingDetails.hidden=!questionnaireComplete;
+}
+
+document.querySelectorAll('[data-package]').forEach(link=>{
+  const packageType=link.dataset.package;
+  link.href=questionnaireComplete
+    ? `checkout.html?package=${encodeURIComponent(packageType)}`
+    : `index.html?signup=1&package=${encodeURIComponent(packageType)}`;
+});
+
 localStorage.removeItem('bamfit_api_key');

@@ -20,8 +20,8 @@ test('checkout fails closed before account connection and readiness',async()=>{
 test('retired cheap and pay-by-day packages stay unavailable',async()=>{
  const catalog=await (await fetch(base+'/api/payments/catalog')).json();
  const ids=catalog.map(entry=>entry.id);
- for(const current of ['10_sessions','15_sessions','25_sessions'])assert.ok(ids.includes(current));
- for(const retired of ['6_sessions','payday_30','payday_55']){
+ assert.deepEqual(ids.sort(),['10_sessions','15_sessions','25_sessions'].sort());
+ for(const retired of ['6_sessions','payday_30','payday_55','custom_3day','custom_5day','pnf_intro','pnf_25','pnf_50','nutrition']){
   assert.ok(!ids.includes(retired));
   assert.equal((await post('/api/payments/create-checkout',{package_type:retired,client_email:'customer@example.com',client_name:'Customer'})).status,400);
  }
@@ -36,3 +36,6 @@ test('webhook verifies signature, account, payment state and deduplicates sessio
 });
 test('public assets work without exposing source or setup files',async()=>{for(const path of ['/','/about.html','/pricing.html','/results.html','/checkout.html','/owner.html','/success.html','/theme.css'])assert.equal((await fetch(base+path)).status,200);for(const path of ['/server.js','/supabase.js','/setup.sql','/.env'])assert.equal((await fetch(base+path)).status,404);});
 test('OAuth rejects a callback without matching browser state',async()=>{assert.equal((await fetch(base+'/api/connect/callback?code=attacker&state=forged')).status,400);});
+test('client package records require owner authorization',async()=>{
+ assert.equal((await fetch(base+'/api/packages/client/example-client')).status,401);
+});

@@ -44,7 +44,7 @@ router.post('/', adminAuth, async (req, res) => {
 });
 
 // GET /api/packages/client/:clientId — get all packages for a client
-router.get('/client/:clientId', async (req, res) => {
+router.get('/client/:clientId', adminAuth, async (req, res) => {
   const { data, error } = await supabase
     .from('packages')
     .select('*')
